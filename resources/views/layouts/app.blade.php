@@ -15,6 +15,14 @@
                 <flux:sidebar.item :href="route('dashboard')" :current="request()->routeIs('dashboard')" :accent="false" wire:navigate>
                     Dashboard
                 </flux:sidebar.item>
+                @if (Auth::user()->currentTeam)
+                    <flux:sidebar.item :href="route('passwords.index', Auth::user()->currentTeam)" :current="request()->routeIs('passwords.*')" :accent="false" wire:navigate>
+                        Passwords
+                    </flux:sidebar.item>
+                    <flux:sidebar.item :href="route('credit-cards.index', Auth::user()->currentTeam)" :current="request()->routeIs('credit-cards.*')" :accent="false" wire:navigate>
+                        Credit Cards
+                    </flux:sidebar.item>
+                @endif
             </flux:navbar>
 
             <flux:sidebar.spacer class="max-lg:hidden" />

@@ -77,6 +77,18 @@ class Team extends Model
         return $this->hasMany(TeamInvitation::class);
     }
 
+    /** @return HasMany<Password, $this> */
+    public function passwords(): HasMany
+    {
+        return $this->hasMany(Password::class);
+    }
+
+    /** @return HasMany<CreditCard, $this> */
+    public function creditCards(): HasMany
+    {
+        return $this->hasMany(CreditCard::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
