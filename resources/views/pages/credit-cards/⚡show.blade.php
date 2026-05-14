@@ -45,7 +45,9 @@ new class extends Component
 
     <x-description.list class="mt-2.5">
         <x-description.term>Name on card</x-description.term>
-        <x-description.details>{{ $creditCardModel->name_on_card }}</x-description.details>
+        <x-description.details>
+            <flux:input :value="$creditCardModel->name_on_card" readonly copyable class="max-w-lg" />
+        </x-description.details>
 
         <x-description.term>Card number</x-description.term>
         <x-description.details>
@@ -53,7 +55,12 @@ new class extends Component
         </x-description.details>
 
         <x-description.term>Expiry date</x-description.term>
-        <x-description.details>{{ $creditCardModel->expiry_date }}</x-description.details>
+        <x-description.details>
+            {{ $creditCardModel->expiry_date }}
+            @if ($creditCardModel->is_expired)
+                — Expired
+            @endif
+        </x-description.details>
 
         <x-description.term>CVV</x-description.term>
         <x-description.details>
@@ -66,12 +73,24 @@ new class extends Component
                 <flux:textarea :value="$creditCardModel->notes" readonly class="max-w-lg" />
             </x-description.details>
         @endif
+
+        <x-description.term>Team</x-description.term>
+        <x-description.details>{{ $teamModel->name }}</x-description.details>
+
+        <x-description.term>Encryption</x-description.term>
+        <x-description.details><flux:badge size="sm" inset="top bottom">Encrypted at rest</flux:badge></x-description.details>
+
+        <x-description.term>Created</x-description.term>
+        <x-description.details>{{ $creditCardModel->created_at->format('M j, Y \a\t H:i') }}</x-description.details>
+
+        <x-description.term>Updated</x-description.term>
+        <x-description.details>{{ $creditCardModel->updated_at->format('M j, Y \a\t H:i') }}</x-description.details>
     </x-description.list>
 
     <flux:separator class="mt-8" />
 
     <div class="mt-4">
-        <flux:button variant="danger" wire:click="deleteCreditCard" wire:confirm="Are you sure you want to delete this credit card?">
+        <flux:button variant="danger" wire:click="deleteCreditCard" wire:confirm="Delete this credit card? This cannot be undone.">
             Delete credit card
         </flux:button>
     </div>

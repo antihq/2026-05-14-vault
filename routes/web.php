@@ -18,6 +18,8 @@ Route::middleware(['auth'])->group(function () {
 require __DIR__.'/settings.php';
 
 Route::middleware(['auth', 'verified', EnsureTeamMembership::class])->scopeBindings()->group(function () {
+    Route::livewire('teams/{team}/vault', 'pages::vault.index')->name('vault.index');
+
     Route::livewire('teams/{team}/passwords', 'pages::passwords.index')->name('passwords.index');
     Route::livewire('teams/{team}/passwords/create', 'pages::passwords.create')->name('passwords.create');
     Route::livewire('teams/{team}/passwords/{password}', 'pages::passwords.show')->name('passwords.show');

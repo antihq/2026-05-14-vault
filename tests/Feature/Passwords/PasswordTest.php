@@ -667,3 +667,89 @@ test('passwords are deleted when team is force deleted', function () {
 
     expect(Password::count())->toBe(0);
 });
+
+test('password creation requires minimum 8 characters', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.create', ['team' => $team])
+        ->set('name', 'GitHub')
+        ->set('username', 'johndoe')
+        ->set('password', 'short')
+        ->call('createPassword')
+        ->assertHasErrors(['password' => 'min']);
+});
+
+test('password show page displays timestamps', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertSee('Created');
+    $response->assertSee('Updated');
+});
+
+test('password show page displays encryption status', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertSee('Encrypted at rest');
+});
+
+test('password show page displays team name', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertSee($team->name);
+});
+
+test('password edit validates minimum 8 characters', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+        ->set('name', 'GitHub')
+        ->set('username', 'johndoe')
+        ->set('password', 'short')
+        ->call('updatePassword')
+        ->assertHasErrors(['password' => 'min']);
+});

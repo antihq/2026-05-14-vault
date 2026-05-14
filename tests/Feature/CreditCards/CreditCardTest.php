@@ -716,3 +716,251 @@ test('credit cards are deleted when team is force deleted', function () {
 
     expect(CreditCard::count())->toBe(0);
 });
+
+test('credit card creation rejects invalid Luhn card number', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::credit-cards.create', ['team' => $team])
+        ->set('name', 'My Card')
+        ->set('nameOnCard', 'John Doe')
+        ->set('cardNumber', '4242424242424241')
+        ->set('expiryDate', '12/28')
+        ->set('cvv', '123')
+        ->call('createCreditCard')
+        ->assertHasErrors(['cardNumber']);
+});
+
+test('credit card creation rejects expired expiry date', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::credit-cards.create', ['team' => $team])
+        ->set('name', 'My Card')
+        ->set('nameOnCard', 'John Doe')
+        ->set('cardNumber', '4242424242424242')
+        ->set('expiryDate', '01/20')
+        ->set('cvv', '123')
+        ->call('createCreditCard')
+        ->assertHasErrors(['expiryDate']);
+});
+
+test('credit card creation rejects invalid expiry date format', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::credit-cards.create', ['team' => $team])
+        ->set('name', 'My Card')
+        ->set('nameOnCard', 'John Doe')
+        ->set('cardNumber', '4242424242424242')
+        ->set('expiryDate', '13/28')
+        ->set('cvv', '123')
+        ->call('createCreditCard')
+        ->assertHasErrors(['expiryDate']);
+});
+
+test('credit card show page displays timestamps', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('credit-cards.show', [$team, $creditCard]));
+
+    $response->assertSee('Created');
+    $response->assertSee('Updated');
+});
+
+test('credit card show page displays encryption status', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('credit-cards.show', [$team, $creditCard]));
+
+    $response->assertSee('Encrypted at rest');
+});
+
+test('credit card is_expired accessor returns true for past dates', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'Expired Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '01/20',
+        'cvv' => '123',
+    ]);
+
+    expect($creditCard->is_expired)->toBeTrue();
+});
+
+test('credit card is_expired accessor returns false for future dates', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'Valid Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    expect($creditCard->is_expired)->toBeFalse();
+});
+
+test('credit card show page displays team name', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('credit-cards.show', [$team, $creditCard]));
+
+    $response->assertSee($team->name);
+});
+
+test('credit card show page displays expired text for expired cards', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'Expired Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '01/20',
+        'cvv' => '123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('credit-cards.show', [$team, $creditCard]));
+
+    $response->assertSee('Expired');
+});
+
+test('credit card index displays expired text for expired cards', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->creditCards()->create([
+        'name' => 'Expired Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '01/20',
+        'cvv' => '123',
+    ]);
+
+    Livewire::test('pages::credit-cards.index', ['team' => $team])
+        ->set('search', 'Expired')
+        ->assertSee('Expired');
+});
+
+test('credit card edit rejects invalid Luhn card number', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+        ->set('name', 'My Visa')
+        ->set('nameOnCard', 'John Doe')
+        ->set('cardNumber', '4242424242424241')
+        ->set('expiryDate', '12/28')
+        ->set('cvv', '123')
+        ->call('updateCreditCard')
+        ->assertHasErrors(['cardNumber']);
+});
+
+test('credit card edit rejects expired expiry date', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+        ->set('name', 'My Visa')
+        ->set('nameOnCard', 'John Doe')
+        ->set('cardNumber', '4242424242424242')
+        ->set('expiryDate', '01/20')
+        ->set('cvv', '123')
+        ->call('updateCreditCard')
+        ->assertHasErrors(['expiryDate']);
+});
+
+test('credit cards index can be searched by name on card', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->creditCards()->create([
+        'name' => 'Card A',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $team->creditCards()->create([
+        'name' => 'Card B',
+        'name_on_card' => 'Jane Smith',
+        'card_number' => '4111111111111111',
+        'expiry_date' => '06/27',
+        'cvv' => '456',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::credit-cards.index', ['team' => $team])
+        ->set('search', 'Jane Smith')
+        ->assertSee('Card B')
+        ->assertDontSee('Card A');
+});

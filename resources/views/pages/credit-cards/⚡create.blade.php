@@ -1,5 +1,7 @@
 <?php
 
+use App\Rules\Luhn;
+use App\Rules\ValidExpiryDate;
 use App\Models\Team;
 use Flux\Flux;
 use Livewire\Attributes\Title;
@@ -31,8 +33,8 @@ new #[Title('New Credit Card')] class extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'nameOnCard' => ['required', 'string', 'max:255'],
-            'cardNumber' => ['required', 'string', 'min:13', 'max:19'],
-            'expiryDate' => ['required', 'string', 'max:5'],
+            'cardNumber' => ['required', 'string', 'min:13', 'max:19', new Luhn],
+            'expiryDate' => ['required', 'string', 'max:5', new ValidExpiryDate],
             'cvv' => ['required', 'string', 'min:3', 'max:4'],
             'notes' => ['nullable', 'string', 'max:65535'],
         ]);
@@ -46,7 +48,7 @@ new #[Title('New Credit Card')] class extends Component
             'notes' => $validated['notes'] ?: null,
         ]);
 
-        Flux::toast(variant: 'success', text: 'Credit card created.');
+        Flux::toast(variant: 'success', text: 'Credit card created and encrypted.');
 
         $this->redirectRoute('credit-cards.show', ['team' => $this->teamModel->slug, 'creditCard' => $creditCard->id], navigate: true);
     }
@@ -55,21 +57,24 @@ new #[Title('New Credit Card')] class extends Component
 <section class="w-full">
     <flux:heading size="xl" level="1">New credit card</flux:heading>
 
-    <form wire:submit="createCreditCard" class="mt-6 space-y-6">
+    <form wire:submit="createCreditCard" class="mt-6 space-y-8">
         <flux:field>
             <flux:label>Name</flux:label>
+            <flux:description>A label for this card, e.g. "Personal Visa"</flux:description>
             <flux:input wire:model="name" type="text" required autofocus class="max-w-lg" />
             <flux:error name="name" />
         </flux:field>
 
         <flux:field>
             <flux:label>Name on card</flux:label>
+            <flux:description>The cardholder name exactly as printed on the card</flux:description>
             <flux:input wire:model="nameOnCard" type="text" required class="max-w-lg" />
             <flux:error name="nameOnCard" />
         </flux:field>
 
         <flux:field>
             <flux:label>Card number</flux:label>
+            <flux:description>The 13–19 digit number on the front or back of the card</flux:description>
             <flux:input wire:model="cardNumber" type="text" required mask="9999 9999 9999 9999" icon:trailing="credit-card" class="max-w-lg" />
             <flux:error name="cardNumber" />
         </flux:field>
@@ -77,12 +82,14 @@ new #[Title('New Credit Card')] class extends Component
         <div class="grid grid-cols-2 gap-4 max-w-lg">
             <flux:field>
                 <flux:label>Expiry date</flux:label>
+                <flux:description>Month and year printed on the card</flux:description>
                 <flux:input wire:model="expiryDate" type="text" required mask="99/99" placeholder="MM/YY" />
                 <flux:error name="expiryDate" />
             </flux:field>
 
             <flux:field>
                 <flux:label>CVV</flux:label>
+                <flux:description>3-digit code on the back (4 digits on the front for Amex)</flux:description>
                 <flux:input wire:model="cvv" type="password" required viewable mask="9999" />
                 <flux:error name="cvv" />
             </flux:field>
@@ -90,6 +97,7 @@ new #[Title('New Credit Card')] class extends Component
 
         <flux:field>
             <flux:label>Notes</flux:label>
+            <flux:description>Billing address, PIN, or other details</flux:description>
             <flux:textarea wire:model="notes" class="max-w-lg" />
             <flux:error name="notes" />
         </flux:field>

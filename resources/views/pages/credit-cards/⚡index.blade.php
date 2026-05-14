@@ -20,9 +20,9 @@ new #[Title('Credit Cards')] class extends Component
     public function creditCards()
     {
         return $this->teamModel->creditCards()
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%")->orWhere('name_on_card', 'like', "%{$this->search}%"))
             ->orderBy('name')
-            ->get();
+            ->paginate(50);
     }
 }; ?>
 
@@ -39,12 +39,12 @@ new #[Title('Credit Cards')] class extends Component
     </div>
 
     <div class="mt-6">
-        @if ($this->creditCards->isEmpty())
+        @if ($this->creditCards->total() === 0)
             <flux:callout variant="note" class="mt-4">
-                No credit cards found. Add your first credit card to get started.
+                No credit cards yet.
             </flux:callout>
         @else
-            <flux:table>
+            <flux:table :paginate="$this->creditCards">
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Number</flux:table.column>
@@ -66,7 +66,7 @@ new #[Title('Credit Cards')] class extends Component
 
                             <flux:table.cell class="relative">
                                 <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate />
-                                {{ $creditCard->expiry_date }}
+                                {{ $creditCard->expiry_date }}@if ($creditCard->is_expired) (Expired)@endif
                             </flux:table.cell>
                         </flux:table.row>
                     @endforeach

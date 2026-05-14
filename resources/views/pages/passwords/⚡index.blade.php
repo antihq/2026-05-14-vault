@@ -22,7 +22,7 @@ new #[Title('Passwords')] class extends Component
         return $this->teamModel->passwords()
             ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%")->orWhere('username', 'like', "%{$this->search}%"))
             ->orderBy('name')
-            ->get();
+            ->paginate(50);
     }
 }; ?>
 
@@ -39,14 +39,14 @@ new #[Title('Passwords')] class extends Component
     </div>
 
     <div class="mt-6">
-        @if ($this->passwords->isEmpty())
+        @if ($this->passwords->total() === 0)
             <flux:callout variant="note" class="mt-4">
-                No passwords found. Create your first password to get started.
+                No passwords yet.
             </flux:callout>
         @else
-            <flux:table>
+            <flux:table :paginate="$this->passwords">
                 <flux:table.columns>
-                    <flux:table.column>Service</flux:table.column>
+                    <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Username</flux:table.column>
                     <flux:table.column>Website</flux:table.column>
                 </flux:table.columns>

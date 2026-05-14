@@ -67,12 +67,24 @@ new class extends Component
                 <flux:textarea :value="$passwordModel->notes" readonly class="max-w-lg" />
             </x-description.details>
         @endif
+
+        <x-description.term>Team</x-description.term>
+        <x-description.details>{{ $teamModel->name }}</x-description.details>
+
+        <x-description.term>Encryption</x-description.term>
+        <x-description.details><flux:badge size="sm" inset="top bottom">Encrypted at rest</flux:badge></x-description.details>
+
+        <x-description.term>Created</x-description.term>
+        <x-description.details>{{ $passwordModel->created_at->format('M j, Y \a\t H:i') }}</x-description.details>
+
+        <x-description.term>Updated</x-description.term>
+        <x-description.details>{{ $passwordModel->updated_at->format('M j, Y \a\t H:i') }}</x-description.details>
     </x-description.list>
 
     <flux:separator class="mt-8" />
 
     <div class="mt-4">
-        <flux:button variant="danger" wire:click="deletePassword" wire:confirm="Are you sure you want to delete this password?">
+        <flux:button variant="danger" wire:click="deletePassword" wire:confirm="Delete this password? This cannot be undone.">
             Delete password
         </flux:button>
     </div>

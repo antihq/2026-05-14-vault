@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -82,6 +83,22 @@ class CreditCard extends Model
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => '•••• •••• •••• ' . ($attributes['last_four'] ?? '    '),
+        );
+    }
+
+    /**
+     * Determine if the credit card has expired.
+     *
+     * Parses the expiry_date (MM/YY) and compares the end of that month
+     * to the current date and time.
+     */
+    protected function isExpired(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => Carbon::createFromFormat('m/y', $attributes['expiry_date'])
+                ->endOfMonth()
+                ->endOfDay()
+                ->isPast(),
         );
     }
 }
