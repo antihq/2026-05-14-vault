@@ -27,8 +27,8 @@
 }
 
 @theme {
-    --color-accent: var(--color-olive-900);
-    --color-accent-content: var(--color-olive-900);
+    --color-accent: var(--color-olive-950);
+    --color-accent-content: var(--color-olive-950);
     --color-accent-foreground: var(--color-white);
 }
 @layer theme {
