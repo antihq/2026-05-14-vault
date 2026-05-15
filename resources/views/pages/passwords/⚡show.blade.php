@@ -37,7 +37,7 @@ new class extends Component
                 <flux:button
                     variant="ghost"
                     x-on:click="navigator.clipboard.writeText(username); copied = true; setTimeout(() => copied = false, 2000)"
-                    inset="left right"
+                    inset="left right top bottom"
                 >
                     <span x-text="copied ? 'Copied!' : username"></span>
                 </flux:button>
@@ -52,7 +52,7 @@ new class extends Component
                     x-on:mouseenter="hovering = true"
                     x-on:mouseleave="hovering = false"
                     x-on:click="if (!pinned) { navigator.clipboard.writeText(password); copied = true; setTimeout(() => copied = false, 2000) }; pinned = !pinned"
-                    inset="left right"
+                    inset="left right top bottom"
                 >
                     <span x-text="copied ? 'Copied!' : (hovering || pinned ? password : '•'.repeat(password.length))"></span>
                 </flux:button>
@@ -73,7 +73,7 @@ new class extends Component
                     <flux:button
                         variant="ghost"
                         x-on:click="visible = !visible"
-                        inset="left right"
+                        inset="left right top bottom"
                     >
                         <span x-text="visible ? 'Hide notes' : 'Show notes'"></span>
                     </flux:button>
