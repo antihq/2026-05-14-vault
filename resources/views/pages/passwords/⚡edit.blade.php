@@ -125,17 +125,20 @@ new class extends Component
 
         <div class="flex">
             <flux:spacer />
-            <flux:button variant="primary" type="submit">
+            <flux:button variant="primary" type="submit" class="max-sm:w-full">
                 Update password
             </flux:button>
         </div>
     </form>
 
-    <div class="max-w-lg text-right">
+    <div class="max-w-lg">
         <flux:separator class="my-8" />
 
-        <flux:button class="text-red-700! dark:text-red-300!" wire:click="deletePassword" wire:confirm="Delete this password? This cannot be undone.">
-            Delete password
-        </flux:button>
+        <div class="flex">
+            <flux:spacer />
+            <flux:button class="text-red-700! dark:text-red-300! max-sm:w-full" wire:click="deletePassword" wire:confirm="Delete this password? This cannot be undone.">
+                Delete password
+            </flux:button>
+        </div>
     </div>
 </section>
