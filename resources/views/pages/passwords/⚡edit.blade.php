@@ -64,6 +64,17 @@ new class extends Component
         $this->redirectRoute('passwords.show', ['team' => $this->teamModel->slug, 'password' => $this->passwordModel->id], navigate: true);
     }
 
+    public function deletePassword(): void
+    {
+        Gate::authorize('delete', $this->passwordModel);
+
+        $this->passwordModel->delete();
+
+        Flux::toast(variant: 'success', text: 'Password deleted.');
+
+        $this->redirectRoute('passwords.index', ['team' => $this->teamModel->slug], navigate: true);
+    }
+
     public function render()
     {
         return $this->view()->title('Edit — ' . $this->passwordModel->name);
@@ -73,18 +84,18 @@ new class extends Component
 <section class="w-full">
     <flux:heading size="xl" level="1">Edit password</flux:heading>
 
-    <form wire:submit="updatePassword" class="mt-6 space-y-8">
+    <form wire:submit="updatePassword" class="mt-6 space-y-8 max-w-lg">
         <flux:field>
             <flux:label>Name</flux:label>
             <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
-            <flux:input wire:model="name" type="text" required class="max-w-lg" />
+            <flux:input wire:model="name" type="text" required />
             <flux:error name="name" />
         </flux:field>
 
         <flux:field>
             <flux:label>Username</flux:label>
             <flux:description>The email or username used to sign in</flux:description>
-            <flux:input wire:model="username" type="text" required class="max-w-lg" />
+            <flux:input wire:model="username" type="text" required />
             <flux:error name="username" />
         </flux:field>
 
@@ -92,7 +103,7 @@ new class extends Component
             <flux:label>Password</flux:label>
             <flux:description>The sign-in password — use Generate for a random 16-character string</flux:description>
             <flux:input.group>
-                <flux:input wire:model="password" type="password" required viewable class="max-w-lg" />
+                <flux:input wire:model="password" type="password" required viewable />
                 <flux:button wire:click.prevent="generatePassword" type="button">Generate</flux:button>
             </flux:input.group>
             <flux:error name="password" />
@@ -101,19 +112,30 @@ new class extends Component
         <flux:field>
             <flux:label>Website</flux:label>
             <flux:description>The login page URL for this service</flux:description>
-            <flux:input wire:model="website" type="url" placeholder="https://example.com" class="max-w-lg" />
+            <flux:input wire:model="website" type="url" placeholder="https://example.com" />
             <flux:error name="website" />
         </flux:field>
 
         <flux:field>
             <flux:label>Notes</flux:label>
             <flux:description>Security questions, recovery codes, or other details</flux:description>
-            <flux:textarea wire:model="notes" class="max-w-lg" />
+            <flux:textarea wire:model="notes" />
             <flux:error name="notes" />
         </flux:field>
 
-        <flux:button variant="primary" type="submit">
-            Update password
-        </flux:button>
+        <div class="flex">
+            <flux:spacer />
+            <flux:button variant="primary" type="submit">
+                Update password
+            </flux:button>
+        </div>
     </form>
+
+    <div class="max-w-lg text-right">
+        <flux:separator class="my-8" />
+
+        <flux:button class="text-red-700! dark:text-red-300!" wire:click="deletePassword" wire:confirm="Delete this password? This cannot be undone.">
+            Delete password
+        </flux:button>
+    </div>
 </section>

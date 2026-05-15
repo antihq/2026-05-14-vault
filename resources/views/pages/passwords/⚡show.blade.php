@@ -2,8 +2,6 @@
 
 use App\Models\Password;
 use App\Models\Team;
-use Flux\Flux;
-use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 
 new class extends Component
@@ -16,17 +14,6 @@ new class extends Component
     {
         $this->teamModel = $team;
         $this->passwordModel = $password;
-    }
-
-    public function deletePassword(): void
-    {
-        Gate::authorize('delete', $this->passwordModel);
-
-        $this->passwordModel->delete();
-
-        Flux::toast(variant: 'success', text: 'Password deleted.');
-
-        $this->redirectRoute('passwords.index', ['team' => $this->teamModel->slug], navigate: true);
     }
 
     public function render()
@@ -81,11 +68,5 @@ new class extends Component
         <x-description.details>{{ $passwordModel->updated_at->format('M j, Y \a\t H:i') }}</x-description.details>
     </x-description.list>
 
-    <flux:separator class="mt-8" />
 
-    <div class="mt-4">
-        <flux:button class="text-red-700! dark:text-red-300!" wire:click="deletePassword" wire:confirm="Delete this password? This cannot be undone.">
-            Delete password
-        </flux:button>
-    </div>
 </section>

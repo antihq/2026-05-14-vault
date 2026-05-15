@@ -13,14 +13,28 @@
 }
 
 @theme {
-    --color-accent: var(--color-zinc-900);
-    --color-accent-content: var(--color-zinc-900);
+    --color-zinc-50: var(--color-olive-50);
+    --color-zinc-100: var(--color-olive-100);
+    --color-zinc-200: var(--color-olive-200);
+    --color-zinc-300: var(--color-olive-300);
+    --color-zinc-400: var(--color-olive-400);
+    --color-zinc-500: var(--color-olive-500);
+    --color-zinc-600: var(--color-olive-600);
+    --color-zinc-700: var(--color-olive-700);
+    --color-zinc-800: var(--color-olive-800);
+    --color-zinc-900: var(--color-olive-900);
+    --color-zinc-950: var(--color-olive-950);
+}
+
+@theme {
+    --color-accent: var(--color-olive-900);
+    --color-accent-content: var(--color-olive-900);
     --color-accent-foreground: var(--color-white);
 }
 @layer theme {
     .dark {
-        --color-accent: var(--color-zinc-600);
-        --color-accent-content: var(--color-zinc-600);
+        --color-accent: var(--color-olive-600);
+        --color-accent-content: var(--color-olive-600);
         --color-accent-foreground: var(--color-white);
     }
 }
