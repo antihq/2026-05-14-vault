@@ -69,7 +69,19 @@ new class extends Component
         @if ($passwordModel->notes)
             <x-description.term>Notes</x-description.term>
             <x-description.details>
-                <flux:textarea :value="$passwordModel->notes" readonly class="max-w-lg" />
+                <div x-data="{ visible: false }" class="max-w-lg">
+                    <flux:button
+                        variant="ghost"
+                        size="sm"
+                        x-on:click="visible = !visible"
+                        inset="left right"
+                    >
+                        <span x-text="visible ? 'Hide notes' : 'Show notes'"></span>
+                    </flux:button>
+                    <div x-show="visible" x-transition class="mt-2">
+                        {!! Illuminate\Support\Str::markdown($passwordModel->notes) !!}
+                    </div>
+                </div>
             </x-description.details>
         @endif
 

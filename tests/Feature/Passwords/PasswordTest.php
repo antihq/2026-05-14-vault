@@ -805,6 +805,100 @@ test('password show page displays team name', function () {
     $response->assertSee($team->name);
 });
 
+test('password show page renders notes as markdown', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+        'notes' => '**important** info',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertOk();
+    $response->assertSee('<strong>important</strong>', false);
+});
+
+test('password show page has show/hide notes toggle', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+        'notes' => 'Some notes',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertSee('Show notes');
+});
+
+test('password show page notes are hidden by default', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+        'notes' => 'Secret note content',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertOk();
+    $content = $response->getContent();
+    expect($content)->toContain('x-data="{ visible: false }"');
+    expect($content)->toContain('x-show="visible"');
+});
+
+test('password show page renders markdown links in notes', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+        'notes' => '[Docs](https://example.com)',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertOk();
+    $response->assertSee('<a href="https://example.com">Docs</a>', false);
+});
+
+test('password show page does not show notes section when notes are empty', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertDontSee('Show notes');
+});
+
 test('password edit validates minimum 8 characters', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
