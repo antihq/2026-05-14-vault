@@ -29,7 +29,7 @@ new #[Title('Passwords')] class extends Component
 <section class="w-full">
     <div class="flex items-end justify-between gap-4">
         <flux:heading size="xl" level="1">Passwords</flux:heading>
-        <flux:button variant="primary" :href="route('passwords.create', $teamModel)" wire:navigate>
+        <flux:button :href="route('passwords.create', $teamModel)" wire:navigate>
             New password
         </flux:button>
     </div>

@@ -96,7 +96,7 @@ new #[Title('New Password')] class extends Component
             <flux:error name="notes" />
         </flux:field>
 
-        <flux:button variant="primary" type="submit">
+        <flux:button variant="primary" color="blue" type="submit">
             Create password
         </flux:button>
     </form>

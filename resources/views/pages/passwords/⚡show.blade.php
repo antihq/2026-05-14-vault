@@ -38,7 +38,7 @@ new class extends Component
 <section class="w-full">
     <div class="flex items-end justify-between gap-4">
         <flux:heading size="xl" level="1">{{ $passwordModel->name }}</flux:heading>
-        <flux:button variant="primary" :href="route('passwords.edit', [$teamModel, $passwordModel])" wire:navigate>
+        <flux:button :href="route('passwords.edit', [$teamModel, $passwordModel])" wire:navigate>
             Edit
         </flux:button>
     </div>
@@ -84,7 +84,7 @@ new class extends Component
     <flux:separator class="mt-8" />
 
     <div class="mt-4">
-        <flux:button variant="danger" wire:click="deletePassword" wire:confirm="Delete this password? This cannot be undone.">
+        <flux:button class="text-red-700! dark:text-red-300!" wire:click="deletePassword" wire:confirm="Delete this password? This cannot be undone.">
             Delete password
         </flux:button>
     </div>
