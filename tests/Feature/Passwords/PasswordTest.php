@@ -162,7 +162,7 @@ test('password can be deleted', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.show', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
         ->call('deletePassword')
         ->assertHasNoErrors()
         ->assertRedirect(route('passwords.index', $team));
@@ -383,7 +383,7 @@ test('password cannot be deleted by non team members', function () {
 
     $this->actingAs($nonMember);
 
-    Livewire::test('pages::passwords.show', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
         ->call('deletePassword')
         ->assertForbidden();
 
@@ -459,7 +459,7 @@ test('password show page displays website and notes', function () {
     $response->assertSee('Notes');
 });
 
-test('password show page displays delete button', function () {
+test('password show page does not display delete button', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
 
@@ -472,6 +472,23 @@ test('password show page displays delete button', function () {
     $response = $this
         ->actingAs($user)
         ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertDontSee('Delete password');
+});
+
+test('password edit page displays delete button', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.edit', [$team, $password]));
 
     $response->assertSee('Delete password');
 });

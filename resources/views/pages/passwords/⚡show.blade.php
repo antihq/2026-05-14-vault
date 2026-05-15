@@ -67,6 +67,4 @@ new class extends Component
         <x-description.term>Updated</x-description.term>
         <x-description.details>{{ $passwordModel->updated_at->format('M j, Y \a\t H:i') }}</x-description.details>
     </x-description.list>
-
-
 </section>
