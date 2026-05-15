@@ -72,7 +72,6 @@ new class extends Component
                 <div x-data="{ visible: false }" class="max-w-lg">
                     <flux:button
                         variant="ghost"
-                        size="sm"
                         x-on:click="visible = !visible"
                         inset="left right"
                     >
