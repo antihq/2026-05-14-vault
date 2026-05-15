@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Crypt;
 
 #[Fillable(['team_id', 'name', 'name_on_card', 'card_number', 'expiry_date', 'cvv', 'notes'])]
 class CreditCard extends Model
@@ -32,10 +33,10 @@ class CreditCard extends Model
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => isset($attributes['encrypted_card_number'])
-                ? decrypt($attributes['encrypted_card_number'])
+                ? Crypt::decryptString($attributes['encrypted_card_number'])
                 : null,
             set: fn (string $value) => [
-                'encrypted_card_number' => encrypt($value),
+                'encrypted_card_number' => Crypt::encryptString($value),
                 'last_four' => substr(preg_replace('/\D/', '', $value), -4),
             ],
         );
@@ -51,9 +52,9 @@ class CreditCard extends Model
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => isset($attributes['encrypted_cvv'])
-                ? decrypt($attributes['encrypted_cvv'])
+                ? Crypt::decryptString($attributes['encrypted_cvv'])
                 : null,
-            set: fn (string $value) => ['encrypted_cvv' => encrypt($value)],
+            set: fn (string $value) => ['encrypted_cvv' => Crypt::encryptString($value)],
         );
     }
 
@@ -67,9 +68,9 @@ class CreditCard extends Model
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => isset($attributes['encrypted_notes'])
-                ? decrypt($attributes['encrypted_notes'])
+                ? Crypt::decryptString($attributes['encrypted_notes'])
                 : null,
-            set: fn (?string $value) => ['encrypted_notes' => $value !== null ? encrypt($value) : null],
+            set: fn (?string $value) => ['encrypted_notes' => $value !== null ? Crypt::encryptString($value) : null],
         );
     }
 

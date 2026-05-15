@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Crypt;
 
 #[Fillable(['team_id', 'name', 'username', 'password', 'website', 'notes'])]
 class Password extends Model
@@ -30,9 +31,9 @@ class Password extends Model
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => isset($attributes['encrypted_password'])
-                ? decrypt($attributes['encrypted_password'])
+                ? Crypt::decryptString($attributes['encrypted_password'])
                 : null,
-            set: fn (string $value) => ['encrypted_password' => encrypt($value)],
+            set: fn (string $value) => ['encrypted_password' => Crypt::encryptString($value)],
         );
     }
 
@@ -46,9 +47,9 @@ class Password extends Model
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => isset($attributes['encrypted_notes'])
-                ? decrypt($attributes['encrypted_notes'])
+                ? Crypt::decryptString($attributes['encrypted_notes'])
                 : null,
-            set: fn (?string $value) => ['encrypted_notes' => $value !== null ? encrypt($value) : null],
+            set: fn (?string $value) => ['encrypted_notes' => $value !== null ? Crypt::encryptString($value) : null],
         );
     }
 }
