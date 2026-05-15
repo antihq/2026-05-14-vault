@@ -476,6 +476,60 @@ test('password show page does not display delete button', function () {
     $response->assertDontSee('Delete password');
 });
 
+test('password show page embeds password value in alpine data', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertOk();
+    $response->assertSee('secret123');
+});
+
+test('password show page safely encodes username with special characters', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'user"name</script>',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertOk();
+    $response->assertDontSee('user"name</script>', false);
+});
+
+test('password show page safely encodes password with special characters', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'pass"word\'s</script>',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', [$team, $password]));
+
+    $response->assertOk();
+    $response->assertDontSee("pass\"word's</script>", false);
+});
+
 test('password edit page displays delete button', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();

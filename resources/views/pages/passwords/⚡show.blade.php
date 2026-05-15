@@ -33,12 +33,30 @@ new class extends Component
     <x-description.list class="mt-2.5">
         <x-description.term>Username</x-description.term>
         <x-description.details>
-            <flux:input :value="$passwordModel->username" readonly copyable class="max-w-lg" />
+            <div x-data="{ copied: false, username: {{ \Illuminate\Support\Js::encode($passwordModel->username) }} }">
+                <flux:button
+                    variant="ghost"
+                    x-on:click="navigator.clipboard.writeText(username); copied = true; setTimeout(() => copied = false, 2000)"
+                    inset="left right"
+                >
+                    <span x-text="copied ? 'Copied!' : username"></span>
+                </flux:button>
+            </div>
         </x-description.details>
 
         <x-description.term>Password</x-description.term>
         <x-description.details>
-            <flux:input type="password" :value="$passwordModel->password" viewable copyable class="max-w-lg" />
+            <div x-data="{ hovering: false, pinned: false, copied: false, password: {{ \Illuminate\Support\Js::encode($passwordModel->password) }} }" class="inline-block">
+                <flux:button
+                    variant="ghost"
+                    x-on:mouseenter="hovering = true"
+                    x-on:mouseleave="hovering = false"
+                    x-on:click="if (!pinned) { navigator.clipboard.writeText(password); copied = true; setTimeout(() => copied = false, 2000) }; pinned = !pinned"
+                    inset="left right"
+                >
+                    <span x-text="copied ? 'Copied!' : (hovering || pinned ? password : '•'.repeat(password.length))"></span>
+                </flux:button>
+            </div>
         </x-description.details>
 
         @if ($passwordModel->website)
