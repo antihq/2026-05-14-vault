@@ -42,39 +42,33 @@ new #[Title('Passwords')] class extends Component
     </div>
 
     <div class="mt-6">
-        @if ($this->passwords->total() === 0)
-            <flux:callout variant="note" class="mt-4">
-                No passwords yet.
-            </flux:callout>
-        @else
-            <flux:table :paginate="$this->passwords" pagination:scroll-to>
-                <flux:table.columns>
-                    <flux:table.column>Name</flux:table.column>
-                    <flux:table.column>Username</flux:table.column>
-                    <flux:table.column>Website</flux:table.column>
-                </flux:table.columns>
+        <flux:table :paginate="$this->passwords" pagination:scroll-to>
+            <flux:table.columns>
+                <flux:table.column>Name</flux:table.column>
+                <flux:table.column>Username</flux:table.column>
+                <flux:table.column>Website</flux:table.column>
+            </flux:table.columns>
 
-                <flux:table.rows>
-                    @foreach ($this->passwords as $password)
-                        <flux:table.row :key="$password->id">
-                            <flux:table.cell class="relative">
-                                <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate :first="true" aria-label="{{ $password->name }}" />
-                                <span class="font-medium">{{ $password->name }}</span>
-                            </flux:table.cell>
+            <flux:table.rows>
+                @foreach ($this->passwords as $password)
+                    <flux:table.row :key="$password->id">
+                        <flux:table.cell class="relative">
+                            <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate :first="true" aria-label="{{ $password->name }}" />
+                            <span class="font-medium">{{ $password->name }}</span>
+                        </flux:table.cell>
 
-                            <flux:table.cell class="relative">
-                                <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate />
-                                {{ $password->username }}
-                            </flux:table.cell>
+                        <flux:table.cell class="relative">
+                            <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate />
+                            {{ $password->username }}
+                        </flux:table.cell>
 
-                            <flux:table.cell class="relative !text-zinc-500">
-                                <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate />
-                                <span title="{{ $password->website }}">{{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}</span>
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @endforeach
-                </flux:table.rows>
-            </flux:table>
-        @endif
+                        <flux:table.cell class="relative !text-zinc-500">
+                            <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate />
+                            <span title="{{ $password->website }}">{{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}</span>
+                        </flux:table.cell>
+                    </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
     </div>
 </section>

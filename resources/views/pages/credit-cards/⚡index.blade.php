@@ -42,39 +42,33 @@ new #[Title('Credit Cards')] class extends Component
     </div>
 
     <div class="mt-6">
-        @if ($this->creditCards->total() === 0)
-            <flux:callout variant="note" class="mt-4">
-                No credit cards yet.
-            </flux:callout>
-        @else
-            <flux:table :paginate="$this->creditCards" pagination:scroll-to>
-                <flux:table.columns>
-                    <flux:table.column>Name</flux:table.column>
-                    <flux:table.column>Number</flux:table.column>
-                    <flux:table.column>Expires</flux:table.column>
-                </flux:table.columns>
+        <flux:table :paginate="$this->creditCards" pagination:scroll-to>
+            <flux:table.columns>
+                <flux:table.column>Name</flux:table.column>
+                <flux:table.column>Number</flux:table.column>
+                <flux:table.column>Expires</flux:table.column>
+            </flux:table.columns>
 
-                <flux:table.rows>
-                    @foreach ($this->creditCards as $creditCard)
-                        <flux:table.row :key="$creditCard->id">
-                            <flux:table.cell class="relative">
-                                <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate :first="true" aria-label="{{ $creditCard->name }}" />
-                                <span class="font-medium">{{ $creditCard->name }}</span>
-                            </flux:table.cell>
+            <flux:table.rows>
+                @foreach ($this->creditCards as $creditCard)
+                    <flux:table.row :key="$creditCard->id">
+                        <flux:table.cell class="relative">
+                            <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate :first="true" aria-label="{{ $creditCard->name }}" />
+                            <span class="font-medium">{{ $creditCard->name }}</span>
+                        </flux:table.cell>
 
-                            <flux:table.cell class="relative">
-                                <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate />
-                                {{ $creditCard->masked_number }}
-                            </flux:table.cell>
+                        <flux:table.cell class="relative">
+                            <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate />
+                            {{ $creditCard->masked_number }}
+                        </flux:table.cell>
 
-                            <flux:table.cell class="relative">
-                                <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate />
-                                {{ $creditCard->expiry_date }}@if ($creditCard->is_expired) (Expired)@endif
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @endforeach
-                </flux:table.rows>
-            </flux:table>
-        @endif
+                        <flux:table.cell class="relative">
+                            <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate />
+                            {{ $creditCard->expiry_date }}@if ($creditCard->is_expired) (Expired)@endif
+                        </flux:table.cell>
+                    </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
     </div>
 </section>
