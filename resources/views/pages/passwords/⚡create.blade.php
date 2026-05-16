@@ -75,10 +75,10 @@ new #[Title('New Password')] class extends Component
         <flux:field>
             <flux:label>Password</flux:label>
             <flux:description>The sign-in password — use Generate for a random 16-character string</flux:description>
-            <flux:input.group>
-                <flux:input wire:model="password" type="password" required viewable />
-                <flux:button wire:click.prevent="generatePassword" type="button">Generate</flux:button>
-            </flux:input.group>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start">
+                <flux:input wire:model="password" type="password" required viewable class="sm:flex-1" />
+                <flux:button wire:click.prevent="generatePassword" type="button" class="sm:w-auto w-full">Generate</flux:button>
+            </div>
             <flux:error name="password" />
         </flux:field>
 
