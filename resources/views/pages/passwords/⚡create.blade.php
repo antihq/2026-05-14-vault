@@ -25,6 +25,14 @@ new #[Title('New Password')] class extends Component
         $this->teamModel = $team;
     }
 
+    public function getUsernameSuggestionsProperty()
+    {
+        return $this->teamModel->passwords()
+            ->select('username')
+            ->distinct()
+            ->pluck('username');
+    }
+
     public function generatePassword(): void
     {
         $this->password = Str::password(16);
@@ -68,7 +76,11 @@ new #[Title('New Password')] class extends Component
         <flux:field>
             <flux:label>Username</flux:label>
             <flux:description>The email or username used to sign in</flux:description>
-            <flux:input wire:model="username" type="text" required />
+            <flux:autocomplete wire:model="username" required>
+                @foreach($this->usernameSuggestions as $suggestion)
+                    <flux:autocomplete.item>{{ $suggestion }}</flux:autocomplete.item>
+                @endforeach
+            </flux:autocomplete>
             <flux:error name="username" />
         </flux:field>
 

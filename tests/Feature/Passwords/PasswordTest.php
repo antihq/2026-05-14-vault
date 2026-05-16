@@ -899,6 +899,85 @@ test('password show page does not show notes section when notes are empty', func
     $response->assertDontSee('Show notes');
 });
 
+test('username suggestions include past usernames from the team', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->passwords()->create(['name' => 'GitHub', 'username' => 'alice@example.com', 'password' => 'secret123']);
+    $team->passwords()->create(['name' => 'GitLab', 'username' => 'bob@example.com', 'password' => 'secret456']);
+
+    $this->actingAs($user);
+
+    $suggestions = Livewire::test('pages::passwords.create', ['team' => $team])
+        ->get('usernameSuggestions');
+
+    expect($suggestions)->toContain('alice@example.com');
+    expect($suggestions)->toContain('bob@example.com');
+});
+
+test('username suggestions are deduplicated', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->passwords()->create(['name' => 'GitHub', 'username' => 'alice@example.com', 'password' => 'secret123']);
+    $team->passwords()->create(['name' => 'GitLab', 'username' => 'alice@example.com', 'password' => 'secret456']);
+    $team->passwords()->create(['name' => 'Bitbucket', 'username' => 'alice@example.com', 'password' => 'secret789']);
+
+    $this->actingAs($user);
+
+    $suggestions = Livewire::test('pages::passwords.create', ['team' => $team])
+        ->get('usernameSuggestions');
+
+    expect($suggestions)->toHaveCount(1);
+    expect($suggestions)->toContain('alice@example.com');
+});
+
+test('username suggestions are empty when team has no passwords', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $this->actingAs($user);
+
+    $suggestions = Livewire::test('pages::passwords.create', ['team' => $team])
+        ->get('usernameSuggestions');
+
+    expect($suggestions)->toHaveCount(0);
+});
+
+test('username suggestions are scoped to the current team', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $otherOwner = User::factory()->create();
+    $otherTeam = Team::factory()->create();
+    $otherTeam->members()->attach($otherOwner, ['role' => TeamRole::Owner->value]);
+
+    $team->passwords()->create(['name' => 'GitHub', 'username' => 'alice@example.com', 'password' => 'secret123']);
+    $otherTeam->passwords()->create(['name' => 'Other', 'username' => 'bob@example.com', 'password' => 'secret456']);
+
+    $this->actingAs($user);
+
+    $suggestions = Livewire::test('pages::passwords.create', ['team' => $team])
+        ->get('usernameSuggestions');
+
+    expect($suggestions)->toContain('alice@example.com');
+    expect($suggestions)->not->toContain('bob@example.com');
+});
+
+test('create page renders autocomplete with username suggestions', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->passwords()->create(['name' => 'GitHub', 'username' => 'alice@example.com', 'password' => 'secret123']);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.create', $team));
+
+    $response->assertOk();
+    $response->assertSee('alice@example.com');
+});
+
 test('password edit validates minimum 8 characters', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
