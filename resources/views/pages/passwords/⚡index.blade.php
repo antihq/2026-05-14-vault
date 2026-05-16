@@ -56,7 +56,7 @@ new #[Title('Passwords')] class extends Component
                         <flux:table.row :key="$password->id">
                             <flux:table.cell class="relative">
                                 <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate :first="true" aria-label="{{ $password->name }}" />
-                                {{ $password->name }}
+                                <span class="font-medium">{{ $password->name }}</span>
                             </flux:table.cell>
 
                             <flux:table.cell class="relative">
@@ -66,9 +66,7 @@ new #[Title('Passwords')] class extends Component
 
                             <flux:table.cell class="relative">
                                 <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate />
-                                @if ($password->website)
-                                    <flux:link :href="$password->website" target="_blank" :accent="false" wire:click.stop>{{ $password->website }}</flux:link>
-                                @endif
+                                {{ $password->website }}
                             </flux:table.cell>
                         </flux:table.row>
                     @endforeach

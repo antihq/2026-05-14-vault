@@ -56,7 +56,7 @@ new #[Title('Credit Cards')] class extends Component
                         <flux:table.row :key="$creditCard->id">
                             <flux:table.cell class="relative">
                                 <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate :first="true" aria-label="{{ $creditCard->name }}" />
-                                {{ $creditCard->name }}
+                                <span class="font-medium">{{ $creditCard->name }}</span>
                             </flux:table.cell>
 
                             <flux:table.cell class="relative">
