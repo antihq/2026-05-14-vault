@@ -57,7 +57,7 @@ new #[Title('New Password')] class extends Component
 <section class="w-full">
     <flux:heading size="xl" level="1">New password</flux:heading>
 
-    <form wire:submit="createPassword" class="mt-6 space-y-8 max-w-lg">
+    <form wire:submit="createPassword" class="mt-6 space-y-8 max-w-xl">
         <flux:field>
             <flux:label>Name</flux:label>
             <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>

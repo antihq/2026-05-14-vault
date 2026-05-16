@@ -84,7 +84,7 @@ new class extends Component
 <section class="w-full">
     <flux:heading size="xl" level="1">Edit password</flux:heading>
 
-    <form wire:submit="updatePassword" class="mt-6 space-y-8 max-w-lg">
+    <form wire:submit="updatePassword" class="mt-6 space-y-8 max-w-xl">
         <flux:field>
             <flux:label>Name</flux:label>
             <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
@@ -131,7 +131,7 @@ new class extends Component
         </div>
     </form>
 
-    <div class="max-w-lg">
+    <div class="max-w-xl">
         <flux:separator class="my-8" />
 
         <div class="flex">

@@ -74,7 +74,7 @@
         </flux:main>
 
         @persist('toast')
-            <flux:toast.group>
+            <flux:toast.group position="bottom center">
                 <flux:toast />
             </flux:toast.group>
         @endpersist
