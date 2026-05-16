@@ -4,6 +4,7 @@ use App\Enums\TeamRole;
 use App\Models\CreditCard;
 use App\Models\Team;
 use App\Models\User;
+use Carbon\Carbon;
 use Livewire\Livewire;
 
 test('credit cards index page can be rendered', function () {
@@ -1185,4 +1186,44 @@ test('credit card show page does not show notes section when notes are empty', f
         ->get(route('credit-cards.show', [$team, $creditCard]));
 
     $response->assertDontSee('Show notes');
+});
+
+test('viewing credit card show page sets last_viewed_at', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    expect($creditCard->last_viewed_at)->toBeNull();
+
+    Livewire::test('pages::credit-cards.show', ['team' => $team, 'creditCard' => $creditCard]);
+
+    expect($creditCard->fresh()->last_viewed_at)->not->toBeNull();
+});
+
+test('viewing credit card show page does not update updated_at', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $originalUpdatedAt = $creditCard->updated_at;
+
+    Carbon::setTestNow(now()->addHour());
+
+    Livewire::test('pages::credit-cards.show', ['team' => $team, 'creditCard' => $creditCard]);
+
+    expect($creditCard->fresh()->updated_at)->toEqual($originalUpdatedAt);
+
+    Carbon::setTestNow();
 });

@@ -14,6 +14,8 @@ new class extends Component
     {
         $this->teamModel = $team;
         $this->creditCardModel = $creditCard;
+
+        $creditCard->withoutTimestamps(fn () => $creditCard->updateQuietly(['last_viewed_at' => now()]));
     }
 
     public function render()

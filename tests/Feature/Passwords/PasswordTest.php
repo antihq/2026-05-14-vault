@@ -4,6 +4,7 @@ use App\Enums\TeamRole;
 use App\Models\Password;
 use App\Models\Team;
 use App\Models\User;
+use Carbon\Carbon;
 use Livewire\Livewire;
 
 test('passwords index page can be rendered', function () {
@@ -1048,4 +1049,40 @@ test('password edit validates minimum 8 characters', function () {
         ->set('password', 'short')
         ->call('updatePassword')
         ->assertHasErrors(['password' => 'min']);
+});
+
+test('viewing password show page sets last_viewed_at', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    expect($password->last_viewed_at)->toBeNull();
+
+    Livewire::test('pages::passwords.show', ['team' => $team, 'password' => $password]);
+
+    expect($password->fresh()->last_viewed_at)->not->toBeNull();
+});
+
+test('viewing password show page does not update updated_at', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $originalUpdatedAt = $password->updated_at;
+
+    Carbon::setTestNow(now()->addHour());
+
+    Livewire::test('pages::passwords.show', ['team' => $team, 'password' => $password]);
+
+    expect($password->fresh()->updated_at)->toEqual($originalUpdatedAt);
+
+    Carbon::setTestNow();
 });

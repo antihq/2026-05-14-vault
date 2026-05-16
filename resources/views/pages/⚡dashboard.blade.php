@@ -19,22 +19,24 @@ new #[Title('Dashboard')] class extends Component
     public function recentItems()
     {
         $passwords = $this->teamModel->passwords()
-            ->select('id', 'name', 'username', 'updated_at')
-            ->latest('updated_at')
+            ->select('id', 'name', 'username', 'last_viewed_at')
+            ->whereNotNull('last_viewed_at')
+            ->latest('last_viewed_at')
             ->limit(25)
             ->get()
             ->each(fn ($p) => $p->type = 'password')
             ->each(fn ($p) => $p->key = $p->username);
 
         $creditCards = $this->teamModel->creditCards()
-            ->select('id', 'name', 'last_four', 'expiry_date', 'updated_at')
-            ->latest('updated_at')
+            ->select('id', 'name', 'last_four', 'expiry_date', 'last_viewed_at')
+            ->whereNotNull('last_viewed_at')
+            ->latest('last_viewed_at')
             ->limit(25)
             ->get()
             ->each(fn ($card) => $card->type = 'credit_card')
             ->each(fn ($card) => $card->key = '•••• •••• •••• ' . ($card->last_four ?? '    '));
 
-        return $passwords->concat($creditCards)->sortByDesc('updated_at')->take(25)->values();
+        return $passwords->concat($creditCards)->sortByDesc('last_viewed_at')->take(25)->values();
     }
 
     #[Computed]
@@ -112,14 +114,14 @@ new #[Title('Dashboard')] class extends Component
 
     @if ($this->recentItems->isNotEmpty())
         <div>
-            <flux:heading size="lg" level="2">Recent items</flux:heading>
+            <flux:heading size="lg" level="2">Recently viewed</flux:heading>
             <div class="mt-3">
                 <flux:table>
                     <flux:table.columns>
                         <flux:table.column>Type</flux:table.column>
                         <flux:table.column>Name</flux:table.column>
                         <flux:table.column>Key</flux:table.column>
-                        <flux:table.column align="end">Updated</flux:table.column>
+                        <flux:table.column align="end">Viewed</flux:table.column>
                     </flux:table.columns>
                     <flux:table.rows>
                         @foreach ($this->recentItems as $item)
@@ -138,7 +140,7 @@ new #[Title('Dashboard')] class extends Component
                                 </flux:table.cell>
                                 <flux:table.cell class="relative whitespace-nowrap !text-zinc-500" align="end">
                                     <x-table-row-link :href="$this->itemRoute($item)" wire:navigate />
-                                    {{ $item->updated_at->diffForHumans() }}
+                                    {{ $item->last_viewed_at->diffForHumans() }}
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach

@@ -118,7 +118,7 @@ test('dashboard shows plural credit card count', function () {
         ->assertSee('2 cards');
 });
 
-test('dashboard shows recent items with passwords and credit cards', function () {
+test('dashboard shows recently viewed items with passwords and credit cards', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
 
@@ -126,6 +126,7 @@ test('dashboard shows recent items with passwords and credit cards', function ()
         'name' => 'GitHub',
         'username' => 'johndoe',
         'password' => 'secret123',
+        'last_viewed_at' => now(),
     ]);
 
     $team->creditCards()->create([
@@ -134,10 +135,11 @@ test('dashboard shows recent items with passwords and credit cards', function ()
         'card_number' => '4242424242424242',
         'expiry_date' => '12/28',
         'cvv' => '123',
+        'last_viewed_at' => now(),
     ]);
 
     Livewire::test('pages::dashboard', ['current_team' => $team])
-        ->assertSee('Recent items')
+        ->assertSee('Recently viewed')
         ->assertSee('GitHub')
         ->assertSee('My Visa');
 });
@@ -150,6 +152,7 @@ test('dashboard shows item type badges', function () {
         'name' => 'GitHub',
         'username' => 'johndoe',
         'password' => 'secret123',
+        'last_viewed_at' => now(),
     ]);
 
     $team->creditCards()->create([
@@ -158,6 +161,7 @@ test('dashboard shows item type badges', function () {
         'card_number' => '4242424242424242',
         'expiry_date' => '12/28',
         'cvv' => '123',
+        'last_viewed_at' => now(),
     ]);
 
     Livewire::test('pages::dashboard', ['current_team' => $team])
@@ -173,6 +177,7 @@ test('dashboard shows item key identifiers', function () {
         'name' => 'GitHub',
         'username' => 'johndoe',
         'password' => 'secret123',
+        'last_viewed_at' => now(),
     ]);
 
     $team->creditCards()->create([
@@ -181,6 +186,7 @@ test('dashboard shows item key identifiers', function () {
         'card_number' => '4242424242424242',
         'expiry_date' => '12/28',
         'cvv' => '123',
+        'last_viewed_at' => now(),
     ]);
 
     Livewire::test('pages::dashboard', ['current_team' => $team])
@@ -188,15 +194,30 @@ test('dashboard shows item key identifiers', function () {
         ->assertSee('4242');
 });
 
-test('dashboard does not show recent items section when vault is empty', function () {
+test('dashboard does not show recently viewed section when no items have been viewed', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
 
     Livewire::test('pages::dashboard', ['current_team' => $team])
-        ->assertDontSee('Recent items');
+        ->assertDontSee('Recently viewed');
 });
 
-test('dashboard only shows items for the current team', function () {
+test('dashboard does not show unviewed items in recently viewed section', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    Livewire::test('pages::dashboard', ['current_team' => $team])
+        ->assertDontSee('Recently viewed')
+        ->assertDontSee('GitHub');
+});
+
+test('dashboard only shows recently viewed items for the current team', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
 
@@ -208,12 +229,14 @@ test('dashboard only shows items for the current team', function () {
         'name' => 'My GitHub',
         'username' => 'johndoe',
         'password' => 'secret123',
+        'last_viewed_at' => now(),
     ]);
 
     $otherTeam->passwords()->create([
         'name' => 'Other GitHub',
         'username' => 'otheruser',
         'password' => 'secret456',
+        'last_viewed_at' => now(),
     ]);
 
     Livewire::test('pages::dashboard', ['current_team' => $team])
@@ -290,4 +313,94 @@ test('dashboard does not show far future cards as expiring soon', function () {
     Livewire::test('pages::dashboard', ['current_team' => $team])
         ->assertDontSee('Card expiry')
         ->assertDontSee('Expiring soon');
+});
+
+test('dashboard recently viewed items are sorted by last_viewed_at descending', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->passwords()->create([
+        'name' => 'Oldest',
+        'username' => 'oldest',
+        'password' => 'secret123',
+        'last_viewed_at' => now()->subHours(2),
+    ]);
+
+    $team->passwords()->create([
+        'name' => 'Newest',
+        'username' => 'newest',
+        'password' => 'secret456',
+        'last_viewed_at' => now(),
+    ]);
+
+    $team->passwords()->create([
+        'name' => 'Middle',
+        'username' => 'middle',
+        'password' => 'secret789',
+        'last_viewed_at' => now()->subHour(),
+    ]);
+
+    $html = Livewire::test('pages::dashboard', ['current_team' => $team])->html();
+
+    $newestPos = strpos($html, 'Newest');
+    $middlePos = strpos($html, 'Middle');
+    $oldestPos = strpos($html, 'Oldest');
+
+    expect($newestPos)->toBeLessThan($middlePos);
+    expect($middlePos)->toBeLessThan($oldestPos);
+});
+
+test('dashboard shows both expired and expiring soon cards', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->creditCards()->create([
+        'name' => 'Expired Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '01/20',
+        'cvv' => '123',
+    ]);
+
+    $team->creditCards()->create([
+        'name' => 'Expiring Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424243',
+        'expiry_date' => now()->addDays(30)->format('m/y'),
+        'cvv' => '456',
+    ]);
+
+    Livewire::test('pages::dashboard', ['current_team' => $team])
+        ->assertSee('Expired Card')
+        ->assertSee('Expired')
+        ->assertSee('Expiring Card')
+        ->assertSee('Expiring soon');
+});
+
+test('dashboard shows expired cards before expiring soon cards', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->creditCards()->create([
+        'name' => 'Expiring Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424243',
+        'expiry_date' => now()->addDays(30)->format('m/y'),
+        'cvv' => '456',
+    ]);
+
+    $team->creditCards()->create([
+        'name' => 'Expired Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '01/20',
+        'cvv' => '123',
+    ]);
+
+    $html = Livewire::test('pages::dashboard', ['current_team' => $team])->html();
+
+    $expiredPos = strpos($html, 'Expired Card');
+    $expiringPos = strpos($html, 'Expiring Card');
+
+    expect($expiredPos)->toBeLessThan($expiringPos);
 });

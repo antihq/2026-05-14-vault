@@ -14,6 +14,8 @@ new class extends Component
     {
         $this->teamModel = $team;
         $this->passwordModel = $password;
+
+        $password->withoutTimestamps(fn () => $password->updateQuietly(['last_viewed_at' => now()]));
     }
 
     public function render()

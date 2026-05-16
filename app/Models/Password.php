@@ -8,9 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Crypt;
 
-#[Fillable(['team_id', 'name', 'username', 'password', 'website', 'notes'])]
+#[Fillable(['team_id', 'name', 'username', 'password', 'website', 'notes', 'last_viewed_at'])]
 class Password extends Model
 {
+    protected function casts(): array
+    {
+        return [
+            'last_viewed_at' => 'datetime',
+        ];
+    }
+
     /**
      * Get the team that owns the password.
      *

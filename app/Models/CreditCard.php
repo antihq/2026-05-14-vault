@@ -9,9 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Crypt;
 
-#[Fillable(['team_id', 'name', 'name_on_card', 'card_number', 'expiry_date', 'cvv', 'notes'])]
+#[Fillable(['team_id', 'name', 'name_on_card', 'card_number', 'expiry_date', 'cvv', 'notes', 'last_viewed_at'])]
 class CreditCard extends Model
 {
+    protected function casts(): array
+    {
+        return [
+            'last_viewed_at' => 'datetime',
+        ];
+    }
+
     /**
      * Get the team that owns the credit card.
      *
