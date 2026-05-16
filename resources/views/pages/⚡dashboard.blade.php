@@ -66,16 +66,6 @@ new #[Title('Dashboard')] class extends Component
     }
 
     #[Computed]
-    public function pendingInvitations()
-    {
-        return $this->teamModel->invitations()
-            ->with('inviter')
-            ->whereNull('accepted_at')
-            ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
-            ->get();
-    }
-
-    #[Computed]
     public function passwordCount(): int
     {
         return $this->teamModel->passwords()->count();
@@ -129,7 +119,7 @@ new #[Title('Dashboard')] class extends Component
                         <flux:table.column>Type</flux:table.column>
                         <flux:table.column>Name</flux:table.column>
                         <flux:table.column>Key</flux:table.column>
-                        <flux:table.column>Updated</flux:table.column>
+                        <flux:table.column align="end">Updated</flux:table.column>
                     </flux:table.columns>
                     <flux:table.rows>
                         @foreach ($this->recentItems as $item)
@@ -146,7 +136,7 @@ new #[Title('Dashboard')] class extends Component
                                     <x-table-row-link :href="$this->itemRoute($item)" wire:navigate />
                                     {{ $item->key }}
                                 </flux:table.cell>
-                                <flux:table.cell class="relative whitespace-nowrap">
+                                <flux:table.cell class="relative whitespace-nowrap !text-zinc-500" align="end">
                                     <x-table-row-link :href="$this->itemRoute($item)" wire:navigate />
                                     {{ $item->updated_at->diffForHumans() }}
                                 </flux:table.cell>
@@ -167,7 +157,7 @@ new #[Title('Dashboard')] class extends Component
                         <flux:table.column>Status</flux:table.column>
                         <flux:table.column>Name</flux:table.column>
                         <flux:table.column>Number</flux:table.column>
-                        <flux:table.column>Expires</flux:table.column>
+                        <flux:table.column align="end">Expires</flux:table.column>
                     </flux:table.columns>
                     <flux:table.rows>
                         @foreach ($this->expiredCards->concat($this->expiringSoonCards) as $card)
@@ -187,41 +177,9 @@ new #[Title('Dashboard')] class extends Component
                                     <x-table-row-link :href="route('credit-cards.show', [$teamModel, $card])" wire:navigate />
                                     {{ $card->maskedNumber }}
                                 </flux:table.cell>
-                                <flux:table.cell class="relative whitespace-nowrap">
+                                <flux:table.cell class="relative whitespace-nowrap" align="end">
                                     <x-table-row-link :href="route('credit-cards.show', [$teamModel, $card])" wire:navigate />
                                     {{ $card->expiry_date }}
-                                </flux:table.cell>
-                            </flux:table.row>
-                        @endforeach
-                    </flux:table.rows>
-                </flux:table>
-            </div>
-        </div>
-    @endif
-
-    @if ($this->pendingInvitations->isNotEmpty())
-        <div>
-            <flux:heading size="lg" level="2">Pending invitations</flux:heading>
-            <div class="mt-3">
-                <flux:table>
-                    <flux:table.columns>
-                        <flux:table.column>Email</flux:table.column>
-                        <flux:table.column>Role</flux:table.column>
-                        <flux:table.column>Invited by</flux:table.column>
-                        <flux:table.column>Expires</flux:table.column>
-                    </flux:table.columns>
-                    <flux:table.rows>
-                        @foreach ($this->pendingInvitations as $invitation)
-                            <flux:table.row>
-                                <flux:table.cell>{{ $invitation->email }}</flux:table.cell>
-                                <flux:table.cell>
-                                    <flux:badge size="sm">{{ $invitation->role->label() }}</flux:badge>
-                                </flux:table.cell>
-                                <flux:table.cell class="text-zinc-500 dark:text-zinc-400">
-                                    {{ $invitation->inviter?->name ?? '—' }}
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-nowrap text-zinc-500 dark:text-zinc-400">
-                                    {{ $invitation->expires_at?->format('M j, Y') ?? '—' }}
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach

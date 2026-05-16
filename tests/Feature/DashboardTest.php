@@ -2,7 +2,6 @@
 
 use App\Enums\TeamRole;
 use App\Models\Team;
-use App\Models\TeamInvitation;
 use App\Models\User;
 use Livewire\Livewire;
 
@@ -291,55 +290,4 @@ test('dashboard does not show far future cards as expiring soon', function () {
     Livewire::test('pages::dashboard', ['current_team' => $team])
         ->assertDontSee('Card expiry')
         ->assertDontSee('Expiring soon');
-});
-
-test('dashboard shows pending invitations', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    TeamInvitation::factory()->create([
-        'team_id' => $team->id,
-        'email' => 'invitee@example.com',
-        'invited_by' => $user->id,
-    ]);
-
-    Livewire::test('pages::dashboard', ['current_team' => $team])
-        ->assertSee('Pending invitations')
-        ->assertSee('invitee@example.com');
-});
-
-test('dashboard does not show accepted invitations', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    TeamInvitation::factory()->accepted()->create([
-        'team_id' => $team->id,
-        'email' => 'accepted@example.com',
-        'invited_by' => $user->id,
-    ]);
-
-    Livewire::test('pages::dashboard', ['current_team' => $team])
-        ->assertDontSee('accepted@example.com');
-});
-
-test('dashboard does not show expired invitations', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    TeamInvitation::factory()->expired()->create([
-        'team_id' => $team->id,
-        'email' => 'expired@example.com',
-        'invited_by' => $user->id,
-    ]);
-
-    Livewire::test('pages::dashboard', ['current_team' => $team])
-        ->assertDontSee('expired@example.com');
-});
-
-test('dashboard does not show pending invitations section when none exist', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    Livewire::test('pages::dashboard', ['current_team' => $team])
-        ->assertDontSee('Pending invitations');
 });
