@@ -57,18 +57,18 @@ new #[Title('New Password')] class extends Component
 <section class="w-full">
     <flux:heading size="xl" level="1">New password</flux:heading>
 
-    <form wire:submit="createPassword" class="mt-6 space-y-8">
+    <form wire:submit="createPassword" class="mt-6 space-y-8 max-w-lg">
         <flux:field>
             <flux:label>Name</flux:label>
             <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
-            <flux:input wire:model="name" type="text" required autofocus class="max-w-lg" />
+            <flux:input wire:model="name" type="text" required autofocus />
             <flux:error name="name" />
         </flux:field>
 
         <flux:field>
             <flux:label>Username</flux:label>
             <flux:description>The email or username used to sign in</flux:description>
-            <flux:input wire:model="username" type="text" required class="max-w-lg" />
+            <flux:input wire:model="username" type="text" required />
             <flux:error name="username" />
         </flux:field>
 
@@ -76,7 +76,7 @@ new #[Title('New Password')] class extends Component
             <flux:label>Password</flux:label>
             <flux:description>The sign-in password — use Generate for a random 16-character string</flux:description>
             <flux:input.group>
-                <flux:input wire:model="password" type="password" required viewable class="max-w-lg" />
+                <flux:input wire:model="password" type="password" required viewable />
                 <flux:button wire:click.prevent="generatePassword" type="button">Generate</flux:button>
             </flux:input.group>
             <flux:error name="password" />
@@ -85,19 +85,22 @@ new #[Title('New Password')] class extends Component
         <flux:field>
             <flux:label>Website</flux:label>
             <flux:description>The login page URL for this service</flux:description>
-            <flux:input wire:model="website" type="url" placeholder="https://example.com" class="max-w-lg" />
+            <flux:input wire:model="website" type="url" placeholder="https://example.com" />
             <flux:error name="website" />
         </flux:field>
 
         <flux:field>
             <flux:label>Notes</flux:label>
             <flux:description>Security questions, recovery codes, or other details</flux:description>
-            <flux:textarea wire:model="notes" class="max-w-lg" />
+            <flux:textarea wire:model="notes" />
             <flux:error name="notes" />
         </flux:field>
 
-        <flux:button variant="primary" color="blue" type="submit">
-            Create password
-        </flux:button>
+        <div class="flex">
+            <flux:spacer />
+            <flux:button variant="primary" type="submit" class="max-sm:w-full">
+                Create password
+            </flux:button>
+        </div>
     </form>
 </section>
