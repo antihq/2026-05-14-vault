@@ -2,7 +2,6 @@
 
 use App\Models\Team;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -14,36 +13,6 @@ new #[Title('Dashboard')] class extends Component
     public function mount(Team $current_team): void
     {
         $this->teamModel = $current_team;
-    }
-
-    #[Computed]
-    public function securityPosture(): array
-    {
-        $user = Auth::user();
-
-        return [
-            'twoFactorEnabled' => $user->two_factor_confirmed_at !== null,
-            'activeSessions' => $user->activeSessionsCount(),
-            'memberCount' => $this->teamModel->members()->count(),
-            'pendingInvites' => $this->pendingInvitations->count(),
-            'expiredCards' => $this->expiredCards->count(),
-        ];
-    }
-
-    #[Computed]
-    public function passwordAgeBuckets(): array
-    {
-        $passwords = $this->teamModel->passwords()->select('id', 'updated_at')->get();
-        $total = $passwords->count();
-
-        $buckets = [
-            ['label' => '< 30 days', 'count' => $passwords->where('updated_at', '>=', now()->subDays(30))->count()],
-            ['label' => '30–90 days', 'count' => $passwords->where('updated_at', '>=', now()->subDays(90))->where('updated_at', '<', now()->subDays(30))->count()],
-            ['label' => '90–180 days', 'count' => $passwords->where('updated_at', '>=', now()->subDays(180))->where('updated_at', '<', now()->subDays(90))->count()],
-            ['label' => '> 180 days', 'count' => $passwords->where('updated_at', '<', now()->subDays(180))->count()],
-        ];
-
-        return ['buckets' => $buckets, 'total' => $total];
     }
 
     #[Computed]
@@ -65,7 +34,7 @@ new #[Title('Dashboard')] class extends Component
             ->each(fn ($card) => $card->type = 'credit_card')
             ->each(fn ($card) => $card->key = '•••• •••• •••• ' . ($card->last_four ?? '    '));
 
-        return $passwords->merge($creditCards)->sortByDesc('updated_at')->take(25)->values();
+        return $passwords->concat($creditCards)->sortByDesc('updated_at')->take(25)->values();
     }
 
     #[Computed]
@@ -91,15 +60,9 @@ new #[Title('Dashboard')] class extends Component
 
                 $expiry = Carbon::createFromFormat('m/y', $card->expiry_date)->endOfMonth()->endOfDay();
 
-                return $expiry->isFuture() && $expiry->diffInDays(now()) <= 60;
+                return $expiry->isFuture() && now()->diffInDays($expiry, false) <= 60;
             })
             ->values();
-    }
-
-    #[Computed]
-    public function teamMembers()
-    {
-        return $this->teamModel->memberships()->with('user')->get();
     }
 
     #[Computed]
@@ -112,6 +75,18 @@ new #[Title('Dashboard')] class extends Component
             ->get();
     }
 
+    #[Computed]
+    public function passwordCount(): int
+    {
+        return $this->teamModel->passwords()->count();
+    }
+
+    #[Computed]
+    public function creditCardCount(): int
+    {
+        return $this->teamModel->creditCards()->count();
+    }
+
     public function itemRoute(object $item): string
     {
         return $item->type === 'password'
@@ -121,46 +96,29 @@ new #[Title('Dashboard')] class extends Component
 }; ?>
 
 <section class="w-full space-y-10">
-    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-zinc-500 dark:text-zinc-400">
-        <span class="flex items-center gap-1.5">
-            <span class="inline-block size-2 rounded-full {{ $this->securityPosture['twoFactorEnabled'] ? 'bg-emerald-500' : 'bg-red-500' }}"></span>
-            2FA: {{ $this->securityPosture['twoFactorEnabled'] ? 'ON' : 'OFF' }}
-        </span>
-        <span>Sessions: {{ $this->securityPosture['activeSessions'] }}</span>
-        <span>Members: {{ $this->securityPosture['memberCount'] }}</span>
-        @if ($this->securityPosture['pendingInvites'] > 0)
-            <span>Invites pending: {{ $this->securityPosture['pendingInvites'] }}</span>
-        @endif
-        @if ($this->securityPosture['expiredCards'] > 0)
-            <span class="text-red-600 dark:text-red-400">Expired cards: {{ $this->securityPosture['expiredCards'] }}</span>
-        @endif
+    <div class="flex flex-wrap items-end justify-between gap-4">
+        <flux:heading size="xl" level="1">Dashboard</flux:heading>
+        <div class="flex gap-4">
+            <flux:button :href="route('passwords.create', $teamModel)" wire:navigate>New password</flux:button>
+            <flux:button :href="route('credit-cards.create', $teamModel)" wire:navigate>New credit card</flux:button>
+        </div>
     </div>
 
-    @if ($this->passwordAgeBuckets['total'] > 0)
-        <div>
-            <flux:heading size="lg" level="2">Password age</flux:heading>
-            <div class="mt-3 space-y-2">
-                @foreach ($this->passwordAgeBuckets['buckets'] as $bucket)
-                    <div class="flex items-center gap-3 text-sm">
-                        <span class="w-24 text-zinc-500 dark:text-zinc-400">{{ $bucket['label'] }}</span>
-                        <div class="flex-1">
-                            <div class="h-4 rounded bg-zinc-100 dark:bg-zinc-800">
-                                @if ($bucket['count'] > 0)
-                                    <div class="h-full rounded bg-zinc-950/15 dark:bg-white/15" style="width: {{ ($bucket['count'] / $this->passwordAgeBuckets['total']) * 100 }}%"></div>
-                                @endif
-                            </div>
-                        </div>
-                        <span class="w-8 text-right tabular-nums">{{ $bucket['count'] }}</span>
-                    </div>
-                @endforeach
-                <div class="flex items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400 pt-1">
-                    <span class="w-24">Total</span>
-                    <div class="flex-1"></div>
-                    <span class="w-8 text-right tabular-nums">{{ $this->passwordAgeBuckets['total'] }}</span>
-                </div>
-            </div>
-        </div>
-    @endif
+    <x-description.list>
+        <x-description.term>Passwords</x-description.term>
+        <x-description.details>
+            <flux:link :href="route('passwords.index', $teamModel)" wire:navigate>
+                {{ $this->passwordCount }} {{ Str::plural('password', $this->passwordCount) }}
+            </flux:link>
+        </x-description.details>
+
+        <x-description.term>Credit cards</x-description.term>
+        <x-description.details>
+            <flux:link :href="route('credit-cards.index', $teamModel)" wire:navigate>
+                {{ $this->creditCardCount }} {{ Str::plural('card', $this->creditCardCount) }}
+            </flux:link>
+        </x-description.details>
+    </x-description.list>
 
     @if ($this->recentItems->isNotEmpty())
         <div>
@@ -175,12 +133,12 @@ new #[Title('Dashboard')] class extends Component
                     </flux:table.columns>
                     <flux:table.rows>
                         @foreach ($this->recentItems as $item)
-                            <flux:table.row :key="'{$item->type}-{$item->id}'">
+                            <flux:table.row :key="$item->type . '-' . $item->id">
                                 <flux:table.cell class="relative">
                                     <x-table-row-link :href="$this->itemRoute($item)" wire:navigate :first="true" />
                                     <flux:badge size="sm" inset="top bottom">{{ $item->type === 'password' ? 'Password' : 'Credit card' }}</flux:badge>
                                 </flux:table.cell>
-                                <flux:table.cell class="relative">
+                                <flux:table.cell class="relative font-medium">
                                     <x-table-row-link :href="$this->itemRoute($item)" wire:navigate />
                                     {{ $item->name }}
                                 </flux:table.cell>
@@ -212,16 +170,16 @@ new #[Title('Dashboard')] class extends Component
                         <flux:table.column>Expires</flux:table.column>
                     </flux:table.columns>
                     <flux:table.rows>
-                        @foreach ($this->expiredCards->merge($this->expiringSoonCards) as $card)
+                        @foreach ($this->expiredCards->concat($this->expiringSoonCards) as $card)
                             <flux:table.row>
                                 <flux:table.cell>
                                     @if ($card->isExpired)
-                                        <span class="text-sm text-red-600 dark:text-red-400 font-medium">Expired</span>
+                                        <flux:badge size="sm" color="red">Expired</flux:badge>
                                     @else
-                                        <span class="text-sm text-amber-600 dark:text-amber-400 font-medium">Expiring soon</span>
+                                        <flux:badge size="sm" color="amber">Expiring soon</flux:badge>
                                     @endif
                                 </flux:table.cell>
-                                <flux:table.cell class="relative">
+                                <flux:table.cell class="relative font-medium">
                                     <x-table-row-link :href="route('credit-cards.show', [$teamModel, $card])" wire:navigate :first="true" />
                                     {{ $card->name }}
                                 </flux:table.cell>
@@ -240,39 +198,6 @@ new #[Title('Dashboard')] class extends Component
             </div>
         </div>
     @endif
-
-    <div>
-        <flux:heading size="lg" level="2">Team</flux:heading>
-        <div class="mt-3">
-            <flux:table>
-                <flux:table.columns>
-                    <flux:table.column>Name</flux:table.column>
-                    <flux:table.column>Role</flux:table.column>
-                    <flux:table.column>Joined</flux:table.column>
-                </flux:table.columns>
-                <flux:table.rows>
-                    @foreach ($this->teamMembers as $membership)
-                        <flux:table.row>
-                            <flux:table.cell>
-                                <div class="flex items-center gap-2">
-                                    <div class="flex size-6 items-center justify-center rounded bg-zinc-100 dark:bg-zinc-800 text-xs font-medium">
-                                        {{ $membership->user->initials() }}
-                                    </div>
-                                    {{ $membership->user->name }}
-                                </div>
-                            </flux:table.cell>
-                            <flux:table.cell>
-                                <flux:badge size="sm">{{ $membership->role->label() }}</flux:badge>
-                            </flux:table.cell>
-                            <flux:table.cell class="whitespace-nowrap text-zinc-500 dark:text-zinc-400">
-                                {{ $membership->created_at->format('M j, Y') }}
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @endforeach
-                </flux:table.rows>
-            </flux:table>
-        </div>
-    </div>
 
     @if ($this->pendingInvitations->isNotEmpty())
         <div>
