@@ -47,7 +47,7 @@ new #[Title('Passwords')] class extends Component
                 No passwords yet.
             </flux:callout>
         @else
-            <flux:table :paginate="$this->passwords">
+            <flux:table :paginate="$this->passwords" pagination:scroll-to>
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Username</flux:table.column>

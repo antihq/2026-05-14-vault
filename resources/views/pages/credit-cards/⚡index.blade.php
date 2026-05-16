@@ -47,7 +47,7 @@ new #[Title('Credit Cards')] class extends Component
                 No credit cards yet.
             </flux:callout>
         @else
-            <flux:table :paginate="$this->creditCards">
+            <flux:table :paginate="$this->creditCards" pagination:scroll-to>
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Number</flux:table.column>
