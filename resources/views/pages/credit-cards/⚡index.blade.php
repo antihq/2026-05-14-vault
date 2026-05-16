@@ -29,7 +29,7 @@ new #[Title('Credit Cards')] class extends Component
 <section class="w-full">
     <div class="flex items-end justify-between gap-4">
         <flux:heading size="xl" level="1">Credit Cards</flux:heading>
-        <flux:button variant="primary" :href="route('credit-cards.create', $teamModel)" wire:navigate>
+        <flux:button :href="route('credit-cards.create', $teamModel)" wire:navigate>
             New credit card
         </flux:button>
     </div>
