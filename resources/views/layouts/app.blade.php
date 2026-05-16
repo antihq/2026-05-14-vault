@@ -4,7 +4,7 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white">
-        <flux:sidebar sticky collapsible="mobile" class="bg-white dark:bg-zinc-900 border-r border-zinc-950/5 dark:border-white/5">
+        <flux:sidebar sticky collapsible="mobile" class="bg-white lg:bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-950/5 dark:border-white/5">
             <livewire:team-switcher />
 
             <div class="-mx-4">
