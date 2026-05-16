@@ -192,6 +192,16 @@ test('password cannot be accessed by non team members', function () {
     $response->assertForbidden();
 });
 
+test('password create page auto-generates a password on load', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.create', ['team' => $team])
+        ->assertSet('password', fn ($value) => strlen($value) === 16 && ! empty($value));
+});
+
 test('password generation works', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
