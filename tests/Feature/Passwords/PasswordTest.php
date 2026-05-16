@@ -705,6 +705,34 @@ test('password creation validates username max length', function () {
         ->assertHasErrors(['username' => 'max']);
 });
 
+test('passwords search is scoped to the current team', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $otherOwner = User::factory()->create();
+    $otherTeam = Team::factory()->create();
+    $otherTeam->members()->attach($otherOwner, ['role' => TeamRole::Owner->value]);
+
+    $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $otherTeam->passwords()->create([
+        'name' => 'Leaked',
+        'username' => 'johndoe',
+        'password' => 'secret456',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.index', ['team' => $team])
+        ->set('search', 'johndoe')
+        ->assertSee('GitHub')
+        ->assertDontSee('Leaked');
+});
+
 test('passwords index only shows passwords for the current team', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();

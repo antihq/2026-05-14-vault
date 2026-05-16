@@ -23,7 +23,10 @@ new #[Title('Passwords')] class extends Component
     public function passwords()
     {
         return $this->teamModel->passwords()
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%")->orWhere('username', 'like', "%{$this->search}%"))
+            ->when($this->search, fn ($q) => $q->where(function ($q) {
+                $q->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('username', 'like', "%{$this->search}%");
+            }))
             ->orderBy('name')
             ->paginate(50);
     }

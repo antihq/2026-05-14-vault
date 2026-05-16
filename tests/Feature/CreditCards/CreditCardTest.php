@@ -667,6 +667,38 @@ test('credit card update updates last four when card number changes', function (
     ]);
 });
 
+test('credit cards search is scoped to the current team', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $otherOwner = User::factory()->create();
+    $otherTeam = Team::factory()->create();
+    $otherTeam->members()->attach($otherOwner, ['role' => TeamRole::Owner->value]);
+
+    $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $otherTeam->creditCards()->create([
+        'name' => 'Leaked Card',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4111111111111111',
+        'expiry_date' => '06/27',
+        'cvv' => '456',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::credit-cards.index', ['team' => $team])
+        ->set('search', 'John Doe')
+        ->assertSee('My Visa')
+        ->assertDontSee('Leaked Card');
+});
+
 test('credit cards index only shows credit cards for the current team', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();

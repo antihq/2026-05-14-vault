@@ -23,7 +23,10 @@ new #[Title('Credit Cards')] class extends Component
     public function creditCards()
     {
         return $this->teamModel->creditCards()
-            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%")->orWhere('name_on_card', 'like', "%{$this->search}%"))
+            ->when($this->search, fn ($q) => $q->where(function ($q) {
+                $q->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('name_on_card', 'like', "%{$this->search}%");
+            }))
             ->orderBy('name')
             ->paginate(50);
     }
