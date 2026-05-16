@@ -978,6 +978,58 @@ test('create page renders autocomplete with username suggestions', function () {
     $response->assertSee('alice@example.com');
 });
 
+test('edit page username suggestions include past usernames from the team', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->passwords()->create(['name' => 'GitHub', 'username' => 'alice@example.com', 'password' => 'secret123']);
+    $team->passwords()->create(['name' => 'GitLab', 'username' => 'bob@example.com', 'password' => 'secret456']);
+
+    $password = $team->passwords()->create(['name' => 'Bitbucket', 'username' => 'charlie@example.com', 'password' => 'secret789']);
+
+    $this->actingAs($user);
+
+    $suggestions = Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+        ->get('usernameSuggestions');
+
+    expect($suggestions)->toContain('alice@example.com');
+    expect($suggestions)->toContain('bob@example.com');
+    expect($suggestions)->toContain('charlie@example.com');
+});
+
+test('edit page renders autocomplete with username suggestions', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->passwords()->create(['name' => 'GitHub', 'username' => 'alice@example.com', 'password' => 'secret123']);
+
+    $password = $team->passwords()->create(['name' => 'GitLab', 'username' => 'bob@example.com', 'password' => 'secret456']);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.edit', [$team, $password]));
+
+    $response->assertOk();
+    $response->assertSee('alice@example.com');
+});
+
+test('password generation works on edit page', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+        ->call('generatePassword')
+        ->assertSet('password', fn ($value) => strlen($value) === 16 && ! empty($value));
+});
+
 test('password edit validates minimum 8 characters', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();

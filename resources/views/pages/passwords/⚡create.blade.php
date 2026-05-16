@@ -3,6 +3,7 @@
 use App\Models\Team;
 use Flux\Flux;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -25,7 +26,8 @@ new #[Title('New Password')] class extends Component
         $this->teamModel = $team;
     }
 
-    public function getUsernameSuggestionsProperty()
+    #[Computed]
+    public function usernameSuggestions()
     {
         return $this->teamModel->passwords()
             ->select('username')
