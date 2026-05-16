@@ -65,6 +65,17 @@ new class extends Component
         $this->redirectRoute('credit-cards.show', ['team' => $this->teamModel->slug, 'creditCard' => $this->creditCardModel->id], navigate: true);
     }
 
+    public function deleteCreditCard(): void
+    {
+        Gate::authorize('delete', $this->creditCardModel);
+
+        $this->creditCardModel->delete();
+
+        Flux::toast(variant: 'success', text: 'Credit card deleted.');
+
+        $this->redirectRoute('credit-cards.index', ['team' => $this->teamModel->slug], navigate: true);
+    }
+
     public function render()
     {
         return $this->view()->title('Edit — ' . $this->creditCardModel->name);
@@ -119,8 +130,22 @@ new class extends Component
             <flux:error name="notes" />
         </flux:field>
 
-        <flux:button variant="primary" type="submit">
-            Update credit card
-        </flux:button>
+        <div class="flex">
+            <flux:spacer />
+            <flux:button variant="primary" type="submit" class="max-sm:w-full">
+                Update credit card
+            </flux:button>
+        </div>
     </form>
+
+    <div class="max-w-xl">
+        <flux:separator class="my-8" />
+
+        <div class="flex">
+            <flux:spacer />
+            <flux:button class="text-red-700! dark:text-red-300! max-sm:w-full" wire:click="deleteCreditCard" wire:confirm="Delete this credit card? This cannot be undone.">
+                Delete credit card
+            </flux:button>
+        </div>
+    </div>
 </section>

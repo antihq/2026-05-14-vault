@@ -2,8 +2,6 @@
 
 use App\Models\CreditCard;
 use App\Models\Team;
-use Flux\Flux;
-use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 
 new class extends Component
@@ -18,17 +16,6 @@ new class extends Component
         $this->creditCardModel = $creditCard;
     }
 
-    public function deleteCreditCard(): void
-    {
-        Gate::authorize('delete', $this->creditCardModel);
-
-        $this->creditCardModel->delete();
-
-        Flux::toast(variant: 'success', text: 'Credit card deleted.');
-
-        $this->redirectRoute('credit-cards.index', ['team' => $this->teamModel->slug], navigate: true);
-    }
-
     public function render()
     {
         return $this->view()->title($this->creditCardModel->name);
@@ -38,7 +25,7 @@ new class extends Component
 <section class="w-full">
     <div class="flex items-end justify-between gap-4">
         <flux:heading size="xl" level="1">{{ $creditCardModel->name }}</flux:heading>
-        <flux:button variant="primary" :href="route('credit-cards.edit', [$teamModel, $creditCardModel])" wire:navigate>
+        <flux:button :href="route('credit-cards.edit', [$teamModel, $creditCardModel])" wire:navigate>
             Edit
         </flux:button>
     </div>
@@ -46,12 +33,30 @@ new class extends Component
     <x-description.list class="mt-2.5">
         <x-description.term>Name on card</x-description.term>
         <x-description.details>
-            <flux:input :value="$creditCardModel->name_on_card" readonly copyable class="max-w-lg" />
+            <div x-data="{ copied: false, value: {{ \Illuminate\Support\Js::encode($creditCardModel->name_on_card) }} }">
+                <flux:button
+                    variant="ghost"
+                    x-on:click="navigator.clipboard.writeText(value); copied = true; setTimeout(() => copied = false, 2000)"
+                    inset="left right top bottom"
+                >
+                    <span x-text="copied ? 'Copied!' : value"></span>
+                </flux:button>
+            </div>
         </x-description.details>
 
         <x-description.term>Card number</x-description.term>
         <x-description.details>
-            <flux:input type="password" :value="$creditCardModel->card_number" viewable copyable class="max-w-lg" />
+            <div x-data="{ hovering: false, pinned: false, copied: false, value: {{ \Illuminate\Support\Js::encode($creditCardModel->card_number) }} }" class="inline-block">
+                <flux:button
+                    variant="ghost"
+                    x-on:mouseenter="hovering = true"
+                    x-on:mouseleave="hovering = false"
+                    x-on:click="if (!pinned) { navigator.clipboard.writeText(value); copied = true; setTimeout(() => copied = false, 2000) }; pinned = !pinned"
+                    inset="left right top bottom"
+                >
+                    <span x-text="copied ? 'Copied!' : (hovering || pinned ? value : '•'.repeat(value.length))"></span>
+                </flux:button>
+            </div>
         </x-description.details>
 
         <x-description.term>Expiry date</x-description.term>
@@ -64,13 +69,34 @@ new class extends Component
 
         <x-description.term>CVV</x-description.term>
         <x-description.details>
-            <flux:input type="password" :value="$creditCardModel->cvv" viewable copyable class="max-w-xs" />
+            <div x-data="{ hovering: false, pinned: false, copied: false, value: {{ \Illuminate\Support\Js::encode($creditCardModel->cvv) }} }" class="inline-block">
+                <flux:button
+                    variant="ghost"
+                    x-on:mouseenter="hovering = true"
+                    x-on:mouseleave="hovering = false"
+                    x-on:click="if (!pinned) { navigator.clipboard.writeText(value); copied = true; setTimeout(() => copied = false, 2000) }; pinned = !pinned"
+                    inset="left right top bottom"
+                >
+                    <span x-text="copied ? 'Copied!' : (hovering || pinned ? value : '•'.repeat(value.length))"></span>
+                </flux:button>
+            </div>
         </x-description.details>
 
         @if ($creditCardModel->notes)
             <x-description.term>Notes</x-description.term>
             <x-description.details>
-                <flux:textarea :value="$creditCardModel->notes" readonly class="max-w-lg" />
+                <div x-data="{ visible: false }" class="max-w-lg">
+                    <flux:button
+                        variant="ghost"
+                        x-on:click="visible = !visible"
+                        inset="left right top bottom"
+                    >
+                        <span x-text="visible ? 'Hide notes' : 'Show notes'"></span>
+                    </flux:button>
+                    <div x-show="visible" x-transition class="mt-2">
+                        {!! Illuminate\Support\Str::markdown($creditCardModel->notes) !!}
+                    </div>
+                </div>
             </x-description.details>
         @endif
 
@@ -86,12 +112,4 @@ new class extends Component
         <x-description.term>Updated</x-description.term>
         <x-description.details>{{ $creditCardModel->updated_at->format('M j, Y \a\t H:i') }}</x-description.details>
     </x-description.list>
-
-    <flux:separator class="mt-8" />
-
-    <div class="mt-4">
-        <flux:button variant="danger" wire:click="deleteCreditCard" wire:confirm="Delete this credit card? This cannot be undone.">
-            Delete credit card
-        </flux:button>
-    </div>
 </section>
