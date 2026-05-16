@@ -12,14 +12,14 @@
             </div>
 
             <flux:sidebar.nav>
-                <flux:sidebar.item :href="route('dashboard')" :current="request()->routeIs('dashboard')" :accent="false" wire:navigate>
+                <flux:sidebar.item icon="dashboard" :href="route('dashboard')" :current="request()->routeIs('dashboard')" :accent="false" wire:navigate>
                     Dashboard
                 </flux:sidebar.item>
                 @if (Auth::user()->currentTeam)
-                    <flux:sidebar.item :href="route('passwords.index', Auth::user()->currentTeam)" :current="request()->routeIs('passwords.*')" :accent="false" wire:navigate>
+                    <flux:sidebar.item icon="lock" :href="route('passwords.index', Auth::user()->currentTeam)" :current="request()->routeIs('passwords.*')" :accent="false" wire:navigate>
                         Passwords
                     </flux:sidebar.item>
-                    <flux:sidebar.item :href="route('credit-cards.index', Auth::user()->currentTeam)" :current="request()->routeIs('credit-cards.*')" :accent="false" wire:navigate>
+                    <flux:sidebar.item icon="credit-card" :href="route('credit-cards.index', Auth::user()->currentTeam)" :current="request()->routeIs('credit-cards.*')" :accent="false" wire:navigate>
                         Credit Cards
                     </flux:sidebar.item>
                 @endif
