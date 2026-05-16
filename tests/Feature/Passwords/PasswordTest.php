@@ -1086,3 +1086,22 @@ test('viewing password show page does not update updated_at', function () {
 
     Carbon::setTestNow();
 });
+
+test('passwords index shows domain instead of full URL', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+        'website' => 'https://www.github.com/settings',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.index', $team));
+
+    $response->assertSee('www.github.com');
+    $response->assertSee('title="https://www.github.com/settings"', false);
+});

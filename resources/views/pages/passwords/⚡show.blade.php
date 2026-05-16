@@ -64,7 +64,7 @@ new class extends Component
         @if ($passwordModel->website)
             <x-description.term>Website</x-description.term>
             <x-description.details>
-                <flux:link :href="$passwordModel->website" target="_blank">{{ $passwordModel->website }}</flux:link>
+                <flux:link :href="$passwordModel->website" target="_blank" class="break-all">{{ $passwordModel->website }}</flux:link>
             </x-description.details>
         @endif
 

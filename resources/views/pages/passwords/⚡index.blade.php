@@ -64,9 +64,9 @@ new #[Title('Passwords')] class extends Component
                                 {{ $password->username }}
                             </flux:table.cell>
 
-                            <flux:table.cell class="relative">
+                            <flux:table.cell class="relative !text-zinc-500">
                                 <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate />
-                                {{ $password->website }}
+                                <span title="{{ $password->website }}">{{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}</span>
                             </flux:table.cell>
                         </flux:table.row>
                     @endforeach
