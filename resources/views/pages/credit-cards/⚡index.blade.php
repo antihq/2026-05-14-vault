@@ -4,9 +4,12 @@ use App\Models\Team;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 new #[Title('Credit Cards')] class extends Component
 {
+    use WithPagination;
+
     public Team $teamModel;
 
     public string $search = '';
