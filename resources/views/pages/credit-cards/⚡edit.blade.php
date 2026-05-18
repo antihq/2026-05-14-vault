@@ -110,15 +110,15 @@ new class extends Component
         <div class="grid grid-cols-2 gap-4">
             <flux:field>
                 <flux:label>Expiry date</flux:label>
-                <flux:description>Month and year printed on the card</flux:description>
                 <flux:input wire:model="expiryDate" type="text" required mask="99/99" placeholder="MM/YY" />
+                <flux:description>Month and year printed on the card</flux:description>
                 <flux:error name="expiryDate" />
             </flux:field>
 
             <flux:field>
                 <flux:label>CVV</flux:label>
-                <flux:description>3-digit code on the back (4 digits on the front for Amex)</flux:description>
                 <flux:input wire:model="cvv" type="password" required viewable mask="9999" />
+                <flux:description>3-digit code on the back (4 digits on the front for Amex)</flux:description>
                 <flux:error name="cvv" />
             </flux:field>
         </div>
