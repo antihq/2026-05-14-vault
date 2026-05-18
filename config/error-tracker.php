@@ -2,7 +2,7 @@
 
 return [
 
-    'enabled' => ! in_array(env('APP_ENV'), ['local', 'testing']),
+    'enabled' => env('ERROR_TRACKER_ENABLED', ! in_array(env('APP_ENV'), ['local', 'testing'])),
 
     'url' => env('ERROR_TRACKER_URL'),
 

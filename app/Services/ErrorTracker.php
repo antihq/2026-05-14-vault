@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Throwable;
 
 class ErrorTracker
@@ -24,9 +25,9 @@ class ErrorTracker
         }
 
         $this->queue[] = [
-            'title' => get_class($e).': '.$e->getMessage(),
+            'title' => Str::limit(get_class($e).': '.$e->getMessage(), 255),
             'user_id' => Auth::id(),
-            'description' => $e->getFile().':'.$e->getLine()."\n\n".$e->getTraceAsString(),
+            'description' => $e->getFile().':'.$e->getLine(),
         ];
     }
 
