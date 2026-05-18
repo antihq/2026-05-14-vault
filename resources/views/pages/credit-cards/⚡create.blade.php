@@ -57,29 +57,29 @@ new #[Title('New Credit Card')] class extends Component
 <section class="w-full">
     <flux:heading size="xl" level="1">New credit card</flux:heading>
 
-    <form wire:submit="createCreditCard" class="mt-6 space-y-8">
+    <form wire:submit="createCreditCard" class="mt-6 space-y-8 max-w-xl">
         <flux:field>
             <flux:label>Name</flux:label>
             <flux:description>A label for this card, e.g. "Personal Visa"</flux:description>
-            <flux:input wire:model="name" type="text" required autofocus class="max-w-lg" />
+            <flux:input wire:model="name" type="text" required autofocus />
             <flux:error name="name" />
         </flux:field>
 
         <flux:field>
             <flux:label>Name on card</flux:label>
             <flux:description>The cardholder name exactly as printed on the card</flux:description>
-            <flux:input wire:model="nameOnCard" type="text" required class="max-w-lg" />
+            <flux:input wire:model="nameOnCard" type="text" required />
             <flux:error name="nameOnCard" />
         </flux:field>
 
         <flux:field>
             <flux:label>Card number</flux:label>
             <flux:description>The 13–19 digit number on the front or back of the card</flux:description>
-            <flux:input wire:model="cardNumber" type="text" required mask="9999 9999 9999 9999" icon:trailing="credit-card" class="max-w-lg" />
+            <flux:input wire:model="cardNumber" type="text" required mask="9999 9999 9999 9999" icon:trailing="credit-card" />
             <flux:error name="cardNumber" />
         </flux:field>
 
-        <div class="grid grid-cols-2 gap-4 max-w-lg">
+        <div class="grid grid-cols-2 gap-4">
             <flux:field>
                 <flux:label>Expiry date</flux:label>
                 <flux:description>Month and year printed on the card</flux:description>
@@ -98,12 +98,15 @@ new #[Title('New Credit Card')] class extends Component
         <flux:field>
             <flux:label>Notes</flux:label>
             <flux:description>Billing address, PIN, or other details</flux:description>
-            <flux:textarea wire:model="notes" class="max-w-lg" />
+            <flux:textarea wire:model="notes" />
             <flux:error name="notes" />
         </flux:field>
 
-        <flux:button variant="primary" type="submit">
-            Create credit card
-        </flux:button>
+        <div class="flex">
+            <flux:spacer />
+            <flux:button variant="primary" type="submit" class="max-sm:w-full">
+                Create credit card
+            </flux:button>
+        </div>
     </form>
 </section>
