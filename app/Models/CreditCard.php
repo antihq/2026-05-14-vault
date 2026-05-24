@@ -90,7 +90,7 @@ class CreditCard extends Model
     protected function maskedNumber(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => '•••• •••• •••• ' . ($attributes['last_four'] ?? '    '),
+            get: fn (mixed $value, array $attributes) => '•••• •••• •••• '.($attributes['last_four'] ?? '    '),
         );
     }
 

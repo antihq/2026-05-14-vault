@@ -83,7 +83,7 @@ test('password creation encrypts the password', function () {
         ->set('password', 'secret123')
         ->call('createPassword');
 
-    $raw = \DB::table('passwords')->first();
+    $raw = DB::table('passwords')->first();
     expect($raw->encrypted_password)->not->toBe('secret123');
 });
 
@@ -353,7 +353,7 @@ test('password update encrypts the new password', function () {
         ->set('password', 'newsecret')
         ->call('updatePassword');
 
-    $raw = \DB::table('passwords')->first();
+    $raw = DB::table('passwords')->first();
     expect($raw->encrypted_password)->not->toBe('newsecret');
     expect($raw->encrypted_password)->not->toBe(encrypt('secret123'));
 });
@@ -571,7 +571,7 @@ test('password notes are encrypted', function () {
         ->set('notes', 'Sensitive notes')
         ->call('createPassword');
 
-    $raw = \DB::table('passwords')->first();
+    $raw = DB::table('passwords')->first();
     expect($raw->encrypted_notes)->not->toBe('Sensitive notes');
 
     $password = Password::first();
@@ -593,7 +593,7 @@ test('password notes can be set to null', function () {
 
     $password->update(['notes' => null]);
 
-    $raw = \DB::table('passwords')->first();
+    $raw = DB::table('passwords')->first();
     expect($raw->encrypted_notes)->toBeNull();
 
     expect($password->fresh()->notes)->toBeNull();

@@ -3,75 +3,47 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white">
-        <flux:sidebar sticky collapsible="mobile" class="bg-white lg:bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-950/5 dark:border-white/5">
-            <livewire:team-switcher />
+    <body class="bg-white dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white text-base/6 sm:text-sm/6">
+        <header>
+            <nav class="flex items-end flex-wrap py-5">
+                <div class="lg:w-64 lg:justify-end px-4 flex gap-x-3 flex-wrap">
+                    <a href="{{ route('dashboard') }}" class="text-zinc-500 dark:text-zinc-400" wire:navigate>
+                        {{ Str::of(config('app.name'))->explode('-', 4)->last() }}
+                        <sup>{{ Str::of(config('app.name'))->explode('-', 4)->take(3)->join('-') }}</sup>
+                    </a>
+                    <a href="{{ route('dashboard') }}" class="text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 hover:underline" wire:navigate>{{ Auth::user()->currentTeam->name }}</a>
+                    <a href="{{ route('teams.switch') }}" class="text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 hover:underline" wire:navigate>switch team</a>
+                </div>
 
-            <div class="-mx-4">
-                <flux:separator />
-            </div>
-
-            <flux:sidebar.nav>
-                <flux:sidebar.item icon="dashboard" :href="route('dashboard')" :current="request()->routeIs('dashboard')" :accent="false" wire:navigate>
-                    Dashboard
-                </flux:sidebar.item>
-                @if (Auth::user()->currentTeam)
-                    <flux:sidebar.item icon="lock" :href="route('passwords.index', Auth::user()->currentTeam)" :current="request()->routeIs('passwords.*')" :accent="false" wire:navigate>
-                        Passwords
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="credit-card" :href="route('credit-cards.index', Auth::user()->currentTeam)" :current="request()->routeIs('credit-cards.*')" :accent="false" wire:navigate>
-                        Credit Cards
-                    </flux:sidebar.item>
-                @endif
-            </flux:navbar>
-
-            <flux:sidebar.spacer class="max-lg:hidden" />
-
-            <div class="-mx-4 max-lg:hidden">
-                <flux:separator />
-            </div>
-
-            <flux:dropdown class="max-lg:hidden">
-                <button class="relative flex min-w-0 items-center gap-3 rounded-lg w-full px-2 py-2 text-start text-zinc-950 dark:text-white hover:text-zinc-950 dark:hover:text-white dark:hover:bg-white/5 hover:bg-zinc-950/5">
-                    <div class="relative flex-none isolate flex items-center justify-center size-10 rounded-lg after:absolute after:inset-0 after:inset-ring-[1px] after:inset-ring-black/7 dark:after:inset-ring-white/10 after:rounded-lg overflow-hidden">
-                        <img src="https://www.gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?d=404"
-                             alt="{{ Auth::user()->name }}"
-                             class="rounded-lg size-full object-cover"
-                             onerror="this.onerror=null;this.src='https://avatars.laravel.cloud/{{ Auth::user()->email }}'" />
+                <div class="flex-1 flex-wrap flex px-4">
+                    <div class="flex gap-x-3">
+                        <a href="{{ route('dashboard') }}" class="text-base/6 sm:text-sm/6 hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>dashboard</a>
+                        @if (Auth::user()->currentTeam)
+                            <a href="{{ route('passwords.index', Auth::user()->currentTeam) }}" class="text-base/6 sm:text-sm/6 hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>passwords</a>
+                            <a href="{{ route('credit-cards.index', Auth::user()->currentTeam) }}" class="text-base/6 sm:text-sm/6 hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>credit cards</a>
+                        @endif
                     </div>
-                    <span class="min-w-0 flex-1">
-                        <span class="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">{{ Auth::user()->name }}</span>
-                        <span class="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">{{ Auth::user()->email }}</span>
-                    </span>
-                    <flux:icon icon="chevron-up" variant="micro" class="size-5 sm:size-4 text-zinc-500 dark:text-zinc-400" />
-                </button>
 
-                @include('partials.account-menu')
-            </flux:dropdown>
-        </flux:sidebar>
+                    <div aria-hidden="true" class="flex-1"></div>
 
-        <flux:header class="lg:hidden">
-            <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
-
-            <flux:spacer />
-
-            <flux:dropdown position="bottom end" class="-mr-1.5">
-                <button class="p-1.5 rounded-md hover:bg-zinc-950/5 dark:hover:bg-white/5">
-                    <div class="relative flex-none isolate flex items-center justify-center size-6 rounded-md after:absolute after:inset-0 after:inset-ring-[1px] after:inset-ring-black/7 dark:after:inset-ring-white/10 after:rounded-md overflow-hidden">
-                        <img src="https://www.gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?d=404"
-                             alt="{{ Auth::user()->name }}"
-                             class="rounded-md size-full object-cover"
-                             onerror="this.onerror=null;this.src='https://avatars.laravel.cloud/{{ Auth::user()->email }}'" />
+                    <div class="flex gap-x-1.5">
+                        logged in as <a href="{{ route('settings') }}" class="hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>{{ Auth::user()->email }}</a>
+                        <form method="POST" action="{{ route('logout') }}" class="inline-flex">
+                            @csrf
+                            <flux:button size="xs" variant="filled" type="submit" class="lowercase">logout</flux:button>
+                        </form>
                     </div>
-                </button>
+                </div>
+            </nav>
+        </header>
 
-                @include('partials.account-menu')
-            </flux:dropdown>
-        </flux:header>
-
-        <flux:main container>
-            {{ $slot }}
-        </flux:main>
+        <main class="lg:pl-64">
+            <div class="p-4 pt-0">
+                <div class="w-full max-w-6xl">
+                    {{ $slot }}
+                </div>
+            </div>
+        </main>
 
         @persist('toast')
             <flux:toast.group position="bottom center">

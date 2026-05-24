@@ -1,6 +1,7 @@
 <?php
 
 use App\Rules\ValidExpiryDate;
+use Carbon\Carbon;
 
 test('valid expiry date passes', function () {
     $rule = new ValidExpiryDate;
@@ -49,7 +50,7 @@ test('invalid format fails', function () {
 test('current month is not expired', function () {
     $rule = new ValidExpiryDate;
 
-    $now = \Carbon\Carbon::now();
+    $now = Carbon::now();
     $value = $now->format('m/y');
 
     $passed = true;

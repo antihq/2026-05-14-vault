@@ -92,7 +92,7 @@ test('credit card creation encrypts card number and cvv', function () {
         ->set('cvv', '123')
         ->call('createCreditCard');
 
-    $raw = \DB::table('credit_cards')->first();
+    $raw = DB::table('credit_cards')->first();
     expect($raw->encrypted_card_number)->not->toBe('4242424242424242');
     expect($raw->encrypted_cvv)->not->toBe('123');
 });
@@ -424,7 +424,7 @@ test('credit card notes are encrypted', function () {
         ->set('notes', 'Business card')
         ->call('createCreditCard');
 
-    $raw = \DB::table('credit_cards')->first();
+    $raw = DB::table('credit_cards')->first();
     expect($raw->encrypted_notes)->not->toBe('Business card');
 
     $creditCard = CreditCard::first();
@@ -526,8 +526,8 @@ test('credit card update re-encrypts card number and cvv', function () {
         'cvv' => '123',
     ]);
 
-    $oldEncryptedCardNumber = \DB::table('credit_cards')->first()->encrypted_card_number;
-    $oldEncryptedCvv = \DB::table('credit_cards')->first()->encrypted_cvv;
+    $oldEncryptedCardNumber = DB::table('credit_cards')->first()->encrypted_card_number;
+    $oldEncryptedCvv = DB::table('credit_cards')->first()->encrypted_cvv;
 
     $this->actingAs($user);
 
@@ -539,7 +539,7 @@ test('credit card update re-encrypts card number and cvv', function () {
         ->set('cvv', '999')
         ->call('updateCreditCard');
 
-    $raw = \DB::table('credit_cards')->first();
+    $raw = DB::table('credit_cards')->first();
     expect($raw->encrypted_card_number)->not->toBe('4111111111111111');
     expect($raw->encrypted_card_number)->not->toBe($oldEncryptedCardNumber);
     expect($raw->encrypted_cvv)->not->toBe('999');
@@ -630,7 +630,7 @@ test('credit card notes can be set to null', function () {
 
     $creditCard->update(['notes' => null]);
 
-    $raw = \DB::table('credit_cards')->first();
+    $raw = DB::table('credit_cards')->first();
     expect($raw->encrypted_notes)->toBeNull();
 
     expect($creditCard->fresh()->notes)->toBeNull();
