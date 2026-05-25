@@ -33,8 +33,8 @@ new #[Title('Passwords')] class extends Component
 }; ?>
 
 <section class="w-full max-w-2xl">
-    <div class="flex gap-3">
-        <flux:heading level="1">Passwords</flux:heading>
+    <div class="flex gap-3 items-baseline">
+        <flux:heading class="lowercase" level="1">Passwords</flux:heading>
         <flux:link :href="route('passwords.create', $teamModel)" wire:navigate>
             New password
         </flux:link>
