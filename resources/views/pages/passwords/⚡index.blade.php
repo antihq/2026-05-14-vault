@@ -85,7 +85,7 @@ new #[Title('Passwords')] class extends Component
                         </flux:button>
                     </p>
 
-                    <div class="mt-1">
+                    <div class="mt-0.5">
                         <span x-show="showPass" x-cloak x-text="password" class="font-mono"></span>
 
                         <flux:button
