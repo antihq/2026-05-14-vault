@@ -32,46 +32,101 @@ new #[Title('Passwords')] class extends Component
     }
 }; ?>
 
-<section class="w-full">
-    <div class="flex items-end justify-between gap-4">
-        <flux:heading size="xl" level="1">Passwords</flux:heading>
-        <flux:button :href="route('passwords.create', $teamModel)" wire:navigate>
+<section class="w-full max-w-2xl">
+    <div class="flex gap-3">
+        <flux:heading level="1">Passwords</flux:heading>
+        <flux:link :href="route('passwords.create', $teamModel)" wire:navigate>
             New password
-        </flux:button>
+        </flux:link>
     </div>
 
-    <div class="mt-6 max-w-sm">
-        <flux:input wire:model.live.debounce.300ms="search" placeholder="Search passwords..." icon="magnifying-glass" clearable />
+    <div class="mt-3 max-w-sm">
+        <flux:input wire:model.live="search" placeholder="Search passwords..." />
     </div>
 
-    <div class="mt-6">
-        <flux:table :paginate="$this->passwords" pagination:scroll-to>
-            <flux:table.columns>
-                <flux:table.column>Name</flux:table.column>
-                <flux:table.column>Username</flux:table.column>
-                <flux:table.column>Website</flux:table.column>
-            </flux:table.columns>
+    <div class="mt-2">
+        <ul role="list" class="divide-y divide-zinc-950/5 dark:divide-white/5">
+            @foreach ($this->passwords as $password)
+                <li class="py-2"
+                    x-data="{
+                        copiedUser: false,
+                        copiedPass: false,
+                        showPass: false,
+                        showNotes: false,
+                        username: {{ \Illuminate\Support\Js::encode($password->username) }},
+                        password: {{ \Illuminate\Support\Js::encode($password->password) }}
+                    }"
+                >
+                    <div class="flex flex-wrap justify-between gap-x-3">
+                        <div class="flex flex-1 flex-wrap gap-x-3 items-center">
+                            <p class="font-semibold">{{ $password->name }}</p>
+                            <flux:link :href="route('passwords.edit', [$teamModel, $password])" wire:navigate>
+                                Edit
+                            </flux:link>
+                        </div>
+                        @if ($password->website)
+                            <span class="truncate" title="{{ $password->website }}">
+                                {{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}
+                            </span>
+                        @endif
+                    </div>
 
-            <flux:table.rows>
-                @foreach ($this->passwords as $password)
-                    <flux:table.row :key="$password->id">
-                        <flux:table.cell class="relative">
-                            <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate :first="true" aria-label="{{ $password->name }}" />
-                            <span class="font-medium">{{ $password->name }}</span>
-                        </flux:table.cell>
+                    <p class="text-sm">
+                        {{ $password->username }}
 
-                        <flux:table.cell class="relative">
-                            <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate />
-                            {{ $password->username }}
-                        </flux:table.cell>
+                        <flux:button
+                            size="xs"
+                            variant="filled"
+                            color="lime"
+                            x-on:click="navigator.clipboard.writeText(username); copiedUser = true; setTimeout(() => copiedUser = false, 2000)"
+                            class="lowercase"
+                        >
+                            <span x-text="copiedUser ? 'Copied!' : 'Copy'"></span>
+                        </flux:button>
+                    </p>
 
-                        <flux:table.cell class="relative !text-zinc-500">
-                            <x-table-row-link :href="route('passwords.show', [$teamModel, $password])" wire:navigate />
-                            <span title="{{ $password->website }}">{{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}</span>
-                        </flux:table.cell>
-                    </flux:table.row>
-                @endforeach
-            </flux:table.rows>
-        </flux:table>
+                    <div class="mt-1">
+                        <flux:button
+                            size="xs"
+                            variant="primary"
+                            color="lime"
+                            x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
+                            class="lowercase"
+                        >
+                            <span x-text="copiedPass ? 'Copied!' : 'Copy password'"></span>
+                        </flux:button>
+
+                        <flux:button
+                            size="xs"
+                            variant="filled"
+                            x-on:click="showPass = !showPass"
+                            class="lowercase"
+                        >
+                            <span x-text="showPass ? 'Hide password' : 'Show password'"></span>
+                        </flux:button>
+                    </div>
+
+                    <div class="mt-1">
+                        <div x-show="showNotes" x-cloak>
+                            {!! Illuminate\Support\Str::markdown($password->notes ?? '') !!}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1 mt-1">
+                        <flux:button
+                            size="xs"
+                            variant="filled"
+                            x-on:click="showNotes = !showNotes"
+                            :disabled="! $password->notes"
+                            class="lowercase"
+                        >
+                            <span x-text="showNotes ? 'Hide notes' : 'View notes'"></span>
+                        </flux:button>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <flux:pagination :paginator="$this->passwords" pagination:scroll-to class="mt-4" />
     </div>
 </section>
