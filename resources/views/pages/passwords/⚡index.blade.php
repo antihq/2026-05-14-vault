@@ -86,6 +86,8 @@ new #[Title('Passwords')] class extends Component
                     </p>
 
                     <div class="mt-1">
+                        <span x-show="showPass" x-cloak x-text="password" class="font-mono"></span>
+
                         <flux:button
                             size="xs"
                             variant="primary"
@@ -93,7 +95,7 @@ new #[Title('Passwords')] class extends Component
                             x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
                             class="lowercase"
                         >
-                            <span x-text="copiedPass ? 'Copied!' : 'Copy password'"></span>
+                            <span x-text="copiedPass ? 'Copied!' : (showPass ? 'Copy' : 'Copy password')"></span>
                         </flux:button>
 
                         <flux:button
@@ -102,7 +104,7 @@ new #[Title('Passwords')] class extends Component
                             x-on:click="showPass = !showPass"
                             class="lowercase"
                         >
-                            <span x-text="showPass ? 'Hide password' : 'Show password'"></span>
+                            <span x-text="showPass ? 'Hide' : 'Show password'"></span>
                         </flux:button>
                     </div>
 
