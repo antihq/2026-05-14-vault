@@ -15,7 +15,7 @@
                     <a href="{{ route('teams.switch') }}" class="text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 hover:underline" wire:navigate>switch team</a>
                 </div>
 
-                <div class="flex-1 flex-wrap flex px-4">
+                <div class="w-full lg:flex-1 flex-wrap flex px-4 gap-x-3 md:justify-between">
                     <div class="flex gap-x-3">
                         <a href="{{ route('dashboard') }}" class="text-base/6 sm:text-sm/6 hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>dashboard</a>
                         @if (Auth::user()->currentTeam)
