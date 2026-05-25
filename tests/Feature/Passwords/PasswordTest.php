@@ -555,7 +555,7 @@ test('password edit page displays delete button', function () {
         ->actingAs($user)
         ->get(route('passwords.edit', [$team, $password]));
 
-    $response->assertSee('Delete password');
+    $response->assertSee('delete password');
 });
 
 test('password notes are encrypted', function () {
@@ -776,20 +776,6 @@ test('passwords are deleted when team is force deleted', function () {
     $team->forceDelete();
 
     expect(Password::count())->toBe(0);
-});
-
-test('password creation requires minimum 8 characters', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $this->actingAs($user);
-
-    Livewire::test('pages::passwords.create', ['team' => $team])
-        ->set('name', 'GitHub')
-        ->set('username', 'johndoe')
-        ->set('password', 'short')
-        ->call('createPassword')
-        ->assertHasErrors(['password' => 'min']);
 });
 
 test('password show page displays timestamps', function () {
@@ -1067,26 +1053,6 @@ test('password generation works on edit page', function () {
     Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
         ->call('generatePassword')
         ->assertSet('password', fn ($value) => strlen($value) === 16 && ! empty($value));
-});
-
-test('password edit validates minimum 8 characters', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $this->actingAs($user);
-
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
-        ->set('name', 'GitHub')
-        ->set('username', 'johndoe')
-        ->set('password', 'short')
-        ->call('updatePassword')
-        ->assertHasErrors(['password' => 'min']);
 });
 
 test('viewing password show page sets last_viewed_at', function () {

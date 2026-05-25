@@ -46,7 +46,7 @@ new #[Title('New Password')] class extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string'],
             'website' => ['nullable', 'string', 'max:255', 'url'],
             'notes' => ['nullable', 'string', 'max:65535'],
         ]);
@@ -65,20 +65,20 @@ new #[Title('New Password')] class extends Component
     }
 }; ?>
 
-<section class="w-full">
-    <flux:heading size="xl" level="1">New password</flux:heading>
+<section class="w-full max-w-2xl">
+    <flux:heading level="1" class="lowercase">new password</flux:heading>
 
-    <form wire:submit="createPassword" class="mt-6 space-y-8 max-w-xl">
-        <flux:field>
-            <flux:label>Name</flux:label>
-            <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
+    <form wire:submit="createPassword" class="mt-2 max-w-xl">
+        <flux:field class="max-w-sm">
+            <flux:label class="lowercase">Name</flux:label>
+            <flux:description class="lowercase">A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
             <flux:input wire:model="name" type="text" required autofocus />
             <flux:error name="name" />
         </flux:field>
 
-        <flux:field>
-            <flux:label>Username</flux:label>
-            <flux:description>The email or username used to sign in</flux:description>
+        <flux:field class="mt-2 max-w-sm">
+            <flux:label class="lowercase">Username</flux:label>
+            <flux:description class="lowercase">The email or username used to sign in</flux:description>
             <flux:autocomplete wire:model="username" required>
                 @foreach($this->usernameSuggestions as $suggestion)
                     <flux:autocomplete.item>{{ $suggestion }}</flux:autocomplete.item>
@@ -87,34 +87,31 @@ new #[Title('New Password')] class extends Component
             <flux:error name="username" />
         </flux:field>
 
-        <flux:field>
-            <flux:label>Password</flux:label>
-            <flux:description>The sign-in password — auto-generated, overwrite or use Regenerate</flux:description>
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-start">
-                <flux:input wire:model="password" type="password" required viewable clearable class="sm:flex-1" />
-                <flux:button wire:click.prevent="generatePassword" type="button" class="sm:w-auto w-full">Regenerate</flux:button>
-            </div>
+        <flux:field class="mt-2 max-w-sm">
+            <flux:label class="lowercase">Password</flux:label>
+            <flux:description class="lowercase">The sign-in password — auto-generated, overwrite or use Regenerate</flux:description>
+            <flux:input wire:model="password" type="password" required viewable clearable />
+            <flux:button wire:click.prevent="generatePassword" size="xs" variant="filled" type="button" class="mt-1 lowercase">regenerate</flux:button>
             <flux:error name="password" />
         </flux:field>
 
-        <flux:field>
-            <flux:label>Website</flux:label>
-            <flux:description>The login page URL for this service</flux:description>
+        <flux:field class="mt-2 max-w-sm">
+            <flux:label class="lowercase">Website</flux:label>
+            <flux:description class="lowercase">The login page URL for this service</flux:description>
             <flux:input wire:model="website" type="url" placeholder="https://example.com" />
             <flux:error name="website" />
         </flux:field>
 
-        <flux:field>
-            <flux:label>Notes</flux:label>
-            <flux:description>Security questions, recovery codes, or other details</flux:description>
+        <flux:field class="mt-2 max-w-sm">
+            <flux:label class="lowercase">Notes</flux:label>
+            <flux:description class="lowercase">Security questions, recovery codes, or other details</flux:description>
             <flux:textarea wire:model="notes" />
             <flux:error name="notes" />
         </flux:field>
 
-        <div class="flex">
-            <flux:spacer />
-            <flux:button variant="primary" type="submit" class="max-sm:w-full">
-                Create password
+        <div class="mt-4">
+            <flux:button variant="primary" color="lime" type="submit" class="lowercase">
+                create password
             </flux:button>
         </div>
     </form>
