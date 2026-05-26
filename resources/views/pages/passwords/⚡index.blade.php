@@ -57,9 +57,9 @@ new #[Title('Passwords')] class extends Component
                         password: {{ \Illuminate\Support\Js::encode($password->password) }}
                     }"
                 >
-                    <div class="flex flex-wrap justify-between gap-x-3">
-                        <div class="flex flex-1 flex-wrap gap-x-3 items-center min-w-0">
-                            <p class="font-semibold truncate">{{ $password->name }}</p>
+                    <div class="flex flex-wrap sm:justify-between gap-x-3">
+                        <div class="flex flex-wrap gap-x-3 items-center min-w-0">
+                            <p class="font-semibold">{{ $password->name }}</p>
                             <flux:link :href="route('passwords.edit', [$teamModel, $password])" wire:navigate>
                                 Edit
                             </flux:link>
