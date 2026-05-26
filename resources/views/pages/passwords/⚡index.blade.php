@@ -41,7 +41,7 @@ new #[Title('Passwords')] class extends Component
     </div>
 
     <div class="mt-3 max-w-sm">
-        <flux:input wire:model.live="search" placeholder="Search passwords..." />
+        <flux:input wire:model.live="search" placeholder="search" clearable />
     </div>
 
     <div class="mt-2">
