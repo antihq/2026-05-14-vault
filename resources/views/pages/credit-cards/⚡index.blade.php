@@ -32,46 +32,125 @@ new #[Title('Credit Cards')] class extends Component
     }
 }; ?>
 
-<section class="w-full">
-    <div class="flex items-end justify-between gap-4">
-        <flux:heading size="xl" level="1">Credit Cards</flux:heading>
-        <flux:button :href="route('credit-cards.create', $teamModel)" wire:navigate>
+<section class="w-full max-w-2xl">
+    <div class="flex gap-3 items-baseline">
+        <flux:heading class="lowercase" level="1">Credit Cards</flux:heading>
+        <flux:link :href="route('credit-cards.create', $teamModel)" wire:navigate>
             New credit card
-        </flux:button>
+        </flux:link>
     </div>
 
-    <div class="mt-6 max-w-sm">
-        <flux:input wire:model.live.debounce.300ms="search" placeholder="Search credit cards..." icon="magnifying-glass" clearable />
+    <div class="mt-3 max-w-sm">
+        <flux:input wire:model.live="search" placeholder="Search credit cards..." />
     </div>
 
-    <div class="mt-6">
-        <flux:table :paginate="$this->creditCards" pagination:scroll-to>
-            <flux:table.columns>
-                <flux:table.column>Name</flux:table.column>
-                <flux:table.column>Number</flux:table.column>
-                <flux:table.column>Expires</flux:table.column>
-            </flux:table.columns>
+    <div class="mt-2">
+        <ul role="list" class="divide-y divide-zinc-950/5 dark:divide-white/5">
+            @foreach ($this->creditCards as $creditCard)
+                <li class="py-2"
+                    x-data="{
+                        copiedNumber: false,
+                        copiedCvv: false,
+                        showNumber: false,
+                        showCvv: false,
+                        showNotes: false,
+                        cardNumber: {{ \Illuminate\Support\Js::encode($creditCard->card_number) }},
+                        cvv: {{ \Illuminate\Support\Js::encode($creditCard->cvv) }}
+                    }"
+                >
+                    <div class="flex flex-wrap justify-between gap-x-3">
+                        <div class="flex flex-1 flex-wrap gap-x-3 items-center">
+                            <p class="font-semibold">{{ $creditCard->name }}</p>
+                            <flux:link :href="route('credit-cards.edit', [$teamModel, $creditCard])" wire:navigate>
+                                Edit
+                            </flux:link>
+                        </div>
+                        @if ($creditCard->is_expired)
+                            <span>expired</span>
+                        @endif
+                    </div>
 
-            <flux:table.rows>
-                @foreach ($this->creditCards as $creditCard)
-                    <flux:table.row :key="$creditCard->id">
-                        <flux:table.cell class="relative">
-                            <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate :first="true" aria-label="{{ $creditCard->name }}" />
-                            <span class="font-medium">{{ $creditCard->name }}</span>
-                        </flux:table.cell>
+                    <div class="mt-1 flex gap-x-3">
+                        <div>
+                            <span x-show="!showNumber">{{ $creditCard->masked_number }}</span>
+                            <span x-show="showNumber" x-cloak x-text="cardNumber" class="font-mono"></span>
+                        </div>
 
-                        <flux:table.cell class="relative">
-                            <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate />
-                            {{ $creditCard->masked_number }}
-                        </flux:table.cell>
+                        <div class="flex gap-1.5">
+                            <flux:button
+                                size="xs"
+                                variant="primary"
+                                color="lime"
+                                x-on:click="navigator.clipboard.writeText(cardNumber); copiedNumber = true; setTimeout(() => copiedNumber = false, 2000)"
+                                class="lowercase"
+                            >
+                                <span x-text="copiedNumber ? 'Copied!' : 'Copy number'"></span>
+                            </flux:button>
 
-                        <flux:table.cell class="relative">
-                            <x-table-row-link :href="route('credit-cards.show', [$teamModel, $creditCard])" wire:navigate />
-                            {{ $creditCard->expiry_date }}@if ($creditCard->is_expired) (Expired)@endif
-                        </flux:table.cell>
-                    </flux:table.row>
-                @endforeach
-            </flux:table.rows>
-        </flux:table>
+                            <flux:button
+                                size="xs"
+                                variant="filled"
+                                x-on:click="showNumber = !showNumber"
+                                class="lowercase"
+                            >
+                                <span x-text="showNumber ? 'Hide' : 'Show'"></span>
+                            </flux:button>
+                        </div>
+                    </div>
+
+                    <div>
+                        Expires {{ $creditCard->expiry_date }}
+                    </div>
+
+                    <div class="mt-1 flex gap-x-3">
+                        <div>
+                            <span x-show="!showCvv">•••</span>
+                            <span x-show="showCvv" x-cloak x-text="cvv" class="font-mono"></span>
+                        </div>
+
+                        <div class="flex gap-1.5">
+                            <flux:button
+                                size="xs"
+                                variant="primary"
+                                color="lime"
+                                x-on:click="navigator.clipboard.writeText(cvv); copiedCvv = true; setTimeout(() => copiedCvv = false, 2000)"
+                                class="lowercase"
+                            >
+                                <span x-text="copiedCvv ? 'Copied!' : 'Copy cvv'"></span>
+                            </flux:button>
+
+                            <flux:button
+                                size="xs"
+                                variant="filled"
+                                x-on:click="showCvv = !showCvv"
+                                class="lowercase"
+                            >
+                                <span x-text="showCvv ? 'Hide' : 'Show'"></span>
+                            </flux:button>
+                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        <div x-show="showNotes" x-cloak>
+                            {!! Illuminate\Support\Str::markdown($creditCard->notes ?? '') !!}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1 mt-1">
+                        <flux:button
+                            size="xs"
+                            variant="filled"
+                            x-on:click="showNotes = !showNotes"
+                            :disabled="! $creditCard->notes"
+                            class="lowercase"
+                        >
+                            <span x-text="showNotes ? 'Hide notes' : 'View notes'"></span>
+                        </flux:button>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <flux:pagination :paginator="$this->creditCards" pagination:scroll-to class="mt-4" />
     </div>
 </section>
