@@ -71,12 +71,12 @@ new #[Title('Passwords')] class extends Component
                         @endif
                     </div>
 
-                    <div class="mt-1 flex gap-x-3">
-                        <div>
+                    <div class="mt-1 flex flex-wrap gap-x-3">
+                        <div class="min-w-0 truncate">
                             {{ $password->username }}
                         </div>
 
-                        <div class="flex gap-1.5">
+                        <div class="flex gap-1.5 shrink-0">
                             <flux:button
                                 size="xs"
                                 variant="filled"
@@ -89,13 +89,13 @@ new #[Title('Passwords')] class extends Component
                         </div>
                     </div>
 
-                    <div class="mt-1 flex gap-x-3">
-                        <div>
-                            <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono"></span>
-                            <span x-show="showPass" x-cloak x-text="password" class="font-mono"></span>
+                    <div class="mt-1 flex flex-wrap gap-x-3">
+                        <div class="min-w-0">
+                            <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono truncate block"></span>
+                            <span x-show="showPass" x-cloak x-text="password" class="font-mono truncate block"></span>
                         </div>
 
-                        <div class="flex gap-1.5">
+                        <div class="flex gap-1.5 shrink-0">
                             <flux:button
                                 size="xs"
                                 variant="primary"
