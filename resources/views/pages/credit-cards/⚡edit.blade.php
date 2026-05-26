@@ -26,9 +26,9 @@ new class extends Component
 
     public string $notes = '';
 
-    public function mount(Team $team, CreditCard $creditCard): void
+    public function mount(Team $current_team, CreditCard $creditCard): void
     {
-        $this->teamModel = $team;
+        $this->teamModel = $current_team;
         $this->creditCardModel = $creditCard;
         $this->name = $creditCard->name;
         $this->nameOnCard = $creditCard->name_on_card;
@@ -62,7 +62,7 @@ new class extends Component
 
         Flux::toast(variant: 'success', text: 'Credit card updated and re-encrypted.');
 
-        $this->redirectRoute('credit-cards.index', ['team' => $this->teamModel->slug], navigate: true);
+        $this->redirectRoute('credit-cards.index', ['current_team' => $this->teamModel->slug], navigate: true);
     }
 
     public function deleteCreditCard(): void
@@ -73,7 +73,7 @@ new class extends Component
 
         Flux::toast(variant: 'success', text: 'Credit card deleted.');
 
-        $this->redirectRoute('credit-cards.index', ['team' => $this->teamModel->slug], navigate: true);
+        $this->redirectRoute('credit-cards.index', ['current_team' => $this->teamModel->slug], navigate: true);
     }
 
     public function render()

@@ -12,7 +12,7 @@ test('credit cards index page can be rendered', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('credit-cards.index', $team));
+        ->get(route('credit-cards.index', ['current_team' => $team]));
 
     $response->assertOk();
 });
@@ -31,7 +31,7 @@ test('credit cards index shows credit cards', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('credit-cards.index', $team));
+        ->get(route('credit-cards.index', ['current_team' => $team]));
 
     $response->assertOk();
     $response->assertSee('My Visa');
@@ -44,7 +44,7 @@ test('credit card create page can be rendered', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('credit-cards.create', $team));
+        ->get(route('credit-cards.create', ['current_team' => $team]));
 
     $response->assertOk();
 });
@@ -55,7 +55,7 @@ test('credit card can be created', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Visa')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -83,7 +83,7 @@ test('credit card creation encrypts card number and cvv', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Visa')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -110,7 +110,7 @@ test('credit card edit page can be rendered', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('credit-cards.edit', [$team, $creditCard]));
+        ->get(route('credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard]));
 
     $response->assertOk();
 });
@@ -129,7 +129,7 @@ test('credit card can be updated', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->set('name', 'My Mastercard')
         ->set('nameOnCard', 'Jane Doe')
         ->set('cardNumber', '5555555555554444')
@@ -161,10 +161,10 @@ test('credit card can be deleted', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->call('deleteCreditCard')
         ->assertHasNoErrors()
-        ->assertRedirect(route('credit-cards.index', $team));
+        ->assertRedirect(route('credit-cards.index', ['current_team' => $team]));
 
     $this->assertDatabaseMissing('credit_cards', [
         'id' => $creditCard->id,
@@ -175,7 +175,7 @@ test('guests cannot access credit cards', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
 
-    $response = $this->get(route('credit-cards.index', $team));
+    $response = $this->get(route('credit-cards.index', ['current_team' => $team]));
 
     $response->assertRedirect(route('login'));
 });
@@ -186,7 +186,7 @@ test('credit card creation requires name', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', '')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -202,7 +202,7 @@ test('credit card creation requires name on card', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', '')
         ->set('cardNumber', '4242424242424242')
@@ -218,7 +218,7 @@ test('credit card creation requires card number', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '')
@@ -234,7 +234,7 @@ test('credit card creation validates card number length', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424')
@@ -250,7 +250,7 @@ test('credit card creation requires cvv', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -291,7 +291,7 @@ test('credit card cannot be updated by non team members', function () {
 
     $this->actingAs($nonMember);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->set('name', 'Hacked')
         ->set('nameOnCard', 'Hacked')
         ->set('cardNumber', '4242424242424242')
@@ -317,7 +317,7 @@ test('credit card cannot be deleted by non team members', function () {
 
     $this->actingAs($nonMember);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->call('deleteCreditCard')
         ->assertForbidden();
 
@@ -330,7 +330,7 @@ test('credit card notes are encrypted', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Visa')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -368,7 +368,7 @@ test('credit cards index can be searched', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.index', ['team' => $team])
+    Livewire::test('pages::credit-cards.index', ['current_team' => $team])
         ->set('search', 'Amex')
         ->assertSee('My Amex')
         ->assertDontSee('My Visa');
@@ -407,7 +407,7 @@ test('credit card update re-encrypts card number and cvv', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->set('name', 'My Visa')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4111111111111111')
@@ -436,7 +436,7 @@ test('credit card edit page pre-fills with decrypted card number and cvv', funct
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->assertSet('cardNumber', '4242424242424242')
         ->assertSet('cvv', '123');
 });
@@ -447,7 +447,7 @@ test('credit card creation requires expiry date', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -463,7 +463,7 @@ test('credit card creation validates cvv max length', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -479,7 +479,7 @@ test('credit card creation validates card number max length', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '42424242424242424242')
@@ -528,7 +528,7 @@ test('credit card update updates last four when card number changes', function (
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->set('name', 'My Visa')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '5555555555554444')
@@ -569,7 +569,7 @@ test('credit cards search is scoped to the current team', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.index', ['team' => $team])
+    Livewire::test('pages::credit-cards.index', ['current_team' => $team])
         ->set('search', 'John Doe')
         ->assertSee('My Visa')
         ->assertDontSee('Leaked Card');
@@ -601,7 +601,7 @@ test('credit cards index only shows credit cards for the current team', function
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.index', ['team' => $team])
+    Livewire::test('pages::credit-cards.index', ['current_team' => $team])
         ->assertSee('My Visa')
         ->assertDontSee('Other Card');
 });
@@ -632,7 +632,7 @@ test('credit card creation rejects invalid Luhn card number', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424241')
@@ -648,7 +648,7 @@ test('credit card creation rejects expired expiry date', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -664,7 +664,7 @@ test('credit card creation rejects invalid expiry date format', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
+    Livewire::test('pages::credit-cards.create', ['current_team' => $team])
         ->set('name', 'My Card')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -716,7 +716,7 @@ test('credit card index displays expired text for expired cards', function () {
         'cvv' => '123',
     ]);
 
-    Livewire::test('pages::credit-cards.index', ['team' => $team])
+    Livewire::test('pages::credit-cards.index', ['current_team' => $team])
         ->set('search', 'Expired')
         ->assertSee('Expired');
 });
@@ -735,7 +735,7 @@ test('credit card edit rejects invalid Luhn card number', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->set('name', 'My Visa')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424241')
@@ -759,7 +759,7 @@ test('credit card edit rejects expired expiry date', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
+    Livewire::test('pages::credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard])
         ->set('name', 'My Visa')
         ->set('nameOnCard', 'John Doe')
         ->set('cardNumber', '4242424242424242')
@@ -791,7 +791,7 @@ test('credit cards index can be searched by name on card', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::credit-cards.index', ['team' => $team])
+    Livewire::test('pages::credit-cards.index', ['current_team' => $team])
         ->set('search', 'Jane Smith')
         ->assertSee('Card B')
         ->assertDontSee('Card A');
@@ -811,7 +811,7 @@ test('credit card edit page displays delete button', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('credit-cards.edit', [$team, $creditCard]));
+        ->get(route('credit-cards.edit', ['current_team' => $team, 'creditCard' => $creditCard]));
 
     $response->assertSee('Delete credit card');
 });

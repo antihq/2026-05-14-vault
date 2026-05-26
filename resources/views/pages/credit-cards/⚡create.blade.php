@@ -23,9 +23,9 @@ new #[Title('New Credit Card')] class extends Component
 
     public string $notes = '';
 
-    public function mount(Team $team): void
+    public function mount(Team $current_team): void
     {
-        $this->teamModel = $team;
+        $this->teamModel = $current_team;
     }
 
     public function createCreditCard(): void
@@ -50,7 +50,7 @@ new #[Title('New Credit Card')] class extends Component
 
         Flux::toast(variant: 'success', text: 'Credit card created and encrypted.');
 
-        $this->redirectRoute('credit-cards.index', ['team' => $this->teamModel->slug], navigate: true);
+        $this->redirectRoute('credit-cards.index', ['current_team' => $this->teamModel->slug], navigate: true);
     }
 }; ?>
 

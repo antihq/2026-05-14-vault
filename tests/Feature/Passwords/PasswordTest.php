@@ -12,7 +12,7 @@ test('passwords index page can be rendered', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('passwords.index', $team));
+        ->get(route('passwords.index', ['current_team' => $team]));
 
     $response->assertOk();
 });
@@ -29,7 +29,7 @@ test('passwords index shows passwords', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('passwords.index', $team));
+        ->get(route('passwords.index', ['current_team' => $team]));
 
     $response->assertOk();
     $response->assertSee('GitHub');
@@ -42,7 +42,7 @@ test('password create page can be rendered', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('passwords.create', $team));
+        ->get(route('passwords.create', ['current_team' => $team]));
 
     $response->assertOk();
 });
@@ -53,7 +53,7 @@ test('password can be created', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', 'GitHub')
         ->set('username', 'johndoe')
         ->set('password', 'secret123')
@@ -76,7 +76,7 @@ test('password creation encrypts the password', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', 'GitHub')
         ->set('username', 'johndoe')
         ->set('password', 'secret123')
@@ -98,7 +98,7 @@ test('password edit page can be rendered', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('passwords.edit', [$team, $password]));
+        ->get(route('passwords.edit', ['current_team' => $team, 'password' => $password]));
 
     $response->assertOk();
 });
@@ -115,7 +115,7 @@ test('password can be updated', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->set('name', 'GitLab')
         ->set('username', 'janedoe')
         ->set('password', 'newsecret')
@@ -143,10 +143,10 @@ test('password can be deleted', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->call('deletePassword')
         ->assertHasNoErrors()
-        ->assertRedirect(route('passwords.index', $team));
+        ->assertRedirect(route('passwords.index', ['current_team' => $team]));
 
     $this->assertDatabaseMissing('passwords', [
         'id' => $password->id,
@@ -159,7 +159,7 @@ test('password create page auto-generates a password on load', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->assertSet('password', fn ($value) => strlen($value) === 16 && ! empty($value));
 });
 
@@ -169,7 +169,7 @@ test('password generation works', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->call('generatePassword')
         ->assertSet('password', fn ($value) => strlen($value) === 16 && ! empty($value));
 });
@@ -178,7 +178,7 @@ test('guests cannot access passwords', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
 
-    $response = $this->get(route('passwords.index', $team));
+    $response = $this->get(route('passwords.index', ['current_team' => $team]));
 
     $response->assertRedirect(route('login'));
 });
@@ -189,7 +189,7 @@ test('password creation requires name', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', '')
         ->set('username', 'johndoe')
         ->set('password', 'secret123')
@@ -203,7 +203,7 @@ test('password creation requires username', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', 'GitHub')
         ->set('username', '')
         ->set('password', 'secret123')
@@ -217,7 +217,7 @@ test('password creation requires password', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', 'GitHub')
         ->set('username', 'johndoe')
         ->set('password', '')
@@ -231,7 +231,7 @@ test('password creation validates website as url', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', 'GitHub')
         ->set('username', 'johndoe')
         ->set('password', 'secret123')
@@ -246,7 +246,7 @@ test('password can be created with all optional fields', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', 'GitHub')
         ->set('username', 'johndoe')
         ->set('password', 'secret123')
@@ -272,7 +272,7 @@ test('password update encrypts the new password', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->set('name', 'GitHub')
         ->set('username', 'johndoe')
         ->set('password', 'newsecret')
@@ -297,7 +297,7 @@ test('password cannot be updated by non team members', function () {
 
     $this->actingAs($nonMember);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->set('name', 'Hacked')
         ->set('username', 'hacked')
         ->set('password', 'hacked')
@@ -319,7 +319,7 @@ test('password cannot be deleted by non team members', function () {
 
     $this->actingAs($nonMember);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->call('deletePassword')
         ->assertForbidden();
 
@@ -344,7 +344,7 @@ test('passwords index can be searched by name', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.index', ['team' => $team])
+    Livewire::test('pages::passwords.index', ['current_team' => $team])
         ->set('search', 'GitLab')
         ->assertSee('GitLab')
         ->assertDontSee('GitHub');
@@ -368,7 +368,7 @@ test('passwords index can be searched by username', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.index', ['team' => $team])
+    Livewire::test('pages::passwords.index', ['current_team' => $team])
         ->set('search', 'janedoe')
         ->assertSee('GitLab')
         ->assertDontSee('GitHub');
@@ -386,7 +386,7 @@ test('password edit page displays delete button', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('passwords.edit', [$team, $password]));
+        ->get(route('passwords.edit', ['current_team' => $team, 'password' => $password]));
 
     $response->assertSee('delete password');
 });
@@ -397,7 +397,7 @@ test('password notes are encrypted', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', 'GitHub')
         ->set('username', 'johndoe')
         ->set('password', 'secret123')
@@ -445,7 +445,7 @@ test('password edit page pre-fills with decrypted values', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->assertSet('password', 'secret123')
         ->assertSet('notes', 'My notes');
 });
@@ -462,7 +462,7 @@ test('password edit validates name required', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->set('name', '')
         ->set('username', 'johndoe')
         ->set('password', 'secret123')
@@ -482,7 +482,7 @@ test('password edit validates username required', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->set('name', 'GitHub')
         ->set('username', '')
         ->set('password', 'secret123')
@@ -502,7 +502,7 @@ test('password edit validates password required', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->set('name', 'GitHub')
         ->set('username', 'johndoe')
         ->set('password', '')
@@ -516,7 +516,7 @@ test('password creation validates name max length', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', str_repeat('a', 256))
         ->set('username', 'johndoe')
         ->set('password', 'secret123')
@@ -530,7 +530,7 @@ test('password creation validates username max length', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.create', ['team' => $team])
+    Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->set('name', 'GitHub')
         ->set('username', str_repeat('a', 256))
         ->set('password', 'secret123')
@@ -560,7 +560,7 @@ test('passwords search is scoped to the current team', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.index', ['team' => $team])
+    Livewire::test('pages::passwords.index', ['current_team' => $team])
         ->set('search', 'johndoe')
         ->assertSee('GitHub')
         ->assertDontSee('Leaked');
@@ -588,7 +588,7 @@ test('passwords index only shows passwords for the current team', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.index', ['team' => $team])
+    Livewire::test('pages::passwords.index', ['current_team' => $team])
         ->assertSee('My GitHub')
         ->assertDontSee('Other GitHub');
 });
@@ -620,7 +620,7 @@ test('username suggestions include past usernames from the team', function () {
 
     $this->actingAs($user);
 
-    $suggestions = Livewire::test('pages::passwords.create', ['team' => $team])
+    $suggestions = Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->get('usernameSuggestions');
 
     expect($suggestions)->toContain('alice@example.com');
@@ -637,7 +637,7 @@ test('username suggestions are deduplicated', function () {
 
     $this->actingAs($user);
 
-    $suggestions = Livewire::test('pages::passwords.create', ['team' => $team])
+    $suggestions = Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->get('usernameSuggestions');
 
     expect($suggestions)->toHaveCount(1);
@@ -650,7 +650,7 @@ test('username suggestions are empty when team has no passwords', function () {
 
     $this->actingAs($user);
 
-    $suggestions = Livewire::test('pages::passwords.create', ['team' => $team])
+    $suggestions = Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->get('usernameSuggestions');
 
     expect($suggestions)->toHaveCount(0);
@@ -669,7 +669,7 @@ test('username suggestions are scoped to the current team', function () {
 
     $this->actingAs($user);
 
-    $suggestions = Livewire::test('pages::passwords.create', ['team' => $team])
+    $suggestions = Livewire::test('pages::passwords.create', ['current_team' => $team])
         ->get('usernameSuggestions');
 
     expect($suggestions)->toContain('alice@example.com');
@@ -684,7 +684,7 @@ test('create page renders autocomplete with username suggestions', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('passwords.create', $team));
+        ->get(route('passwords.create', ['current_team' => $team]));
 
     $response->assertOk();
     $response->assertSee('alice@example.com');
@@ -701,7 +701,7 @@ test('edit page username suggestions include past usernames from the team', func
 
     $this->actingAs($user);
 
-    $suggestions = Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    $suggestions = Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->get('usernameSuggestions');
 
     expect($suggestions)->toContain('alice@example.com');
@@ -719,7 +719,7 @@ test('edit page renders autocomplete with username suggestions', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('passwords.edit', [$team, $password]));
+        ->get(route('passwords.edit', ['current_team' => $team, 'password' => $password]));
 
     $response->assertOk();
     $response->assertSee('alice@example.com');
@@ -737,7 +737,7 @@ test('password generation works on edit page', function () {
 
     $this->actingAs($user);
 
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
+    Livewire::test('pages::passwords.edit', ['current_team' => $team, 'password' => $password])
         ->call('generatePassword')
         ->assertSet('password', fn ($value) => strlen($value) === 16 && ! empty($value));
 });
@@ -755,7 +755,7 @@ test('passwords index shows domain instead of full URL', function () {
 
     $response = $this
         ->actingAs($user)
-        ->get(route('passwords.index', $team));
+        ->get(route('passwords.index', ['current_team' => $team]));
 
     $response->assertSee('www.github.com');
     $response->assertSee('title="https://www.github.com/settings"', false);

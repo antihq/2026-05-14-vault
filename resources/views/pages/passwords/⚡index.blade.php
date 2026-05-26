@@ -14,9 +14,9 @@ new #[Title('Passwords')] class extends Component
 
     public string $search = '';
 
-    public function mount(Team $team): void
+    public function mount(Team $current_team): void
     {
-        $this->teamModel = $team;
+        $this->teamModel = $current_team;
     }
 
     #[Computed]
@@ -35,7 +35,7 @@ new #[Title('Passwords')] class extends Component
 <section class="w-full max-w-2xl">
     <div class="flex gap-3 items-baseline">
         <flux:heading class="lowercase" level="1">Passwords</flux:heading>
-        <flux:link :href="route('passwords.create', $teamModel)" wire:navigate>
+        <flux:link :href="route('passwords.create', ['current_team' => $teamModel])" wire:navigate>
             New password
         </flux:link>
     </div>
@@ -60,7 +60,7 @@ new #[Title('Passwords')] class extends Component
                     <div class="flex flex-wrap sm:justify-between gap-x-3">
                         <div class="flex flex-wrap gap-x-3 items-center min-w-0">
                             <p class="font-semibold">{{ $password->name }}</p>
-                            <flux:link :href="route('passwords.edit', [$teamModel, $password])" wire:navigate>
+                            <flux:link :href="route('passwords.edit', ['current_team' => $teamModel, 'password' => $password])" wire:navigate>
                                 Edit
                             </flux:link>
                         </div>

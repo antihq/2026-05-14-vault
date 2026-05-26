@@ -24,9 +24,9 @@ new class extends Component
 
     public string $notes = '';
 
-    public function mount(Team $team, Password $password): void
+    public function mount(Team $current_team, Password $password): void
     {
-        $this->teamModel = $team;
+        $this->teamModel = $current_team;
         $this->passwordModel = $password;
         $this->name = $password->name;
         $this->username = $password->username;
@@ -71,7 +71,7 @@ new class extends Component
 
         Flux::toast(variant: 'success', text: 'Password updated and re-encrypted.');
 
-        $this->redirectRoute('passwords.index', ['team' => $this->teamModel->slug], navigate: true);
+        $this->redirectRoute('passwords.index', ['current_team' => $this->teamModel->slug], navigate: true);
     }
 
     public function deletePassword(): void
@@ -82,7 +82,7 @@ new class extends Component
 
         Flux::toast(variant: 'success', text: 'Password deleted.');
 
-        $this->redirectRoute('passwords.index', ['team' => $this->teamModel->slug], navigate: true);
+        $this->redirectRoute('passwords.index', ['current_team' => $this->teamModel->slug], navigate: true);
     }
 
     public function render()
