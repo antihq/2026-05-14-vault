@@ -43,11 +43,11 @@ new #[Title('Passwords')] class extends Component
         </flux:link>
     </div>
 
-    <div class="mt-3 max-w-sm">
+    <div class="mt-4 max-w-sm">
         <flux:input wire:model.live="search" placeholder="search" clearable />
     </div>
 
-    <div class="mt-2">
+    <div class="mt-8">
         <ul role="list" class="divide-y divide-zinc-950/5 dark:divide-white/5">
             @foreach ($this->passwords as $password)
                 <li class="py-2"

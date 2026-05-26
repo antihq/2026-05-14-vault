@@ -143,7 +143,7 @@ new class extends Component
     </form>
 
     <form wire:submit="deletePassword" wire:confirm="Delete this password? This cannot be undone." class="mt-8">
-        <flux:button type="submit" variant="danger" size="xs" class="lowercase">
+        <flux:button type="submit" variant="danger" class="lowercase">
             delete password
         </flux:button>
     </form>
