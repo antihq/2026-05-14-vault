@@ -71,7 +71,7 @@
 @endtask
 
 @task('assert-tests-pass', ['on' => 'localhost'])
-    vendor/bin/pest --no-interaction
+    vendor/bin/pest
 @endtask
 
 @task('assert-nothing-to-push', ['on' => 'localhost'])
