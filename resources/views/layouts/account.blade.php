@@ -15,13 +15,13 @@
 
                 <div class="flex-1 flex-wrap flex px-4">
                     <div class="flex gap-x-3">
-                        <a href="{{ route('dashboard') }}" class="text-base/6 sm:text-sm/6 hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>dashboard</a>
+                        <flux:link :href="route('dashboard')" variant="ghost" class="lowercase" wire:navigate>dashboard</flux:link>
                     </div>
 
                     <div aria-hidden="true" class="flex-1"></div>
 
                     <div class="flex gap-x-1.5">
-                        logged in as <a href="{{ route('settings') }}" class="hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>{{ Auth::user()->email }}</a>
+                        logged in as <flux:link :href="route('settings')" variant="ghost" class="lowercase" wire:navigate>{{ Auth::user()->email }}</flux:link>
                         <form method="POST" action="{{ route('logout') }}" class="inline-flex">
                             @csrf
                             <flux:button size="xs" variant="filled" type="submit" class="lowercase">logout</flux:button>

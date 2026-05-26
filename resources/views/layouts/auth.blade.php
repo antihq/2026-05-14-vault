@@ -15,7 +15,7 @@
 
                 <div class="flex-1 flex-wrap flex px-4">
                     <div class="flex gap-x-3">
-                        <a href="{{ route('home') }}" class="hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>home</a>
+                        <flux:link :href="route('home')" variant="ghost" class="lowercase" wire:navigate>home</flux:link>
                     </div>
 
                     <div aria-hidden="true" class="flex-1"></div>
@@ -23,16 +23,16 @@
                     <div class="flex gap-x-3">
                         @guest
                             @if (Route::has('login'))
-                                <a href="{{ route('login') }}" class="whitespace-nowrap hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>Sign in</a>
+                                <flux:link :href="route('login')" variant="ghost" class="lowercase whitespace-nowrap" wire:navigate>Sign in</flux:link>
                             @endif
 
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="whitespace-nowrap hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>Create account</a>
+                                <flux:link :href="route('register')" variant="ghost" class="lowercase whitespace-nowrap" wire:navigate>Create account</flux:link>
                             @endif
                         @endguest
 
                         @auth
-                            <a href="{{ route('dashboard') }}" class="hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>dashboard</a>
+                            <flux:link :href="route('dashboard')" variant="ghost" class="lowercase" wire:navigate>dashboard</flux:link>
                         @endauth
                     </div>
                 </div>

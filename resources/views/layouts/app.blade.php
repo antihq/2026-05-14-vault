@@ -11,23 +11,23 @@
                         {{ Str::of(config('app.name'))->explode('-', 4)->last() }}
                         <sup>{{ Str::of(config('app.name'))->explode('-', 4)->take(3)->join('-') }}</sup>
                     </a>
-                    <a href="{{ route('dashboard') }}" class="text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 hover:underline" wire:navigate>{{ Auth::user()->currentTeam->name }}</a>
-                    <a href="{{ route('teams.switch') }}" class="text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 hover:underline" wire:navigate>switch team</a>
+                    <flux:link :href="route('dashboard')" variant="ghost" wire:navigate>{{ Auth::user()->currentTeam->name }}</flux:link>
+                    <flux:link :href="route('teams.switch')" variant="ghost" wire:navigate>switch team</flux:link>
                 </div>
 
                 <div class="w-full lg:flex-1 flex-wrap flex px-4 gap-x-3 md:justify-between">
                     <div class="flex gap-x-3">
-                        <a href="{{ route('dashboard') }}" class="text-base/6 sm:text-sm/6 hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>dashboard</a>
+                        <flux:link :href="route('dashboard')" variant="ghost" class="lowercase" wire:navigate>dashboard</flux:link>
                         @if (Auth::user()->currentTeam)
-                            <a href="{{ route('passwords.index', Auth::user()->currentTeam) }}" class="text-base/6 sm:text-sm/6 hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>passwords</a>
-                            <a href="{{ route('credit-cards.index', Auth::user()->currentTeam) }}" class="text-base/6 sm:text-sm/6 hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>credit cards</a>
+                            <flux:link :href="route('passwords.index', Auth::user()->currentTeam)" variant="ghost" class="lowercase" wire:navigate>passwords</flux:link>
+                            <flux:link :href="route('credit-cards.index', Auth::user()->currentTeam)" variant="ghost" class="lowercase" wire:navigate>credit cards</flux:link>
                         @endif
                     </div>
 
                     <div aria-hidden="true" class="flex-1"></div>
 
                     <div class="flex gap-x-1.5">
-                        logged in as <a href="{{ route('settings') }}" class="hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400 lowercase" wire:navigate>{{ Auth::user()->email }}</a>
+                        logged in as <flux:link :href="route('settings')" variant="ghost" class="lowercase" wire:navigate>{{ Auth::user()->email }}</flux:link>
                         <form method="POST" action="{{ route('logout') }}" class="inline-flex">
                             @csrf
                             <flux:button size="xs" variant="filled" type="submit" class="lowercase">logout</flux:button>
