@@ -19,7 +19,7 @@
                     <div class="flex gap-x-3">
                         @if (Auth::user()->currentTeam)
                             <flux:link :href="route('passwords.index', ['current_team' => Auth::user()->currentTeam])" variant="ghost" class="lowercase" wire:navigate>passwords</flux:link>
-                            <flux:link :href="route('credit-cards.index', ['current_team' => Auth::user()->currentTeam])" variant="ghost" class="lowercase" wire:navigate>credit cards</flux:link>
+                            <flux:link :href="route('credit-cards.index', ['current_team' => Auth::user()->currentTeam])" variant="ghost" class="lowercase" wire:navigate>cards</flux:link>
                             <flux:link :href="route('teams.settings', Auth::user()->currentTeam)" variant="ghost" class="lowercase" wire:navigate>settings</flux:link>
                         @endif
                     </div>
