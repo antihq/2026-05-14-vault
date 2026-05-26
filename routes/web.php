@@ -3,7 +3,7 @@
 use App\Http\Middleware\EnsureTeamMembership;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/home');
+Route::view('/', 'pages::home')->middleware('guest');
 Route::view('home', 'pages::home')->name('home');
 
 Route::prefix('{current_team}')
