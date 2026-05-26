@@ -62,7 +62,7 @@ new class extends Component
 
         Flux::toast(variant: 'success', text: 'Credit card updated and re-encrypted.');
 
-        $this->redirectRoute('credit-cards.show', ['team' => $this->teamModel->slug, 'creditCard' => $this->creditCardModel->id], navigate: true);
+        $this->redirectRoute('credit-cards.index', ['team' => $this->teamModel->slug], navigate: true);
     }
 
     public function deleteCreditCard(): void

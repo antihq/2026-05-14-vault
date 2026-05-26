@@ -61,7 +61,7 @@ new #[Title('New Password')] class extends Component
 
         Flux::toast(variant: 'success', text: 'Password created and encrypted.');
 
-        $this->redirectRoute('passwords.show', ['team' => $this->teamModel->slug, 'password' => $password->id], navigate: true);
+        $this->redirectRoute('passwords.index', ['team' => $this->teamModel->slug], navigate: true);
     }
 }; ?>
 

@@ -50,7 +50,7 @@ new #[Title('New Credit Card')] class extends Component
 
         Flux::toast(variant: 'success', text: 'Credit card created and encrypted.');
 
-        $this->redirectRoute('credit-cards.show', ['team' => $this->teamModel->slug, 'creditCard' => $creditCard->id], navigate: true);
+        $this->redirectRoute('credit-cards.index', ['team' => $this->teamModel->slug], navigate: true);
     }
 }; ?>
 

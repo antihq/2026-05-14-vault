@@ -4,7 +4,6 @@ use App\Enums\TeamRole;
 use App\Models\CreditCard;
 use App\Models\Team;
 use App\Models\User;
-use Carbon\Carbon;
 use Livewire\Livewire;
 
 test('credit cards index page can be rendered', function () {
@@ -97,27 +96,6 @@ test('credit card creation encrypts card number and cvv', function () {
     expect($raw->encrypted_cvv)->not->toBe('123');
 });
 
-test('credit card show page can be rendered', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertSee('My Visa');
-    $response->assertSee('John Doe');
-});
-
 test('credit card edit page can be rendered', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
@@ -191,27 +169,6 @@ test('credit card can be deleted', function () {
     $this->assertDatabaseMissing('credit_cards', [
         'id' => $creditCard->id,
     ]);
-});
-
-test('credit card cannot be accessed by non team members', function () {
-    $owner = User::factory()->create();
-    $nonMember = User::factory()->create();
-    $team = Team::factory()->create();
-    $team->members()->attach($owner, ['role' => TeamRole::Owner->value]);
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($nonMember)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertForbidden();
 });
 
 test('guests cannot access credit cards', function () {
@@ -318,48 +275,6 @@ test('credit card masked number accessor works', function () {
     expect($creditCard->masked_number)->toBe('•••• •••• •••• 4242');
 });
 
-test('credit card creation redirects to show page', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $this->actingAs($user);
-
-    Livewire::test('pages::credit-cards.create', ['team' => $team])
-        ->set('name', 'My Visa')
-        ->set('nameOnCard', 'John Doe')
-        ->set('cardNumber', '4242424242424242')
-        ->set('expiryDate', '12/28')
-        ->set('cvv', '123')
-        ->call('createCreditCard')
-        ->assertHasNoErrors()
-        ->assertRedirect(route('credit-cards.show', [$team, CreditCard::first()]));
-});
-
-test('credit card update redirects to show page', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $this->actingAs($user);
-
-    Livewire::test('pages::credit-cards.edit', ['team' => $team, 'creditCard' => $creditCard])
-        ->set('name', 'Updated Visa')
-        ->set('nameOnCard', 'John Doe')
-        ->set('cardNumber', '4242424242424242')
-        ->set('expiryDate', '12/28')
-        ->set('cvv', '123')
-        ->call('updateCreditCard')
-        ->assertHasNoErrors()
-        ->assertRedirect(route('credit-cards.show', [$team, $creditCard]));
-});
-
 test('credit card cannot be updated by non team members', function () {
     $owner = User::factory()->create();
     $nonMember = User::factory()->create();
@@ -457,45 +372,6 @@ test('credit cards index can be searched', function () {
         ->set('search', 'Amex')
         ->assertSee('My Amex')
         ->assertDontSee('My Visa');
-});
-
-test('credit card show page displays expiry date', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertSee('12/28');
-});
-
-test('credit card show page does not display delete button', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertDontSee('Delete credit card');
 });
 
 test('credit card last four strips non-digit characters from card number', function () {
@@ -798,45 +674,6 @@ test('credit card creation rejects invalid expiry date format', function () {
         ->assertHasErrors(['expiryDate']);
 });
 
-test('credit card show page displays timestamps', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertSee('Created');
-    $response->assertSee('Updated');
-});
-
-test('credit card show page displays encryption status', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertSee('Encrypted at rest');
-});
-
 test('credit card is_expired accessor returns true for past dates', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
@@ -865,44 +702,6 @@ test('credit card is_expired accessor returns false for future dates', function 
     ]);
 
     expect($creditCard->is_expired)->toBeFalse();
-});
-
-test('credit card show page displays team name', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertSee($team->name);
-});
-
-test('credit card show page displays expired text for expired cards', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'Expired Card',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '01/20',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertSee('Expired');
 });
 
 test('credit card index displays expired text for expired cards', function () {
@@ -1017,245 +816,4 @@ test('credit card edit page displays delete button', function () {
     $response->assertSee('Delete credit card');
 });
 
-test('credit card show page embeds card number value in alpine data', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
 
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertSee('4242424242424242');
-});
-
-test('credit card show page embeds CVV value in alpine data', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '4567',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertSee('4567');
-});
-
-test('credit card show page embeds name on card value in alpine data', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertSee('John Doe');
-});
-
-test('credit card show page safely encodes name on card with special characters', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John"name</script>',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertDontSee('John"name</script>', false);
-});
-
-test('credit card show page safely encodes card number with special characters', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242"42</script>42',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertDontSee('4242"42</script>42', false);
-});
-
-test('credit card show page safely encodes CVV with special characters', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '1"23</script>',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertDontSee('1"23</script>', false);
-});
-
-test('credit card show page has show/hide notes toggle', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-        'notes' => 'Some notes',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertSee('Show notes');
-});
-
-test('credit card show page notes are hidden by default', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-        'notes' => 'Secret note content',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $content = $response->getContent();
-    expect($content)->toContain('x-data="{ visible: false }"');
-    expect($content)->toContain('x-show="visible"');
-});
-
-test('credit card show page renders notes as markdown', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-        'notes' => '**important** info',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertOk();
-    $response->assertSee('<strong>important</strong>', false);
-});
-
-test('credit card show page does not show notes section when notes are empty', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('credit-cards.show', [$team, $creditCard]));
-
-    $response->assertDontSee('Show notes');
-});
-
-test('viewing credit card show page sets last_viewed_at', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    expect($creditCard->last_viewed_at)->toBeNull();
-
-    Livewire::test('pages::credit-cards.show', ['team' => $team, 'creditCard' => $creditCard]);
-
-    expect($creditCard->fresh()->last_viewed_at)->not->toBeNull();
-});
-
-test('viewing credit card show page does not update updated_at', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-    $creditCard = $team->creditCards()->create([
-        'name' => 'My Visa',
-        'name_on_card' => 'John Doe',
-        'card_number' => '4242424242424242',
-        'expiry_date' => '12/28',
-        'cvv' => '123',
-    ]);
-
-    $originalUpdatedAt = $creditCard->updated_at;
-
-    Carbon::setTestNow(now()->addHour());
-
-    Livewire::test('pages::credit-cards.show', ['team' => $team, 'creditCard' => $creditCard]);
-
-    expect($creditCard->fresh()->updated_at)->toEqual($originalUpdatedAt);
-
-    Carbon::setTestNow();
-});

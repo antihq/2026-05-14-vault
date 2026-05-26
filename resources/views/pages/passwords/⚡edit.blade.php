@@ -71,7 +71,7 @@ new class extends Component
 
         Flux::toast(variant: 'success', text: 'Password updated and re-encrypted.');
 
-        $this->redirectRoute('passwords.show', ['team' => $this->teamModel->slug, 'password' => $this->passwordModel->id], navigate: true);
+        $this->redirectRoute('passwords.index', ['team' => $this->teamModel->slug], navigate: true);
     }
 
     public function deletePassword(): void

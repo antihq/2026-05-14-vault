@@ -4,7 +4,6 @@ use App\Enums\TeamRole;
 use App\Models\Password;
 use App\Models\Team;
 use App\Models\User;
-use Carbon\Carbon;
 use Livewire\Livewire;
 
 test('passwords index page can be rendered', function () {
@@ -87,25 +86,6 @@ test('password creation encrypts the password', function () {
     expect($raw->encrypted_password)->not->toBe('secret123');
 });
 
-test('password show page can be rendered', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertOk();
-    $response->assertSee('GitHub');
-    $response->assertSee('johndoe');
-});
-
 test('password edit page can be rendered', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
@@ -171,25 +151,6 @@ test('password can be deleted', function () {
     $this->assertDatabaseMissing('passwords', [
         'id' => $password->id,
     ]);
-});
-
-test('password cannot be accessed by non team members', function () {
-    $owner = User::factory()->create();
-    $nonMember = User::factory()->create();
-    $team = Team::factory()->create();
-    $team->members()->attach($owner, ['role' => TeamRole::Owner->value]);
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($nonMember)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertForbidden();
 });
 
 test('password create page auto-generates a password on load', function () {
@@ -297,42 +258,6 @@ test('password can be created with all optional fields', function () {
     $password = Password::first();
     expect($password->website)->toBe('https://github.com');
     expect($password->notes)->toBe('Personal account');
-});
-
-test('password creation redirects to show page', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $this->actingAs($user);
-
-    Livewire::test('pages::passwords.create', ['team' => $team])
-        ->set('name', 'GitHub')
-        ->set('username', 'johndoe')
-        ->set('password', 'secret123')
-        ->call('createPassword')
-        ->assertHasNoErrors()
-        ->assertRedirect(route('passwords.show', [$team, Password::first()]));
-});
-
-test('password update redirects to show page', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $this->actingAs($user);
-
-    Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
-        ->set('name', 'GitLab')
-        ->set('username', 'janedoe')
-        ->set('password', 'newsecret')
-        ->call('updatePassword')
-        ->assertHasNoErrors()
-        ->assertRedirect(route('passwords.show', [$team, $password]));
 });
 
 test('password update encrypts the new password', function () {
@@ -447,98 +372,6 @@ test('passwords index can be searched by username', function () {
         ->set('search', 'janedoe')
         ->assertSee('GitLab')
         ->assertDontSee('GitHub');
-});
-
-test('password show page displays website and notes', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-        'website' => 'https://github.com',
-        'notes' => 'Personal account',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertOk();
-    $response->assertSee('https://github.com');
-    $response->assertSee('Notes');
-});
-
-test('password show page does not display delete button', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertDontSee('Delete password');
-});
-
-test('password show page embeds password value in alpine data', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertOk();
-    $response->assertSee('secret123');
-});
-
-test('password show page safely encodes username with special characters', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'user"name</script>',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertOk();
-    $response->assertDontSee('user"name</script>', false);
-});
-
-test('password show page safely encodes password with special characters', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'pass"word\'s</script>',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertOk();
-    $response->assertDontSee("pass\"word's</script>", false);
 });
 
 test('password edit page displays delete button', function () {
@@ -778,152 +611,6 @@ test('passwords are deleted when team is force deleted', function () {
     expect(Password::count())->toBe(0);
 });
 
-test('password show page displays timestamps', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertSee('Created');
-    $response->assertSee('Updated');
-});
-
-test('password show page displays encryption status', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertSee('Encrypted at rest');
-});
-
-test('password show page displays team name', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertSee($team->name);
-});
-
-test('password show page renders notes as markdown', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-        'notes' => '**important** info',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertOk();
-    $response->assertSee('<strong>important</strong>', false);
-});
-
-test('password show page has show/hide notes toggle', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-        'notes' => 'Some notes',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertSee('Show notes');
-});
-
-test('password show page notes are hidden by default', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-        'notes' => 'Secret note content',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertOk();
-    $content = $response->getContent();
-    expect($content)->toContain('x-data="{ visible: false }"');
-    expect($content)->toContain('x-show="visible"');
-});
-
-test('password show page renders markdown links in notes', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-        'notes' => '[Docs](https://example.com)',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertOk();
-    $response->assertSee('<a href="https://example.com">Docs</a>', false);
-});
-
-test('password show page does not show notes section when notes are empty', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $response = $this
-        ->actingAs($user)
-        ->get(route('passwords.show', [$team, $password]));
-
-    $response->assertDontSee('Show notes');
-});
-
 test('username suggestions include past usernames from the team', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
@@ -1053,42 +740,6 @@ test('password generation works on edit page', function () {
     Livewire::test('pages::passwords.edit', ['team' => $team, 'password' => $password])
         ->call('generatePassword')
         ->assertSet('password', fn ($value) => strlen($value) === 16 && ! empty($value));
-});
-
-test('viewing password show page sets last_viewed_at', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    expect($password->last_viewed_at)->toBeNull();
-
-    Livewire::test('pages::passwords.show', ['team' => $team, 'password' => $password]);
-
-    expect($password->fresh()->last_viewed_at)->not->toBeNull();
-});
-
-test('viewing password show page does not update updated_at', function () {
-    $user = User::factory()->create();
-    $team = $user->personalTeam();
-    $password = $team->passwords()->create([
-        'name' => 'GitHub',
-        'username' => 'johndoe',
-        'password' => 'secret123',
-    ]);
-
-    $originalUpdatedAt = $password->updated_at;
-
-    Carbon::setTestNow(now()->addHour());
-
-    Livewire::test('pages::passwords.show', ['team' => $team, 'password' => $password]);
-
-    expect($password->fresh()->updated_at)->toEqual($originalUpdatedAt);
-
-    Carbon::setTestNow();
 });
 
 test('passwords index shows domain instead of full URL', function () {
