@@ -71,41 +71,50 @@ new #[Title('Passwords')] class extends Component
                         @endif
                     </div>
 
-                    <p class="text-sm">
-                        {{ $password->username }}
+                    <div class="mt-1 flex gap-x-3">
+                        <div>
+                            {{ $password->username }}
+                        </div>
 
-                        <flux:button
-                            size="xs"
-                            variant="filled"
-                            color="lime"
-                            x-on:click="navigator.clipboard.writeText(username); copiedUser = true; setTimeout(() => copiedUser = false, 2000)"
-                            class="lowercase"
-                        >
-                            <span x-text="copiedUser ? 'Copied!' : 'Copy'"></span>
-                        </flux:button>
-                    </p>
+                        <div class="flex gap-1.5">
+                            <flux:button
+                                size="xs"
+                                variant="filled"
+                                color="lime"
+                                x-on:click="navigator.clipboard.writeText(username); copiedUser = true; setTimeout(() => copiedUser = false, 2000)"
+                                class="lowercase"
+                            >
+                                <span x-text="copiedUser ? 'Copied!' : 'Copy'"></span>
+                            </flux:button>
+                        </div>
+                    </div>
 
-                    <div class="mt-0.5">
-                        <span x-show="showPass" x-cloak x-text="password" class="font-mono"></span>
+                    <div class="mt-1 flex gap-x-3">
+                        <div>
+                            <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono"></span>
+                            <span x-show="showPass" x-cloak x-text="password" class="font-mono"></span>
+                        </div>
 
-                        <flux:button
-                            size="xs"
-                            variant="primary"
-                            color="lime"
-                            x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
-                            class="lowercase"
-                        >
-                            <span x-text="copiedPass ? 'Copied!' : (showPass ? 'Copy' : 'Copy password')"></span>
-                        </flux:button>
+                        <div class="flex gap-1.5">
+                            <flux:button
+                                size="xs"
+                                variant="primary"
+                                color="lime"
+                                x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
+                                class="lowercase"
+                            >
+                                <span x-text="copiedPass ? 'Copied!' : (showPass ? 'Copy' : 'Copy password')"></span>
+                            </flux:button>
 
-                        <flux:button
-                            size="xs"
-                            variant="filled"
-                            x-on:click="showPass = !showPass"
-                            class="lowercase"
-                        >
-                            <span x-text="showPass ? 'Hide' : 'Show password'"></span>
-                        </flux:button>
+                            <flux:button
+                                size="xs"
+                                variant="filled"
+                                x-on:click="showPass = !showPass"
+                                class="lowercase"
+                            >
+                                <span x-text="showPass ? 'Hide' : 'Show'"></span>
+                            </flux:button>
+                        </div>
                     </div>
 
                     <div class="mt-1">
