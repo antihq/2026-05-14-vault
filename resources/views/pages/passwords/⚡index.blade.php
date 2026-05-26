@@ -34,7 +34,10 @@ new #[Title('Passwords')] class extends Component
 
 <section class="w-full max-w-2xl">
     <div class="flex gap-3 items-baseline">
-        <flux:heading class="lowercase" level="1">Passwords</flux:heading>
+        <div class="flex items-center gap-2">
+            <flux:heading class="lowercase" level="1">Passwords</flux:heading>
+            <span class="text-zinc-500 dark:text-zinc-400 text-sm/5 sm:text-xs/5">{{ $this->passwords->total() }}</span>
+        </div>
         <flux:link :href="route('passwords.create', ['current_team' => $teamModel])" wire:navigate>
             New password
         </flux:link>

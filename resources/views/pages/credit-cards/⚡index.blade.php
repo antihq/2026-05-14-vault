@@ -34,7 +34,10 @@ new #[Title('Credit Cards')] class extends Component
 
 <section class="w-full max-w-2xl">
     <div class="flex gap-3 items-baseline">
-        <flux:heading class="lowercase" level="1">Credit Cards</flux:heading>
+        <div class="flex items-center gap-2">
+            <flux:heading class="lowercase" level="1">Credit Cards</flux:heading>
+            <span class="text-zinc-500 dark:text-zinc-400 text-sm/5 sm:text-xs/5">{{ $this->creditCards->total() }}</span>
+        </div>
         <flux:link :href="route('credit-cards.create', ['current_team' => $teamModel])" wire:navigate>
             New credit card
         </flux:link>
