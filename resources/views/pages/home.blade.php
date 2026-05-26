@@ -1,10 +1,27 @@
 <x-layouts::auth title="Welcome">
     <div class="grid lg:grid-cols-[1fr_320px] gap-x-12 lg:gap-x-16 gap-y-8">
         <div>
-            <flux:heading level="1">Anti Starter Kit</flux:heading>
+            <flux:heading level="1" class="lowercase">A simple password manager.</flux:heading>
 
             <p class="mt-1 max-w-prose">
-                An opinionated starter kit made for the <a href="https://github.com/antihq" class="hover:underline text-blue-700 visited:text-purple-700 dark:text-blue-400 dark:visited:text-purple-400">AntiHQ Laravel projects</a>. It ships with authentication, teams, and a set of conventions to get you building faster.
+                Manages passwords and credit cards. Quickly filter to find
+                what you need. One-click copy for usernames, passwords,
+                card numbers, and CVVs. Personal vault or team sharing.
+                Works on any device with a browser. No download required.
+            </p>
+
+            <ul class="mt-6">
+                <li><span class="font-semibold">search</span> — Quickly filter passwords and credit cards by name, username, or cardholder.</li>
+                <li><span class="font-semibold">clipboard</span> — One-click copy for username, password, card number, and CVV.</li>
+                <li><span class="font-semibold">share</span> — Personal vault, or share items with your team with granular access control.</li>
+                <li><span class="font-semibold">access</span> — Works on any device with a browser. No download required.</li>
+            </ul>
+
+            <p class="mt-6 max-w-prose">
+                Not a browser extension. Not an autofill companion. Use vault
+                as your single source of truth for sensitive credentials. Let
+                your browser or operating system handle autofill for commonly
+                used passwords — that saves time and keeps things simple.
             </p>
         </div>
 
