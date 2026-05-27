@@ -50,7 +50,7 @@ new #[Title('Credit Cards')] class extends Component
     <div class="mt-8">
         <ul role="list" class="divide-y divide-zinc-950/5 dark:divide-white/5">
             @foreach ($this->creditCards as $creditCard)
-                <li class="py-2"
+                <li wire:key="{{ $creditCard->id }}" class="py-2"
                     x-data="{
                         copiedNumber: false,
                         copiedCvv: false,

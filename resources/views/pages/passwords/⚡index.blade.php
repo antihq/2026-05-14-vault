@@ -50,7 +50,7 @@ new #[Title('Passwords')] class extends Component
     <div class="mt-8">
         <ul role="list" class="divide-y divide-zinc-950/5 dark:divide-white/5">
             @foreach ($this->passwords as $password)
-                <li class="py-2"
+                <li wire:key="{{ $password->id }}" class="py-2"
                     x-data="{
                         copiedUser: false,
                         copiedPass: false,
