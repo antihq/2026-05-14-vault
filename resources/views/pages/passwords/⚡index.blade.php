@@ -60,45 +60,54 @@ new #[Title('Passwords')] class extends Component
                         password: {{ \Illuminate\Support\Js::encode($password->password) }}
                     }"
                 >
-                    <div class="flex flex-wrap sm:justify-between gap-x-3">
-                        <div class="flex flex-wrap gap-x-3 items-center min-w-0">
-                            <p class="font-semibold">{{ $password->name }}</p>
+                    <div class="flex flex-wrap justify-between gap-x-3">
+                        <p class="font-semibold">{{ $password->name }}</p>
+                        <div class="flex flex-wrap gap-x-3">
+                            @if ($password->website)
+                                <span class="truncate" title="{{ $password->website }}">
+                                    {{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}
+                                </span>
+                            @endif
                             <flux:link :href="route('passwords.edit', ['current_team' => $teamModel, 'password' => $password])" wire:navigate>
                                 Edit
                             </flux:link>
                         </div>
-                        @if ($password->website)
-                            <span class="truncate" title="{{ $password->website }}">
-                                {{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}
-                            </span>
-                        @endif
                     </div>
 
-                    <div class="mt-1 flex flex-wrap gap-x-3">
-                        <div class="min-w-0 truncate">
-                            {{ $password->username }}
-                        </div>
+                    <div class="min-w-0 truncate">
+                        {{ $password->username }}
+                    </div>
 
-                        <div class="flex gap-1.5 shrink-0">
+                    <div>
+                        <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono"></span>
+                        <span x-show="showPass" x-cloak x-text="password" class="font-mono"></span>
+                        <flux:button
+                            size="xs"
+                            variant="filled"
+                            x-on:click="showPass = !showPass"
+                            class="lowercase"
+                        >
+                            <span x-text="showPass ? 'Hide' : 'Show'"></span>
+                        </flux:button>
+                    </div>
+
+                    <div>
+                        <div x-show="showNotes" x-cloak>
+                            {!! Illuminate\Support\Str::markdown($password->notes ?? '') !!}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-1 mt-2">
                             <flux:button
                                 size="xs"
-                                variant="filled"
+                                variant="primary"
                                 color="lime"
                                 x-on:click="navigator.clipboard.writeText(username); copiedUser = true; setTimeout(() => copiedUser = false, 2000)"
                                 class="lowercase"
                             >
-                                <span x-text="copiedUser ? 'Copied!' : 'Copy'"></span>
+                                <span x-text="copiedUser ? 'Copied!' : 'Copy username'"></span>
                             </flux:button>
-                        </div>
-                    </div>
 
-                    <div class="mt-1 flex flex-wrap gap-x-3">
-                        <div class="min-w-0">
-                            <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono truncate block"></span>
-                            <span x-show="showPass" x-cloak x-text="password" class="font-mono truncate block"></span>
-                        </div>
-
-                        <div class="flex gap-1.5 shrink-0">
                             <flux:button
                                 size="xs"
                                 variant="primary"
@@ -106,27 +115,9 @@ new #[Title('Passwords')] class extends Component
                                 x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
                                 class="lowercase"
                             >
-                                <span x-text="copiedPass ? 'Copied!' : (showPass ? 'Copy' : 'Copy password')"></span>
+                                <span x-text="copiedPass ? 'Copied!' : 'Copy password'"></span>
                             </flux:button>
 
-                            <flux:button
-                                size="xs"
-                                variant="filled"
-                                x-on:click="showPass = !showPass"
-                                class="lowercase"
-                            >
-                                <span x-text="showPass ? 'Hide' : 'Show'"></span>
-                            </flux:button>
-                        </div>
-                    </div>
-
-                    <div class="mt-1">
-                        <div x-show="showNotes" x-cloak>
-                            {!! Illuminate\Support\Str::markdown($password->notes ?? '') !!}
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-1 mt-1">
                         <flux:button
                             size="xs"
                             variant="filled"
