@@ -74,13 +74,13 @@ new #[Title('Passwords')] class extends Component
                         </div>
                     </div>
 
-                    <div class="min-w-0 truncate">
+                    <div class="break-all">
                         {{ $password->username }}
                     </div>
 
                     <div>
-                        <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono"></span>
-                        <span x-show="showPass" x-cloak x-text="password" class="font-mono"></span>
+                        <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono break-all"></span>
+                        <span x-show="showPass" x-cloak x-text="password" class="font-mono break-all"></span>
                         <flux:button
                             size="xs"
                             variant="filled"
