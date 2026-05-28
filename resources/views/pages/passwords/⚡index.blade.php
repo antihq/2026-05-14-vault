@@ -78,8 +78,8 @@ new #[Title('Passwords')] class extends Component
                         {{ $password->username }}
                     </div>
 
-                    <div>
-                        <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono break-all"></span>
+                    <div class="overflow-hidden">
+                        <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono"></span>
                         <span x-show="showPass" x-cloak x-text="password" class="font-mono break-all"></span>
                         <flux:button
                             size="xs"
