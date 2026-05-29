@@ -758,5 +758,5 @@ test('passwords index shows domain instead of full URL', function () {
         ->get(route('passwords.index', ['current_team' => $team]));
 
     $response->assertSee('www.github.com');
-    $response->assertSee('title="https://www.github.com/settings"', false);
+    $response->assertSee('href="https://www.github.com/settings"', false);
 });
