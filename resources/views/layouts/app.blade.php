@@ -5,7 +5,7 @@
     </head>
     <body class="bg-white dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white text-base/6 sm:text-sm/6">
         <header>
-            <nav class="flex items-end flex-wrap py-5">
+            <nav class="flex items-end flex-wrap py-5 gap-y-1">
                 <div class="lg:w-64 lg:text-right px-4 gap-x-3 text-zinc-500 dark:text-zinc-400">
                     <a href="{{ route('home') }}" wire:navigate>
                         {{ config('app.name') }}
@@ -14,11 +14,11 @@
                     <flux:button size="xs" variant="filled" :href="route('teams.switch')" wire:navigate class="lowercase">switch team</flux:button>
                 </div>
 
-                <div class="w-full lg:flex-1 flex-wrap flex px-4 gap-x-3 md:justify-between">
+                <div class="w-full lg:flex-1 flex-wrap flex px-4 gap-x-3 gap-y-1 md:justify-between max-sm:flex-wrap-reverse">
                     <div class="flex gap-x-3">
                         @if (Auth::user()->currentTeam)
-                            <flux:link :href="route('passwords.index', ['current_team' => Auth::user()->currentTeam])" class="lowercase" wire:navigate :accent="false" :variant="request()->routeIs('passwords.*') ? null : 'ghost'">passwords</flux:link>
-                            <flux:link :href="route('credit-cards.index', ['current_team' => Auth::user()->currentTeam])" class="lowercase" wire:navigate :accent="false" :variant="request()->routeIs('credit-cards.*') ? null : 'ghost'">cards</flux:link>
+                            <flux:link :href="route('passwords.index', ['current_team' => Auth::user()->currentTeam])" class="lowercase" wire:navigate>passwords</flux:link>
+                            <flux:link :href="route('credit-cards.index', ['current_team' => Auth::user()->currentTeam])" class="lowercase" wire:navigate>cards</flux:link>
                         @endif
                     </div>
 
