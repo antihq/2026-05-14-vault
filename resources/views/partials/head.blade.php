@@ -6,6 +6,7 @@
 </title>
 
 <link rel="icon" href="/favicon.png" type="image/png">
+<link rel="manifest" href="{{ url('/manifest') }}">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 <link rel="preconnect" href="https://fonts.bunny.net">

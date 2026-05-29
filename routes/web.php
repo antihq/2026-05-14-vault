@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'pages::home')->middleware('guest');
 Route::view('home', 'pages::home')->name('home');
 
+Route::get('/manifest', function () {
+    return response()->view('manifest-json')->header('Content-Type', 'application/json');
+});
+
 Route::prefix('{current_team}')
     ->middleware(['auth', 'verified', EnsureTeamMembership::class])
     ->group(function () {
