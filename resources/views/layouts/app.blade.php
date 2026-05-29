@@ -19,14 +19,14 @@
                         @if (Auth::user()->currentTeam)
                             <flux:link :href="route('passwords.index', ['current_team' => Auth::user()->currentTeam])" class="lowercase" wire:navigate :accent="false" :variant="request()->routeIs('passwords.*') ? null : 'ghost'">passwords</flux:link>
                             <flux:link :href="route('credit-cards.index', ['current_team' => Auth::user()->currentTeam])" class="lowercase" wire:navigate :accent="false" :variant="request()->routeIs('credit-cards.*') ? null : 'ghost'">cards</flux:link>
-                            <flux:link :href="route('teams.settings', Auth::user()->currentTeam)" class="lowercase" wire:navigate :accent="false" :variant="request()->routeIs('teams.settings') ? null : 'ghost'">settings</flux:link>
                         @endif
                     </div>
 
                     <div aria-hidden="true" class="flex-1"></div>
 
-                    <div>
-                        logged in as <flux:link :href="route('settings')" class="lowercase" wire:navigate :accent="false">{{ Auth::user()->email }}</flux:link>
+                    <div class="flex flex-wrap gap-x-3">
+                        <flux:link :href="route('teams.settings', Auth::user()->currentTeam)" class="lowercase" wire:navigate :accent="false">Settings</flux:link>
+                        <flux:link :href="route('settings')" class="lowercase" wire:navigate :accent="false">Account</flux:link>
                         <form method="POST" action="{{ route('logout') }}" class="inline-flex">
                             @csrf
                             <flux:button size="xs" variant="filled" type="submit" class="lowercase">logout</flux:button>

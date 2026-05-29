@@ -61,16 +61,20 @@ new #[Title('Passwords')] class extends Component
                     }"
                 >
                     <div class="flex flex-wrap justify-between gap-x-3">
-                        <p class="font-semibold">{{ $password->name }}</p>
                         <div class="flex flex-wrap gap-x-3">
-                            @if ($password->website)
-                                <span class="truncate" title="{{ $password->website }}">
-                                    {{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}
-                                </span>
-                            @endif
-                            <flux:link :href="route('passwords.edit', ['current_team' => $teamModel, 'password' => $password])" wire:navigate>
+                            <p class="font-semibold">
+                                {{ $password->name }}
+                            </p>
+                            <flux:link :href="route('passwords.edit', ['current_team' => $teamModel, 'password' => $password])" class="font-normal" wire:navigate>
                                 Edit
                             </flux:link>
+                        </div>
+                        <div class="">
+                            @if ($password->website)
+                                <flux:link :href="$password->website" target="_blank" class="truncate">
+                                    {{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}
+                                </flux:link>
+                            @endif
                         </div>
                     </div>
 
