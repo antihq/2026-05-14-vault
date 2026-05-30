@@ -24,6 +24,7 @@ $classes = Flux::classes()
             false => 'text-zinc-950 dark:text-white decoration-zinc-950/50 hover:decoration-zinc-950 dark:decoration-white/50 dark:hover:decoration-white',
         },
     })
+    ->add('active:bg-zinc-600/10 dark:active:bg-white/5 active:text-red-700 dark:active:text-red-400 active:no-underline')
     ;
 @endphp
 {{-- NOTE: It's important that this file has NO newline at the end of the file. --}}
