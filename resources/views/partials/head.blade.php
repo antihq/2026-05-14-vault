@@ -7,7 +7,7 @@
 
 <link rel="icon" href="/favicon.png" type="image/png">
 <link rel="manifest" href="{{ url('/manifest') }}">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
