@@ -1,7 +1,7 @@
 @servers(['web' => 'calm-cliff', 'localhost' => '127.0.0.1'])
 
 @setup
-    $path = '2026-05-14-vault.antihq.com/';
+    $path = 'vault.antihq.com/';
     $branch = 'main';
 @endsetup
 
