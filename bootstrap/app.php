@@ -3,6 +3,7 @@
 use App\Http\Middleware\FlushErrorTracker;
 use App\Http\Middleware\SetTeamUrlDefaults;
 use App\Services\ErrorTracker;
+use BeyondCode\ServerTiming\Middleware\ServerTimingMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->prepend(\BeyondCode\ServerTiming\Middleware\ServerTimingMiddleware::class);
+        $middleware->prepend(ServerTimingMiddleware::class);
 
         $middleware->web(append: [
             SetTeamUrlDefaults::class,

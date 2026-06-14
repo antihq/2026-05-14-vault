@@ -815,5 +815,3 @@ test('credit card edit page displays delete button', function () {
 
     $response->assertSee('Delete credit card');
 });
-
-
