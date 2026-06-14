@@ -3,8 +3,7 @@
 use App\Http\Middleware\EnsureTeamMembership;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'pages::home')->middleware('guest');
-Route::view('home', 'pages::home')->name('home');
+Route::get('/', fn () => redirect()->route('login'))->middleware('guest')->name('home');
 
 Route::get('/manifest', function () {
     return response()->view('manifest-json')->header('Content-Type', 'application/json');

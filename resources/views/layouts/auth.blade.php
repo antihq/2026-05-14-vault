@@ -11,10 +11,6 @@
                 </div>
 
                 <div class="w-full lg:flex-1 flex-wrap flex px-4 gap-x-3 gap-y-1 md:justify-between max-sm:flex-wrap-reverse">
-                    <div class="flex gap-x-3">
-                        <flux:link :href="route('home')" class="lowercase" wire:navigate>home</flux:link>
-                    </div>
-
                     <div aria-hidden="true" class="flex-1"></div>
 
                     <div class="flex gap-x-3">
