@@ -69,9 +69,9 @@ new #[Title('Passwords')] class extends Component
                                 Edit
                             </flux:link>
                         </div>
-                        <div class="">
+                        <div>
                             @if ($password->website)
-                                <flux:link :href="$password->website" target="_blank" class="truncate">
+                                <flux:link :href="$password->website" target="_blank" :accent="false" class="truncate">
                                     {{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}
                                 </flux:link>
                             @endif
@@ -101,26 +101,26 @@ new #[Title('Passwords')] class extends Component
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-1 mt-2">
-                            <flux:button
-                                size="xs"
-                                variant="primary"
-                                color="lime"
-                                x-on:click="navigator.clipboard.writeText(username); copiedUser = true; setTimeout(() => copiedUser = false, 2000)"
-                                class="lowercase"
-                            >
-                                <span x-text="copiedUser ? 'Copied!' : 'Copy username'"></span>
-                            </flux:button>
+                    <div class="flex flex-wrap items-center gap-1 mt-2 pb-2">
+                        <flux:button
+                            size="xs"
+                            variant="primary"
+                            color="lime"
+                            x-on:click="navigator.clipboard.writeText(username); copiedUser = true; setTimeout(() => copiedUser = false, 2000)"
+                            class="lowercase"
+                        >
+                            <span x-text="copiedUser ? 'Copied!' : 'Copy username'"></span>
+                        </flux:button>
 
-                            <flux:button
-                                size="xs"
-                                variant="primary"
-                                color="lime"
-                                x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
-                                class="lowercase"
-                            >
-                                <span x-text="copiedPass ? 'Copied!' : 'Copy password'"></span>
-                            </flux:button>
+                        <flux:button
+                            size="xs"
+                            variant="primary"
+                            color="lime"
+                            x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
+                            class="lowercase"
+                        >
+                            <span x-text="copiedPass ? 'Copied!' : 'Copy password'"></span>
+                        </flux:button>
 
                         <flux:button
                             size="xs"
