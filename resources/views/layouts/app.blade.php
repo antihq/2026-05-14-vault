@@ -3,7 +3,7 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="font-mono bg-white dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white text-base/6 sm:text-sm/6">
+    <body class="font-mono bg-zinc-50 dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white text-base/6 sm:text-sm/6">
         <header>
             <nav class="flex items-end flex-wrap py-5 gap-y-1">
                 <div class="lg:w-64 lg:text-right px-4 gap-x-3">
