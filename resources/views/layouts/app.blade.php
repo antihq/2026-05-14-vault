@@ -9,7 +9,7 @@
                 <div class="lg:w-64 lg:text-right px-4 gap-x-3">
                     <a href="{{ route('home') }}" wire:navigate>{{ config('app.name') }}</a>
                     <flux:link :href="route('dashboard')" wire:navigate :accent="false">{{ Auth::user()->currentTeam->name }}</flux:link>
-                    <flux:link :href="route('teams.switch')" wire:navigate :accent="false" class="lowercase">switch team</flux:link>
+                    <flux:link :href="route('teams.switch')" wire:navigate :accent="false" class="lowercase whitespace-nowrap">switch team</flux:link>
                 </div>
 
                 <div class="w-full lg:flex-1 flex-wrap flex px-4 gap-x-3 gap-y-1 md:justify-between max-sm:flex-wrap-reverse">
