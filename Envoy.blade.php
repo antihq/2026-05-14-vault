@@ -3,6 +3,7 @@
 @setup
     $path = 'vault.antihq.com/';
     $branch = 'main';
+    $server = 'calm-cliff';
 @endsetup
 
 @story('pre-check')
@@ -17,6 +18,7 @@
     pull-code
     install-composer
     install-npm
+    upload-fonts
     build-assets
     run-migrations
     optimize
@@ -42,6 +44,12 @@
 @task('install-npm', ['on' => 'web'])
     cd {{ $path }}
     npm ci --no-audit --no-fund
+@endtask
+
+@task('upload-fonts', ['on' => 'localhost'])
+    ssh {{ $server }} "mkdir -p {{ $path }}resources/fonts"
+    scp resources/fonts/BerkeleyMonoVariable.woff2 \
+        {{ $server }}:{{ $path }}resources/fonts/BerkeleyMonoVariable.woff2
 @endtask
 
 @task('build-assets', ['on' => 'web'])

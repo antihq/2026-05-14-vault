@@ -8,8 +8,17 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@font-face {
+    font-family: 'Berkeley Mono';
+    src: url('../fonts/BerkeleyMonoVariable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 @theme {
     --font-sans: Inter, sans-serif;
+    --font-mono: 'Berkeley Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @theme {
@@ -23,4 +32,9 @@
         --color-accent-content: var(--color-green-400);
         --color-accent-foreground: var(--color-white);
     }
+}
+
+@utility font-mono {
+    font-family: var(--font-mono);
+    font-variation-settings: "wdth" 87.5;
 }
