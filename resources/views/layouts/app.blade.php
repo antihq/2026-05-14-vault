@@ -3,15 +3,13 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="bg-white dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white text-base/6 sm:text-sm/6">
+    <body class="font-mono bg-white dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white text-base/6 sm:text-sm/6">
         <header>
             <nav class="flex items-end flex-wrap py-5 gap-y-1">
-                <div class="lg:w-64 lg:text-right px-4 gap-x-3 text-zinc-500 dark:text-zinc-400">
-                    <a href="{{ route('home') }}" wire:navigate>
-                        {{ config('app.name') }}
-                    </a>
-                    (<flux:link :href="route('dashboard')" wire:navigate :accent="false">{{ Auth::user()->currentTeam->name }}</flux:link>)
-                    <flux:button size="xs" variant="filled" :href="route('teams.switch')" wire:navigate class="lowercase">switch team</flux:button>
+                <div class="lg:w-64 lg:text-right px-4 gap-x-3">
+                    <a href="{{ route('home') }}" wire:navigate>{{ config('app.name') }}</a>
+                    <flux:link :href="route('dashboard')" wire:navigate :accent="false">{{ Auth::user()->currentTeam->name }}</flux:link>
+                    <flux:link :href="route('teams.switch')" wire:navigate :accent="false" class="lowercase">switch team</flux:link>
                 </div>
 
                 <div class="w-full lg:flex-1 flex-wrap flex px-4 gap-x-3 gap-y-1 md:justify-between max-sm:flex-wrap-reverse">
@@ -24,10 +22,10 @@
 
                     <div aria-hidden="true" class="flex-1"></div>
 
-                    <div class="flex flex-wrap gap-x-3">
+                    <div class="flex flex-wrap gap-x-3 items-center">
                         <flux:link :href="route('teams.settings', Auth::user()->currentTeam)" class="lowercase" wire:navigate :accent="false">Settings</flux:link>
                         <flux:link :href="route('settings')" class="lowercase" wire:navigate :accent="false">Account</flux:link>
-                        <form method="POST" action="{{ route('logout') }}" class="inline-flex">
+                        <form method="POST" action="{{ route('logout') }}" class="flex">
                             @csrf
                             <flux:button size="xs" variant="filled" type="submit" class="lowercase">logout</flux:button>
                         </form>
