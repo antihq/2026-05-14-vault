@@ -75,7 +75,7 @@ $classes = Flux::classes()
                 ? 'w-11 sm:w-9'
                 : ($iconLeading && $iconLeading !== '' ? 'ps-3 sm:ps-2.5' : 'ps-3.5 sm:ps-3') . ' ' . ($iconTrailing && $iconTrailing !== '' ? 'pe-3 sm:pe-2.5' : 'pe-3.5 sm:pe-3')
         ),
-        'sm' => 'h-8 text-sm' . ' ' . ($square ? 'w-8' : 'px-3'),
+        'sm' => 'h-6 text-base/6 sm:text-sm/6' . ' ' . ($square ? 'w-6' : 'px-1.5'),
         'xs' => 'h-6 text-sm/5 sm:text-xs/5' . ' ' . ($square ? 'w-6' : 'px-1.5'),
     })
     ->add('inline-flex') // Buttons are inline by default but links are blocks, so inline-flex is needed here to ensure link-buttons are displayed the same as buttons...

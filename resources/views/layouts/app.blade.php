@@ -27,7 +27,7 @@
                         <flux:link :href="route('settings')" class="lowercase" wire:navigate :accent="false">Account</flux:link>
                         <form method="POST" action="{{ route('logout') }}" class="flex">
                             @csrf
-                            <flux:button size="xs" variant="filled" type="submit" class="lowercase">logout</flux:button>
+                            <flux:button size="sm" variant="filled" type="submit" class="lowercase">logout</flux:button>
                         </form>
                     </div>
                 </div>

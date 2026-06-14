@@ -86,7 +86,7 @@ new #[Title('Passwords')] class extends Component
                         <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono"></span>
                         <span x-show="showPass" x-cloak x-text="password" class="font-mono break-all"></span>
                         <flux:button
-                            size="xs"
+                            size="sm"
                             variant="filled"
                             x-on:click="showPass = !showPass"
                             class="lowercase"
@@ -103,7 +103,7 @@ new #[Title('Passwords')] class extends Component
 
                     <div class="flex flex-wrap items-center gap-1 mt-2 pb-2">
                         <flux:button
-                            size="xs"
+                            size="sm"
                             variant="primary"
                             color="lime"
                             x-on:click="navigator.clipboard.writeText(username); copiedUser = true; setTimeout(() => copiedUser = false, 2000)"
@@ -113,7 +113,7 @@ new #[Title('Passwords')] class extends Component
                         </flux:button>
 
                         <flux:button
-                            size="xs"
+                            size="sm"
                             variant="primary"
                             color="lime"
                             x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
@@ -123,7 +123,7 @@ new #[Title('Passwords')] class extends Component
                         </flux:button>
 
                         <flux:button
-                            size="xs"
+                            size="sm"
                             variant="filled"
                             x-on:click="showNotes = !showNotes"
                             :disabled="! $password->notes"
