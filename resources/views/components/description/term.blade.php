@@ -4,7 +4,7 @@
     {{ $attributes->except('class') }}
     @class([
         $attributes->get('class'),
-        'col-start-1 border-t border-zinc-950/5 pt-2 font-medium text-zinc-950 first:border-none sm:border-t sm:border-zinc-950/5 sm:py-2 dark:border-white/5 dark:text-white sm:dark:border-white/5',
+        'col-start-1 border-t border-zinc-950/5 pt-4 text-zinc-500 first:border-none sm:border-t sm:border-zinc-950/5 sm:py-4 dark:border-white/5 dark:text-zinc-400 sm:dark:border-white/5',
     ])
 >
     {{ $slot }}

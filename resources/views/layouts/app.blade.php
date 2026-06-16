@@ -3,39 +3,58 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="bg-zinc-50 dark:bg-zinc-900 antialiased text-zinc-950 dark:text-white text-base/6 sm:text-sm/6">
-        <header>
-            <nav class="flex items-end flex-wrap py-5 gap-y-1">
-                <div class="lg:w-64 lg:text-right px-4 gap-x-3">
-                    <a href="{{ route('home') }}" wire:navigate>{{ config('app.name') }}</a>
-                    <flux:link :href="route('dashboard')" wire:navigate :accent="false">{{ Auth::user()->currentTeam->name }}</flux:link>
-                    <flux:link :href="route('teams.switch')" wire:navigate :accent="false" class="lowercase whitespace-nowrap">switch team</flux:link>
+    <body class="bg-zinc-50 dark:bg-zinc-900 antialiased text-zinc-800 dark:text-white text-sm/6">
+        <header class="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+            <nav class="flex flex-wrap gap-y-1">
+                <div class="lg:w-64 pl-1.5 lg:flex justify-end items-start hidden ">
+                    <flux:navbar class="-mb-px">
+                        <flux:navbar.item :href="route('home')" :accent="true" class="text-zinc-800" wire:navigate>{{ config('app.name') }}</flux:navbar.item>
+                    </flux:navbar>
                 </div>
 
-                <div class="w-full lg:flex-1 flex-wrap flex px-4 gap-x-3 gap-y-1 md:justify-between max-sm:flex-wrap-reverse">
-                    <div class="flex gap-x-3">
-                        @if (Auth::user()->currentTeam)
-                            <flux:link :href="route('passwords.index', ['current_team' => Auth::user()->currentTeam])" class="lowercase" wire:navigate>passwords</flux:link>
-                            <flux:link :href="route('credit-cards.index', ['current_team' => Auth::user()->currentTeam])" class="lowercase" wire:navigate>cards</flux:link>
-                        @endif
-                    </div>
+                <div class="w-full flex-1 flex-wrap flex px-1.5">
+                    <flux:navbar class="pb-3">
+                        <flux:navbar.item :href="route('home')" :accent="true" class="lg:hidden" wire:navigate>{{ config('app.name') }}</flux:navbar.item>
+                        <flux:navbar.item :href="route('dashboard')" :accent="true" class="text-zinc-800" wire:navigate>{{ Auth::user()->currentTeam->name }}</flux:navbar.item>
+                        <flux:navbar.item :href="route('teams.switch')" :accent="true" class="text-zinc-800" wire:navigate>Switch team</flux:navbar.item>
+                    </flux:navbar>
 
                     <div aria-hidden="true" class="flex-1"></div>
 
-                    <div class="flex flex-wrap gap-x-3 items-center">
-                        <flux:link :href="route('teams.settings', Auth::user()->currentTeam)" class="lowercase" wire:navigate :accent="false">Settings</flux:link>
-                        <flux:link :href="route('settings')" class="lowercase" wire:navigate :accent="false">Account</flux:link>
-                        <form method="POST" action="{{ route('logout') }}" class="flex">
+                    <flux:navbar class="-mb-px pb-3">
+                        <flux:navbar.item :href="route('teams.settings', Auth::user()->currentTeam)" wire:navigate :accent="false" class="text-zinc-800 max-lg:hidden">Settings</flux:navbar.item>
+                        <flux:navbar.item :href="route('settings')" wire:navigate :accent="false" class="text-zinc-800 max-lg:hidden">Account</flux:navbar.item>
+                        <form method="POST" action="{{ route('logout') }}" class="flex max-lg:hidden">
                             @csrf
-                            <flux:button size="sm" variant="filled" type="submit" class="lowercase">logout</flux:button>
+                            <flux:navbar.item type="submit" class="text-zinc-800">Logout</flux:navbar.item>
                         </form>
-                    </div>
+                        <flux:dropdown class="lg:hidden">
+                            <flux:navbar.item icon="ellipsis-horizontal" class="text-zinc-800" />
+                            <flux:navmenu>
+                                <flux:navmenu.item :href="route('teams.settings', Auth::user()->currentTeam)" wire:navigate :accent="false" class="text-zinc-800">Settings</flux:navmenu.item>
+                                <flux:navmenu.item :href="route('settings')" wire:navigate :accent="false" class="text-zinc-800">Account</flux:navmenu.item>
+                                <form method="POST" action="{{ route('logout') }}" class="flex">
+                                    @csrf
+                                    <flux:navmenu.item type="submit" class="text-zinc-800">Logout</flux:navmenu.item>
+                                </form>
+                            </flux:navmenu>
+                        </flux:dropdown>
+                    </flux:navbar>
                 </div>
             </nav>
         </header>
 
+        <header class="lg:pl-64 border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+            <div class="px-1.5">
+                <flux:navbar class="w-full -mb-px">
+                    <flux:navbar.item :href="route('passwords.index', ['current_team' => Auth::user()->currentTeam])" :current="request()->routeIs('passwords.*')" class="text-zinc-800" wire:navigate>Passwords</flux:navbar.item>
+                    <flux:navbar.item :href="route('credit-cards.index', ['current_team' => Auth::user()->currentTeam])" :current="request()->routeIs('credit-cards.*')" class="text-zinc-800" wire:navigate>Cards</flux:navbar.item>
+                </flux:navbar>
+            </div>
+        </header>
+
         <main class="lg:pl-64">
-            <div class="p-4 pt-0">
+            <div class="px-4 py-6">
                 <div class="w-full max-w-6xl">
                     {{ $slot }}
                 </div>
