@@ -21,6 +21,7 @@ Route::prefix('{current_team}')
 
         Route::livewire('/credit-cards', 'pages::credit-cards.index')->name('credit-cards.index');
         Route::livewire('/credit-cards/create', 'pages::credit-cards.create')->name('credit-cards.create');
+        Route::livewire('/credit-cards/{creditCard}', 'pages::credit-cards.show')->name('credit-cards.show');
         Route::livewire('/credit-cards/{creditCard}/edit', 'pages::credit-cards.edit')->name('credit-cards.edit');
     });
 

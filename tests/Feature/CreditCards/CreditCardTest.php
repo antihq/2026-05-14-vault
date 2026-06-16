@@ -324,6 +324,53 @@ test('credit card cannot be deleted by non team members', function () {
     $this->assertDatabaseHas('credit_cards', ['id' => $creditCard->id]);
 });
 
+test('credit card can be deleted from index page', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::credit-cards.index', ['current_team' => $team])
+        ->call('deleteCreditCard', $creditCard->id)
+        ->assertHasNoErrors()
+        ->assertNoRedirect();
+
+    $this->assertDatabaseMissing('credit_cards', [
+        'id' => $creditCard->id,
+    ]);
+});
+
+test('credit card cannot be deleted from index page by non team members', function () {
+    $owner = User::factory()->create();
+    $nonMember = User::factory()->create();
+    $team = Team::factory()->create();
+    $team->members()->attach($owner, ['role' => TeamRole::Owner->value]);
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $this->actingAs($nonMember);
+
+    Livewire::test('pages::credit-cards.index', ['current_team' => $team])
+        ->call('deleteCreditCard', $creditCard->id)
+        ->assertForbidden();
+
+    $this->assertDatabaseHas('credit_cards', ['id' => $creditCard->id]);
+});
+
 test('credit card notes are encrypted', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
