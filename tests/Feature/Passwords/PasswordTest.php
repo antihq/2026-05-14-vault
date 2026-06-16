@@ -103,6 +103,62 @@ test('password edit page can be rendered', function () {
     $response->assertOk();
 });
 
+test('password show page can be rendered', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.show', ['current_team' => $team, 'password' => $password]));
+
+    $response->assertOk();
+    $response->assertSee('GitHub');
+    $response->assertSee('johndoe');
+});
+
+test('password show page records last viewed timestamp', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    expect($password->last_viewed_at)->toBeNull();
+
+    $this
+        ->actingAs($user)
+        ->get(route('passwords.show', ['current_team' => $team, 'password' => $password]));
+
+    expect($password->fresh()->last_viewed_at)->not->toBeNull();
+});
+
+test('password show page cannot be viewed by non team members', function () {
+    $owner = User::factory()->create();
+    $nonMember = User::factory()->create();
+    $team = Team::factory()->create();
+    $team->members()->attach($owner, ['role' => TeamRole::Owner->value]);
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($nonMember);
+
+    Livewire::test('pages::passwords.show', ['current_team' => $team, 'password' => $password])
+        ->assertForbidden();
+});
+
 test('password can be updated', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();

@@ -115,6 +115,68 @@ test('credit card edit page can be rendered', function () {
     $response->assertOk();
 });
 
+test('credit card show page can be rendered', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('credit-cards.show', ['current_team' => $team, 'creditCard' => $creditCard]));
+
+    $response->assertOk();
+    $response->assertSee('My Visa');
+    $response->assertSee('4242');
+});
+
+test('credit card show page records last viewed timestamp', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    expect($creditCard->last_viewed_at)->toBeNull();
+
+    $this
+        ->actingAs($user)
+        ->get(route('credit-cards.show', ['current_team' => $team, 'creditCard' => $creditCard]));
+
+    expect($creditCard->fresh()->last_viewed_at)->not->toBeNull();
+});
+
+test('credit card show page cannot be viewed by non team members', function () {
+    $owner = User::factory()->create();
+    $nonMember = User::factory()->create();
+    $team = Team::factory()->create();
+    $team->members()->attach($owner, ['role' => TeamRole::Owner->value]);
+
+    $creditCard = $team->creditCards()->create([
+        'name' => 'My Visa',
+        'name_on_card' => 'John Doe',
+        'card_number' => '4242424242424242',
+        'expiry_date' => '12/28',
+        'cvv' => '123',
+    ]);
+
+    $this->actingAs($nonMember);
+
+    Livewire::test('pages::credit-cards.show', ['current_team' => $team, 'creditCard' => $creditCard])
+        ->assertForbidden();
+});
+
 test('credit card can be updated', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
