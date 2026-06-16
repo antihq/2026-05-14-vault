@@ -69,7 +69,7 @@ new #[Title('Passwords')] class extends Component
                     }"
                 >
                     <div class="min-w-0 flex-auto">
-                        <p class="font-medium">
+                        <p class="font-medium text-base/6 sm:text-sm/6">
                             <a href="{{ route('passwords.show', ['current_team' => $teamModel, 'password' => $password]) }}" wire:navigate>
                                 <span class="absolute inset-x-0 -top-px bottom-0"></span>
                                 {{ $password->name }}
