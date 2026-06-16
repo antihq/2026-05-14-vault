@@ -6,7 +6,7 @@
     <body class="bg-zinc-50 dark:bg-zinc-900 antialiased text-zinc-800 dark:text-white text-sm/6">
         <header class="border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
             <nav class="flex flex-wrap gap-y-1">
-                <div class="lg:w-64 pl-1.5 lg:flex justify-end items-start hidden ">
+                <div class="lg:w-64 pl-1.5 lg:flex justify-end items-start hidden">
                     <flux:navbar class="-mb-px">
                         <flux:navbar.item :href="route('home')" :accent="true" class="text-zinc-800" wire:navigate>{{ config('app.name') }}</flux:navbar.item>
                     </flux:navbar>

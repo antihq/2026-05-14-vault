@@ -105,7 +105,7 @@ new class extends Component
                 <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
                 <flux:error name="name" />
             </flux:field>
-             <flux:field class="mt-6">
+            <flux:field class="mt-6">
                 <flux:label>Username</flux:label>
                 <flux:autocomplete wire:model="username" required>
                     @foreach($this->usernameSuggestions as $suggestion)
@@ -122,20 +122,20 @@ new class extends Component
                 <flux:description>The sign-in password — auto-generated, overwrite or use Regenerate</flux:description>
                 <flux:error name="password" />
             </flux:field>
-         <flux:field class="mt-6">
+            <flux:field class="mt-6">
                 <flux:label>Website</flux:label>
                 <flux:input wire:model="website" type="url" placeholder="https://example.com" />
                 <flux:description>The login page URL for this service</flux:description>
                 <flux:error name="website" />
             </flux:field>
-         <flux:field class="mt-6">
+            <flux:field class="mt-6">
                 <flux:label>Notes</flux:label>
                 <flux:textarea wire:model="notes" />
                 <flux:error name="notes" />
                 <flux:description>Security questions, recovery codes, or other details</flux:description>
             </flux:field>
         </flux:card>
-         <div class="mt-4 flex">
+        <div class="mt-4 flex">
             <flux:spacer />
             <flux:button variant="primary" type="submit">
                 Update password
