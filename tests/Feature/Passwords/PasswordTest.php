@@ -431,7 +431,7 @@ test('password edit page displays delete button', function () {
         ->actingAs($user)
         ->get(route('passwords.edit', ['current_team' => $team, 'password' => $password]));
 
-    $response->assertSee('delete password');
+    $response->assertSee('Delete password');
 });
 
 test('password notes are encrypted', function () {
