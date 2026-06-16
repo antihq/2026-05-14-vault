@@ -22,7 +22,6 @@
                     <div aria-hidden="true" class="flex-1"></div>
 
                     <flux:navbar class="-mb-px pb-3">
-                        <flux:navbar.item :href="route('teams.settings', Auth::user()->currentTeam)" wire:navigate :accent="false" class="text-zinc-800 max-lg:hidden">Settings</flux:navbar.item>
                         <flux:navbar.item :href="route('settings')" wire:navigate :accent="false" class="text-zinc-800 max-lg:hidden">Account</flux:navbar.item>
                         <form method="POST" action="{{ route('logout') }}" class="flex max-lg:hidden">
                             @csrf
@@ -31,7 +30,6 @@
                         <flux:dropdown class="lg:hidden">
                             <flux:navbar.item icon="ellipsis-horizontal" class="text-zinc-800" />
                             <flux:navmenu>
-                                <flux:navmenu.item :href="route('teams.settings', Auth::user()->currentTeam)" wire:navigate :accent="false" class="text-zinc-800">Settings</flux:navmenu.item>
                                 <flux:navmenu.item :href="route('settings')" wire:navigate :accent="false" class="text-zinc-800">Account</flux:navmenu.item>
                                 <form method="POST" action="{{ route('logout') }}" class="flex">
                                     @csrf
@@ -49,6 +47,7 @@
                 <flux:navbar class="w-full -mb-px">
                     <flux:navbar.item :href="route('passwords.index', ['current_team' => Auth::user()->currentTeam])" :current="request()->routeIs('passwords.*')" class="text-zinc-800" wire:navigate>Passwords</flux:navbar.item>
                     <flux:navbar.item :href="route('credit-cards.index', ['current_team' => Auth::user()->currentTeam])" :current="request()->routeIs('credit-cards.*')" class="text-zinc-800" wire:navigate>Cards</flux:navbar.item>
+                    <flux:navbar.item :href="route('teams.settings', Auth::user()->currentTeam)" :current="request()->routeIs('teams.settings')" class="text-zinc-800" wire:navigate>Settings</flux:navbar.item>
                 </flux:navbar>
             </div>
         </header>
