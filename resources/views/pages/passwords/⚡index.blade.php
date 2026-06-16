@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Password;
 use App\Models\Team;
+use Flux\Flux;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -30,112 +33,90 @@ new #[Title('Passwords')] class extends Component
             ->orderBy('name')
             ->paginate(50);
     }
+
+    public function deletePassword(Password $password): void
+    {
+        Gate::authorize('delete', $password);
+
+        $password->delete();
+
+        Flux::toast(variant: 'success', text: 'Password deleted.');
+    }
 }; ?>
 
 <section class="w-full max-w-2xl">
-    <div class="flex gap-3 items-baseline">
+    <div class="flex gap-3 items-baseline justify-between">
         <div class="flex items-center gap-2">
-            <flux:heading class="lowercase" level="1">Passwords</flux:heading>
+            <flux:heading level="1">Passwords</flux:heading>
             <span class="text-zinc-500 dark:text-zinc-400 text-sm/5 sm:text-xs/5">{{ $this->passwords->total() }}</span>
         </div>
-        <flux:link :href="route('passwords.create', ['current_team' => $teamModel])" wire:navigate>
+        <flux:button :href="route('passwords.create', ['current_team' => $teamModel])" variant="primary" inset="top bottom" wire:navigate>
             New password
-        </flux:link>
+        </flux:button>
     </div>
 
-    <div class="mt-4 max-w-sm">
-        <flux:input wire:model.live="search" placeholder="search" clearable />
+    <div class="mt-6.5">
+        <flux:input wire:model.live="search" placeholder="Search..." clearable />
     </div>
 
-    <div class="mt-8">
-        <ul role="list" class="divide-y divide-zinc-950/5 dark:divide-white/5">
+    <flux:card class="mt-4 p-0!">
+        <ul role="list" class="divide-y divide-zinc-100 dark:divide-zinc-700">
             @foreach ($this->passwords as $password)
-                <li wire:key="{{ $password->id }}" class="py-2"
+                <li wire:key="{{ $password->id }}" class="relative flex justify-between gap-x-6 px-5 py-4"
                     x-data="{
-                        copiedUser: false,
-                        copiedPass: false,
-                        showPass: false,
-                        showNotes: false,
                         username: {{ \Illuminate\Support\Js::encode($password->username) }},
                         password: {{ \Illuminate\Support\Js::encode($password->password) }}
                     }"
                 >
-                    <div class="flex flex-wrap justify-between gap-x-3">
-                        <div class="flex flex-wrap gap-x-3">
-                            <p class="font-semibold">
+                    <div class="min-w-0 flex-auto">
+                        <p class="font-medium">
+                            <a href="{{ route('passwords.show', ['current_team' => $teamModel, 'password' => $password]) }}" wire:navigate>
+                                <span class="absolute inset-x-0 -top-px bottom-0"></span>
                                 {{ $password->name }}
-                            </p>
-                            <flux:link :href="route('passwords.edit', ['current_team' => $teamModel, 'password' => $password])" class="font-normal" wire:navigate>
-                                Edit
-                            </flux:link>
-                        </div>
-                        <div>
+                            </a>
+                        </p>
+                        <flux:text class="flex truncate">
+                            {{ $password->username }}
+                        </flux:text>
+                    </div>
+                    <div class="flex shrink-0 items-center gap-x-4">
+                        <div class="hidden sm:flex sm:flex-col sm:items-end relative z-10">
                             @if ($password->website)
-                                <flux:link :href="$password->website" target="_blank" :accent="false" class="truncate">
+                                <flux:link :href="$password->website" target="_blank" variant="ghost" class="truncate lowercase">
                                     {{ parse_url($password->website, PHP_URL_HOST) ?: $password->website }}
                                 </flux:link>
                             @endif
                         </div>
-                    </div>
-
-                    <div class="break-all">
-                        {{ $password->username }}
-                    </div>
-
-                    <div class="overflow-hidden">
-                        <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono"></span>
-                        <span x-show="showPass" x-cloak x-text="password" class="font-mono break-all"></span>
-                        <flux:button
-                            size="sm"
-                            variant="filled"
-                            x-on:click="showPass = !showPass"
-                            class="lowercase"
-                        >
-                            <span x-text="showPass ? 'Hide' : 'Show'"></span>
-                        </flux:button>
-                    </div>
-
-                    <div>
-                        <div x-show="showNotes" x-cloak>
-                            {!! Illuminate\Support\Str::markdown($password->notes ?? '') !!}
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap items-center gap-1 mt-2 pb-2">
-                        <flux:button
-                            size="sm"
-                            variant="primary"
-                            color="lime"
-                            x-on:click="navigator.clipboard.writeText(username); copiedUser = true; setTimeout(() => copiedUser = false, 2000)"
-                            class="lowercase"
-                        >
-                            <span x-text="copiedUser ? 'Copied!' : 'Copy username'"></span>
-                        </flux:button>
-
-                        <flux:button
-                            size="sm"
-                            variant="primary"
-                            color="lime"
-                            x-on:click="navigator.clipboard.writeText(password); copiedPass = true; setTimeout(() => copiedPass = false, 2000)"
-                            class="lowercase"
-                        >
-                            <span x-text="copiedPass ? 'Copied!' : 'Copy password'"></span>
-                        </flux:button>
-
-                        <flux:button
-                            size="sm"
-                            variant="filled"
-                            x-on:click="showNotes = !showNotes"
-                            :disabled="! $password->notes"
-                            class="lowercase"
-                        >
-                            <span x-text="showNotes ? 'Hide notes' : 'View notes'"></span>
-                        </flux:button>
+                        <flux:dropdown align="end" class="relative z-10">
+                            <flux:button icon="ellipsis-horizontal" variant="ghost" inset="right" />
+                            <flux:menu>
+                                <flux:menu.item :href="route('passwords.edit', ['current_team' => $teamModel, 'password' => $password])" wire:navigate>
+                                    Edit
+                                </flux:menu.item>
+                                <flux:menu.separator />
+                                <flux:menu.item x-on:click="navigator.clipboard.writeText(username); $flux.toast('Username copied.', { variant: 'success' })">
+                                    Copy username
+                                </flux:menu.item>
+                                <flux:menu.item x-on:click="navigator.clipboard.writeText(password); $flux.toast('Password copied.', { variant: 'success' })">
+                                    Copy password
+                                </flux:menu.item>
+                                <flux:menu.separator />
+                                <flux:menu.item
+                                    variant="danger"
+                                    wire:click="deletePassword({{ $password->id }})"
+                                    wire:confirm="Delete this password? This cannot be undone."
+                                >
+                                    Delete...
+                                </flux:menu.item>
+                            </flux:menu>
+                        </flux:dropdown>
                     </div>
                 </li>
             @endforeach
         </ul>
+    </flux:card>
 
-        <flux:pagination :paginator="$this->passwords" pagination:scroll-to class="mt-4" />
+    <div class="mt-2">
+        <flux:pagination :paginator="$this->passwords" pagination:scroll-to />
     </div>
 </section>

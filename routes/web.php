@@ -16,6 +16,7 @@ Route::prefix('{current_team}')
 
         Route::livewire('/passwords', 'pages::passwords.index')->name('passwords.index');
         Route::livewire('/passwords/create', 'pages::passwords.create')->name('passwords.create');
+        Route::livewire('/passwords/{password}', 'pages::passwords.show')->name('passwords.show');
         Route::livewire('/passwords/{password}/edit', 'pages::passwords.edit')->name('passwords.edit');
 
         Route::livewire('/credit-cards', 'pages::credit-cards.index')->name('credit-cards.index');

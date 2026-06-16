@@ -91,60 +91,65 @@ new class extends Component
     }
 }; ?>
 
-<section class="w-full max-w-2xl">
-    <flux:heading level="1" class="lowercase">edit password</flux:heading>
+<section class="w-full max-w-xl">
+    <flux:breadcrumbs>
+        <flux:breadcrumbs.item :href="route('passwords.show', ['current_team' => $teamModel, 'password' => $passwordModel])">{{ $passwordModel->name }}</flux:breadcrumbs.item>
+        <flux:breadcrumbs.item>Edit</flux:breadcrumbs.item>
+    </flux:breadcrumbs>
 
-    <form wire:submit="updatePassword" class="mt-2 max-w-xl">
-        <flux:field class="max-w-sm">
-            <flux:label class="lowercase">Name</flux:label>
-            <flux:input wire:model="name" type="text" required />
-            <flux:description class="lowercase">A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
-            <flux:error name="name" />
-        </flux:field>
-
-        <flux:field class="mt-4 max-w-sm">
-            <flux:label class="lowercase">Username</flux:label>
-            <flux:autocomplete wire:model="username" required>
-                @foreach($this->usernameSuggestions as $suggestion)
-                    <flux:autocomplete.item>{{ $suggestion }}</flux:autocomplete.item>
-                @endforeach
-            </flux:autocomplete>
-            <flux:description class="lowercase">The email or username used to sign in</flux:description>
-            <flux:error name="username" />
-        </flux:field>
-
-        <flux:field class="mt-4 max-w-sm">
-            <flux:label class="lowercase">Password</flux:label>
-            <flux:input wire:model="password" type="password" required viewable clearable />
-            <flux:button wire:click.prevent="generatePassword" size="xs" variant="filled" type="button" class="mt-1 lowercase">regenerate</flux:button>
-            <flux:description class="lowercase">The sign-in password — auto-generated, overwrite or use Regenerate</flux:description>
-            <flux:error name="password" />
-        </flux:field>
-
-        <flux:field class="mt-4 max-w-sm">
-            <flux:label class="lowercase">Website</flux:label>
-            <flux:input wire:model="website" type="url" placeholder="https://example.com" />
-            <flux:description class="lowercase">The login page URL for this service</flux:description>
-            <flux:error name="website" />
-        </flux:field>
-
-        <flux:field class="mt-4 max-w-sm">
-            <flux:label class="lowercase">Notes</flux:label>
-            <flux:textarea wire:model="notes" />
-            <flux:error name="notes" />
-            <flux:description class="lowercase">Security questions, recovery codes, or other details</flux:description>
-        </flux:field>
-
-        <div class="mt-4">
-            <flux:button variant="primary" color="lime" type="submit" class="lowercase">
-                update password
+    <form wire:submit="updatePassword" class="mt-4">
+        <flux:card class="px-6 py-5 max-sm:px-4 max-sm:py-3">
+            <flux:field>
+                <flux:label>Name</flux:label>
+                <flux:input wire:model="name" type="text" required />
+                <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
+                <flux:error name="name" />
+            </flux:field>
+             <flux:field class="mt-6">
+                <flux:label>Username</flux:label>
+                <flux:autocomplete wire:model="username" required>
+                    @foreach($this->usernameSuggestions as $suggestion)
+                        <flux:autocomplete.item>{{ $suggestion }}</flux:autocomplete.item>
+                    @endforeach
+                </flux:autocomplete>
+                <flux:description>The email or username used to sign in</flux:description>
+                <flux:error name="username" />
+            </flux:field>
+            <flux:field class="mt-6">
+                <flux:label>Password</flux:label>
+                <flux:input wire:model="password" type="password" required viewable clearable />
+                <flux:button wire:click.prevent="generatePassword" size="sm" type="button" class="mt-2">Regenerate</flux:button>
+                <flux:description>The sign-in password — auto-generated, overwrite or use Regenerate</flux:description>
+                <flux:error name="password" />
+            </flux:field>
+         <flux:field class="mt-6">
+                <flux:label>Website</flux:label>
+                <flux:input wire:model="website" type="url" placeholder="https://example.com" />
+                <flux:description>The login page URL for this service</flux:description>
+                <flux:error name="website" />
+            </flux:field>
+         <flux:field class="mt-6">
+                <flux:label>Notes</flux:label>
+                <flux:textarea wire:model="notes" />
+                <flux:error name="notes" />
+                <flux:description>Security questions, recovery codes, or other details</flux:description>
+            </flux:field>
+        </flux:card>
+         <div class="mt-4 flex">
+            <flux:spacer />
+            <flux:button variant="primary" type="submit">
+                Update password
             </flux:button>
         </div>
     </form>
 
     <form wire:submit="deletePassword" wire:confirm="Delete this password? This cannot be undone." class="mt-8">
-        <flux:button type="submit" variant="danger" class="lowercase">
-            delete password
-        </flux:button>
+        <flux:separator variant="subtle" />
+        <div class="mt-2 flex">
+            <flux:spacer />
+            <flux:button type="submit" variant="danger">
+                Delete password
+            </flux:button>
+        </div>
     </form>
 </section>

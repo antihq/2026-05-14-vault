@@ -326,6 +326,49 @@ test('password cannot be deleted by non team members', function () {
     $this->assertDatabaseHas('passwords', ['id' => $password->id]);
 });
 
+test('password can be deleted from index page', function () {
+    $user = User::factory()->create();
+    $team = $user->personalTeam();
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.index', ['current_team' => $team])
+        ->call('deletePassword', $password->id)
+        ->assertHasNoErrors()
+        ->assertNoRedirect();
+
+    $this->assertDatabaseMissing('passwords', [
+        'id' => $password->id,
+    ]);
+});
+
+test('password cannot be deleted from index page by non team members', function () {
+    $owner = User::factory()->create();
+    $nonMember = User::factory()->create();
+    $team = Team::factory()->create();
+    $team->members()->attach($owner, ['role' => TeamRole::Owner->value]);
+
+    $password = $team->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($nonMember);
+
+    Livewire::test('pages::passwords.index', ['current_team' => $team])
+        ->call('deletePassword', $password->id)
+        ->assertForbidden();
+
+    $this->assertDatabaseHas('passwords', ['id' => $password->id]);
+});
+
 test('passwords index can be searched by name', function () {
     $user = User::factory()->create();
     $team = $user->personalTeam();
