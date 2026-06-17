@@ -25,7 +25,7 @@ $badgeAttributes = Flux::attributesAfter('badge:', $attributes);
             @endif
 
             @if ($count)
-                <div class="text-sm text-zinc-500 dark:text-white/70">{{ $count }}</div>
+                <div class="text-base/6 sm:text-sm/6 text-zinc-500 dark:text-white/70">{{ $count }}</div>
             @endif
 
             @if ($badge)

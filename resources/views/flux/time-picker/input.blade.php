@@ -15,9 +15,9 @@ $classes = Flux::classes()
     ->add('px-3 flex items-center')
     ->add('tabular-nums cursor-default select-none')
     ->add(match ($size) {
-        default => 'text-base sm:text-sm py-2 h-10 leading-[1.375rem]', // This makes the height of the input 40px (same as buttons and such...)
-        'sm' => 'text-sm py-1.5 h-8 leading-[1.125rem]',
-        'xs' => 'text-xs py-1.5 h-6 leading-[1.125rem]',
+        default => 'text-base/6 sm:text-sm/6 py-2 h-10', // This makes the height of the input 40px (same as buttons and such...)
+        'sm' => 'text-base/6 sm:text-sm/6 py-1.5 h-8',
+        'xs' => 'text-sm/5 sm:text-xs/5 py-1.5 h-6',
     })
     ->add(match ($variant) { // Background...
         'outline' => 'bg-white dark:bg-white/10 dark:disabled:bg-white/[7%]',

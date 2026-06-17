@@ -2,7 +2,7 @@
 
 <ui-option-empty class="data-hidden:hidden">
     <div class="flex items-center justify-center h-10">
-        <div class="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
+        <div class="text-base/6 sm:text-sm/6 text-zinc-500 dark:text-zinc-400 font-medium">
             {{ $slot }}
         </div>
     </div>

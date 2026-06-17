@@ -89,7 +89,7 @@ if (isset($dropdown) && $dropdown === false) {
 
         <ui-time-picker-options popover="manual" tabindex="-1" wire:ignore class="{{ $optionsClasses }}">
             <template name="option">
-                <button type="button" tabindex="-1" class="w-full px-1 py-1.5 rounded-lg flex items-center justify-start gap-2 text-sm text-zinc-800 dark:text-white data-active:bg-zinc-100 dark:data-active:bg-zinc-600 disabled:text-zinc-400 disabled:pointer-events-none disabled:cursor-default [[readonly]_&]:pointer-events-none [[readonly]_&]:cursor-default [[readonly]_&]:bg-transparent">
+                <button type="button" tabindex="-1" class="w-full px-1 py-1.5 rounded-lg flex items-center justify-start gap-2 text-base/6 sm:text-sm/6 text-zinc-800 dark:text-white data-active:bg-zinc-100 dark:data-active:bg-zinc-600 disabled:text-zinc-400 disabled:pointer-events-none disabled:cursor-default [[readonly]_&]:pointer-events-none [[readonly]_&]:cursor-default [[readonly]_&]:bg-transparent">
                     <div class="w-6 shrink-0" data-checked>
                         <flux:icon.check variant="mini" class="hidden [ui-time-picker-options>[data-selected]_&]:block" />
                     </div>

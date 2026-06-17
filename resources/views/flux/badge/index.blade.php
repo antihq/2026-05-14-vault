@@ -33,9 +33,9 @@ $classes = Flux::classes()
     ->add($insetClasses)
     ->add('[print-color-adjust:exact]')
     ->add(match ($size) {
-        'lg' => 'text-sm py-1.5 **:data-flux-badge-icon:me-2',
-        default => 'text-sm py-1 **:data-flux-badge-icon:me-1.5',
-        'sm' => 'text-xs py-1 **:data-flux-badge-icon:me-1',
+        'lg' => 'text-base/6 sm:text-sm/6 py-1.5 **:data-flux-badge-icon:me-2',
+        default => 'text-base/6 sm:text-sm/6 py-1 **:data-flux-badge-icon:me-1.5',
+        'sm' => 'text-sm/5 sm:text-xs/5 py-1 **:data-flux-badge-icon:me-1',
     })
     ->add(match ($rounded) {
         true => 'rounded-full px-3',

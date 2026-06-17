@@ -30,7 +30,7 @@ $iconTrailingClasses = Flux::classes()
 $classes = Flux::classes()
     ->add('group/menu-radio flex items-center px-2 py-1.5 w-full focus:outline-hidden')
     ->add('rounded-md')
-    ->add('text-start text-sm font-medium')
+    ->add('text-start text-base/6 sm:text-sm/6 font-medium')
     ->add('[[disabled]_&]:opacity-50 [&[disabled]]:opacity-50')
     ->add([
         'text-zinc-800 data-active:bg-zinc-50 dark:text-white dark:data-active:bg-zinc-600',
@@ -49,7 +49,7 @@ $classes = Flux::classes()
     {{ $slot->isNotEmpty() ? $slot : $label }}
 
     <?php if ($suffix): ?>
-        <div class="ms-auto opacity-50 text-xs">
+        <div class="ms-auto opacity-50 text-sm/5 sm:text-xs/5">
             {{ $suffix }}
         </div>
     <?php endif; ?>

@@ -35,7 +35,7 @@ $classes = Flux::classes()
 $textareaClasses = Flux::classes()
     ->add('block w-full resize-none px-2 py-1.5')
     ->add('outline-none!')
-    ->add('text-base sm:text-sm text-zinc-700 [[disabled]_&]:text-zinc-500 placeholder-zinc-400 [[disabled]_&]:placeholder-zinc-400/70 dark:text-zinc-300 dark:[[disabled]_&]:text-zinc-400 dark:placeholder-zinc-400 dark:[[disabled]_&]:placeholder-zinc-500')
+    ->add('text-base/6 sm:text-sm/6 text-zinc-700 [[disabled]_&]:text-zinc-500 placeholder-zinc-400 [[disabled]_&]:placeholder-zinc-400/70 dark:text-zinc-300 dark:[[disabled]_&]:text-zinc-400 dark:placeholder-zinc-400 dark:[[disabled]_&]:placeholder-zinc-500')
     ;
 
 // Support adding the .self modifier to the wire:model directive...

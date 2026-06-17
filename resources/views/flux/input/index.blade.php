@@ -93,9 +93,9 @@ $classes = Flux::classes()
     ->add('w-full border rounded-lg block disabled:shadow-none dark:shadow-none')
     ->add('appearance-none') // Without this, input[type="date"] on mobile doesn't respect w-full...
     ->add(match ($size) {
-        default => 'text-base sm:text-sm py-2 h-10 leading-[1.375rem]', // This makes the height of the input 40px (same as buttons and such...)
-        'sm' => 'text-sm py-1.5 h-8 leading-[1.125rem]',
-        'xs' => 'text-xs py-1.5 h-6 leading-[1.125rem]',
+        default => 'text-base/6 sm:text-sm/6 py-2 h-10', // This makes the height of the input 40px (same as buttons and such...)
+        'sm' => 'text-base/6 sm:text-sm/6 py-1.5 h-8',
+        'xs' => 'text-sm/5 sm:text-xs/5 py-1.5 h-6',
     })
     ->add(match ($hasLeadingIcon) {
         true => 'ps-10',
@@ -139,11 +139,11 @@ $classes = Flux::classes()
     <flux:with-field :$attributes :$name>
         <div {{ $attributes->only('class')->class('w-full relative block group/input') }} data-flux-input>
             <?php if (is_string($iconLeading)): ?>
-                <div class="pointer-events-none absolute top-0 bottom-0 border-s border-transparent flex items-center justify-center text-xs text-zinc-400/75 dark:text-white/60 ps-3 start-0">
+                <div class="pointer-events-none absolute top-0 bottom-0 border-s border-transparent flex items-center justify-center text-sm/5 sm:text-xs/5 text-zinc-400/75 dark:text-white/60 ps-3 start-0">
                     <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
                 </div>
             <?php elseif ($iconLeading): ?>
-                <div {{ $iconLeading->attributes->class('absolute top-0 bottom-0 border-s border-transparent flex items-center justify-center text-xs text-zinc-400/75 dark:text-white/60 ps-3 start-0') }}>
+                <div {{ $iconLeading->attributes->class('absolute top-0 bottom-0 border-s border-transparent flex items-center justify-center text-sm/5 sm:text-xs/5 text-zinc-400/75 dark:text-white/60 ps-3 start-0') }}>
                     {{ $iconLeading }}
                 </div>
             <?php endif; ?>
@@ -167,7 +167,7 @@ $classes = Flux::classes()
             >
 
             <?php if ($loading || $countOfTrailingIcons > 0): ?>
-                <div class="absolute top-0 bottom-0 flex items-center gap-x-1.5 pe-2 border-e border-transparent end-0 text-xs text-zinc-400">
+                <div class="absolute top-0 bottom-0 flex items-center gap-x-1.5 pe-2 border-e border-transparent end-0 text-sm/5 sm:text-xs/5 text-zinc-400">
                     {{-- Icon should be text-zinc-400/75 --}}
                     <?php if ($loading): ?>
                         <flux:icon name="loading" :variant="$iconVariant" :class="$iconClasses" wire:loading :wire:target="$wireTarget" />
@@ -209,11 +209,11 @@ $classes = Flux::classes()
 <?php else: ?>
     <button {{ $attributes->merge(['type' => 'button'])->class([$classes, 'w-full relative flex']) }}>
         <?php if (is_string($iconLeading)): ?>
-            <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 ps-3 start-0">
+            <div class="absolute top-0 bottom-0 flex items-center justify-center text-sm/5 sm:text-xs/5 text-zinc-400/75 ps-3 start-0">
                 <flux:icon :icon="$iconLeading" :variant="$iconVariant" :class="$iconClasses" />
             </div>
         <?php elseif ($iconLeading): ?>
-            <div {{ $iconLeading->attributes->class('absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 ps-3 start-0') }}>
+            <div {{ $iconLeading->attributes->class('absolute top-0 bottom-0 flex items-center justify-center text-sm/5 sm:text-xs/5 text-zinc-400/75 ps-3 start-0') }}>
                 {{ $iconLeading }}
             </div>
         <?php endif; ?>
@@ -229,17 +229,17 @@ $classes = Flux::classes()
         <?php endif; ?>
 
         <?php if ($kbd): ?>
-            <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 pe-4 end-0">
+            <div class="absolute top-0 bottom-0 flex items-center justify-center text-sm/5 sm:text-xs/5 text-zinc-400/75 pe-4 end-0">
                 {{ $kbd }}
             </div>
         <?php endif; ?>
 
         <?php if (is_string($iconTrailing)): ?>
-            <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 pe-3 end-0">
+            <div class="absolute top-0 bottom-0 flex items-center justify-center text-sm/5 sm:text-xs/5 text-zinc-400/75 pe-3 end-0">
                 <flux:icon :icon="$iconTrailing" :variant="$iconVariant" :class="$iconClasses" />
             </div>
         <?php elseif  ($iconTrailing): ?>
-            <div {{ $iconTrailing->attributes->class('absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400/75 pe-2 end-0') }}>
+            <div {{ $iconTrailing->attributes->class('absolute top-0 bottom-0 flex items-center justify-center text-sm/5 sm:text-xs/5 text-zinc-400/75 pe-2 end-0') }}>
                 {{ $iconTrailing }}
             </div>
         <?php endif; ?>

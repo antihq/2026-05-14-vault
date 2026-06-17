@@ -62,9 +62,9 @@ $classes = Flux::classes()
     ->add(match($size) {
         'xl' => '[:where(&)]:size-16 [:where(&)]:text-base',
         'lg' => '[:where(&)]:size-12 [:where(&)]:text-base',
-        default => '[:where(&)]:size-10 [:where(&)]:text-sm',
-        'sm' => '[:where(&)]:size-8 [:where(&)]:text-sm',
-        'xs' => '[:where(&)]:size-6 [:where(&)]:text-xs',
+        default => '[:where(&)]:size-10 [:where(&)]:text-base/6 sm:[:where(&)]:text-sm/6',
+        'sm' => '[:where(&)]:size-8 [:where(&)]:text-base/6 sm:[:where(&)]:text-sm/6',
+        'xs' => '[:where(&)]:size-6 [:where(&)]:text-sm/5 sm:[:where(&)]:text-xs/5',
     })
     ->add($circle ? '[--avatar-radius:calc(infinity*1px)]' : match($size) {
         'xl' => '[--avatar-radius:var(--radius-xl)]',

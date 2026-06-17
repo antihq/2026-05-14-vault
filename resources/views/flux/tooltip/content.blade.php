@@ -8,7 +8,7 @@
 $classes = Flux::classes([
     'relative py-2 px-2.5',
     'rounded-md',
-    'text-xs text-white font-medium',
+    'text-sm/5 sm:text-xs/5 text-white font-medium',
     'bg-zinc-800 dark:bg-zinc-700 dark:border dark:border-white/10',
     'p-0 overflow-visible',
 ]);

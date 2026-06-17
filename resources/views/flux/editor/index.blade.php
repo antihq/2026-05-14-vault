@@ -36,7 +36,7 @@ $classes = Flux::classes()
             $invalid ? 'border-red-500' : 'border-zinc-200 border-b-zinc-300/80 dark:border-white/10',
         ],
     })
-    ->add('**:data-[slot=content]:text-base! sm:**:data-[slot=content]:text-sm!')
+    ->add('**:data-[slot=content]:text-base/6! sm:**:data-[slot=content]:text-sm/6!')
     ->add('**:data-[slot=content]:text-zinc-700 dark:**:data-[slot=content]:text-zinc-300')
     ->add('[&[disabled]_[data-slot=content]]:text-zinc-500 dark:[&[disabled]_[data-slot=content]]:text-zinc-400')
     ;

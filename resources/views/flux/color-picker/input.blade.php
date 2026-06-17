@@ -8,7 +8,7 @@
 $inputClasses = Flux::classes()
     ->add('w-full')
     ->add('tabular-nums')
-    ->add('text-base sm:text-sm')
+    ->add('text-base/6 sm:text-sm/6')
     ->add('bg-white dark:bg-white/10')
     ->add('text-zinc-700 dark:text-zinc-300')
     ->add('placeholder-zinc-400 dark:placeholder-zinc-400')

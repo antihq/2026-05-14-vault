@@ -14,7 +14,7 @@ $format = is_array($format) ? \Illuminate\Support\Js::encode($format) : $format;
     {{ $slot }}
 
     @if (is_string($label) && $label !== '')
-        <div class="text-xs text-zinc-500 dark:text-zinc-400">{{ $label }}</div>
+        <div class="text-sm/5 sm:text-xs/5 text-zinc-500 dark:text-zinc-400">{{ $label }}</div>
     @elseif ($label)
         {{ $label }}
     @endif

@@ -7,7 +7,7 @@
 
 @php
 $class = Flux::classes()
-    ->add('text-xs font-medium rounded-sm px-1 py-0.5 min-w-5 text-center')
+    ->add('text-sm/5 sm:text-xs/5 font-medium rounded-sm px-1 py-0.5 min-w-5 text-center')
     /**
      * We can't compile classes for each color because of variants color to color and Tailwind's JIT compiler.
      * We instead need to write out each one by hand. Sorry...

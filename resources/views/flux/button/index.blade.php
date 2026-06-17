@@ -70,14 +70,14 @@ $classes = Flux::classes()
         'end' => 'justify-end',
     })
     ->add(match ($size) { // Size...
-        'base' => 'h-10 text-sm rounded-lg' . ' ' . (
+        'base' => 'h-10 text-base/6 sm:text-sm/6 rounded-lg' . ' ' . (
             $square
                 ? 'w-10'
                 // If we have an icon, we want to reduce the padding on the side that has the icon...
                 : ($iconLeading && $iconLeading !== '' ? 'ps-3' : 'ps-4') . ' ' . ($iconTrailing && $iconTrailing !== '' ? 'pe-3' : 'pe-4')
         ),
-        'sm' => 'h-8 text-sm rounded-md' . ' ' . ($square ? 'w-8' : 'px-3'),
-        'xs' => 'h-6 text-xs rounded-md' . ' ' . ($square ? 'w-6' : 'px-2'),
+        'sm' => 'h-8 text-base/6 sm:text-sm/6 rounded-md' . ' ' . ($square ? 'w-8' : 'px-3'),
+        'xs' => 'h-6 text-sm/5 sm:text-xs/5 rounded-md' . ' ' . ($square ? 'w-6' : 'px-2'),
     })
     ->add('inline-flex') // Buttons are inline by default but links are blocks, so inline-flex is needed here to ensure link-buttons are displayed the same as buttons...
     ->add($inset ? match ($size) { // Inset...
@@ -196,7 +196,7 @@ $classes = Flux::classes()
         <?php endif; ?>
 
         <?php if ($kbd): ?>
-            <div class="text-xs text-zinc-400 dark:text-zinc-400">{{ $kbd }}</div>
+            <div class="text-sm/5 sm:text-xs/5 text-zinc-400 dark:text-zinc-400">{{ $kbd }}</div>
         <?php endif; ?>
 
         <?php if (is_string($iconTrailing) && $iconTrailing !== ''): ?>

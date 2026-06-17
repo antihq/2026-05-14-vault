@@ -8,7 +8,7 @@
 
 @php
 $classes = Flux::classes()
-    ->add('text-sm text-zinc-500 dark:text-white/60')
+    ->add('text-base/6 sm:text-sm/6 text-zinc-500 dark:text-white/60')
     ->add($srOnly ? 'sr-only' : '')
     ;
 @endphp

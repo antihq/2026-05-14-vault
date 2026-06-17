@@ -11,9 +11,9 @@
 $classes = Flux::classes()
     ->add('flex relative items-center font-medium justify-center gap-2 whitespace-nowrap')
     ->add(match ($size) {
-        'base' => 'h-10 text-sm rounded-lg px-4 [&:has(>:not(span):first-child)]:ps-3 [&:has(>:not(span):last-child)]:pe-3',
-        'sm' => 'h-8 text-sm rounded-md px-3',
-        'xs' => 'h-6 text-xs rounded-md px-2',
+        'base' => 'h-10 text-base/6 sm:text-sm/6 rounded-lg px-4 [&:has(>:not(span):first-child)]:ps-3 [&:has(>:not(span):last-child)]:pe-3',
+        'sm' => 'h-8 text-base/6 sm:text-sm/6 rounded-md px-3',
+        'xs' => 'h-6 text-sm/5 sm:text-xs/5 rounded-md px-2',
     })
     ->add(match ($size) {
         'base' => 'shadow-xs',

@@ -12,7 +12,7 @@
 $classes = Flux::classes()
     ->add('w-full group/item data-hidden:hidden h-10 flex items-center px-2 py-1.5 focus:outline-hidden')
     ->add('rounded-md')
-    ->add('text-start text-sm font-medium')
+    ->add('text-start text-base/6 sm:text-sm/6 font-medium')
     ->add('text-zinc-800 data-active:bg-zinc-100 dark:text-white dark:data-active:bg-zinc-600')
     ;
 @endphp
@@ -32,7 +32,7 @@ $classes = Flux::classes()
 
     <?php if ($kbd): ?>
         <div class="inline-flex ms-auto rounded-sm bg-zinc-800/5 dark:bg-white/10 px-1 py-0.5">
-            <span class="font-medium text-xs text-zinc-500 dark:text-zinc-300">{{ $kbd }}</span>
+            <span class="font-medium text-sm/5 sm:text-xs/5 text-zinc-500 dark:text-zinc-300">{{ $kbd }}</span>
         </div>
     <?php endif; ?>
 </ui-option>

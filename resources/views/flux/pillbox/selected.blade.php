@@ -17,8 +17,8 @@
         ->add('px-2 flex max-w-full text-zinc-700 dark:text-zinc-200 bg-zinc-400/15 dark:bg-zinc-400/40')
         ->add('cursor-default') // Combobox trigger sets cursor-text, so we need to reset it here...
         ->add(match($size) {
-            default => 'rounded-md py-1 text-base sm:text-sm leading-4',
-            'sm' => 'rounded-sm py-[calc(0.125rem+1px)] text-sm leading-4',
+            default => 'rounded-md py-1 text-base/6 sm:text-sm/6',
+            'sm' => 'rounded-sm py-[calc(0.125rem+1px)] text-base/6 sm:text-sm/6',
         });
 
     $removeClasses = Flux::classes()

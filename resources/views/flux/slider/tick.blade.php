@@ -4,7 +4,7 @@
 
 @php
     $classes = Flux::classes()
-        ->add('relative w-px min-h-4 min-w-4 flex flex-col justify-center items-center text-xs font-medium text-zinc-400 data-active:text-zinc-500 dark:text-white/70 dark:data-active:text-white whitespace-nowrap -translate-x-1/2')
+        ->add('relative w-px min-h-4 min-w-4 flex flex-col justify-center items-center text-sm/5 sm:text-xs/5 font-medium text-zinc-400 data-active:text-zinc-500 dark:text-white/70 dark:data-active:text-white whitespace-nowrap -translate-x-1/2')
         ->add('mt-2 has-data-flux-slider-tick-line:mt-1')
     ;
 

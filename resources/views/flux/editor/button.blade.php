@@ -14,7 +14,7 @@ $iconClasses = Flux::classes()
     ;
 
 $classes = Flux::classes()
-    ->add('p-0.5 flex items-center justify-center text-sm font-medium rounded-sm touch-manipulation')
+    ->add('p-0.5 flex items-center justify-center text-base/6 sm:text-sm/6 font-medium rounded-sm touch-manipulation')
     ->add('text-zinc-400 data-open:text-zinc-800 hover:text-zinc-800 focus:text-zinc-800 data-match:text-zinc-800')
     ->add('disabled:opacity-75 dark:disabled:opacity-75 disabled:cursor-default disabled:pointer-events-none')
     ->add('dark:text-zinc-400 dark:data-open:text-white dark:hover:text-white dark:focus:text-white dark:data-match:text-white')

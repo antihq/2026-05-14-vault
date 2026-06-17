@@ -20,9 +20,9 @@ $classes = Flux::classes()
     // Make the placeholder match the text color of standard input placeholders...
     ->add('disabled:shadow-none')
     ->add(match ($size) {
-        default => 'h-10 text-base sm:text-sm rounded-lg px-3 block w-full',
-        'sm' => 'h-8 text-sm rounded-md ps-3 pe-2 block w-full',
-        'xs' => 'h-6 text-xs rounded-md ps-3 pe-2 block w-full',
+        default => 'h-10 text-base/6 sm:text-sm/6 rounded-lg px-3 block w-full',
+        'sm' => 'h-8 text-base/6 sm:text-sm/6 rounded-md ps-3 pe-2 block w-full',
+        'xs' => 'h-6 text-sm/5 sm:text-xs/5 rounded-md ps-3 pe-2 block w-full',
     })
     ->add($invalid
         ? 'border border-red-500'

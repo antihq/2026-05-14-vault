@@ -126,7 +126,7 @@ if (isset($dropdown) && $dropdown === false) {
                             @foreach ($presetArray as $preset)
                                 <ui-radio
                                     value="{{ $preset->value }}"
-                                    class="text-sm font-medium text-zinc-600 dark:text-zinc-300 data-checked:bg-(--color-accent) data-checked:text-(--color-accent-foreground) px-2 py-1.5 whitespace-nowrap rounded-lg hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-white/5 dark:hover:text-white"
+                                    class="text-base/6 sm:text-sm/6 font-medium text-zinc-600 dark:text-zinc-300 data-checked:bg-(--color-accent) data-checked:text-(--color-accent-foreground) px-2 py-1.5 whitespace-nowrap rounded-lg hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-white/5 dark:hover:text-white"
                                 >{{ $preset->label() }}</ui-radio>
                             @endforeach
                         </ui-radio-group>
@@ -139,13 +139,13 @@ if (isset($dropdown) && $dropdown === false) {
                     <ui-calendar-inputs class="flex items-center p-2 border-b border-zinc-200 dark:border-white/10">
                         <?php if ($withInputs === 'custom'): ?>
                             @php
-                            $dateInputClasses = 'text-center rounded-sm font-mono tabular-nums placeholder-zinc-400 dark:placeholder-zinc-400 caret-transparent border-0 bg-transparent p-0 text-sm focus:ring-0 focus:ring-offset-0 focus:outline-[revert] focus:outline-offset-[revert]';
-                            $bareInputClasses = 'flex items-center tabular-nums text-sm text-zinc-700 dark:text-zinc-300 bg-white dark:bg-white/10 shadow-xs border border-zinc-200 border-b-zinc-300/80 dark:border-white/10 rounded-lg h-10 px-3';
+                            $dateInputClasses = 'text-center rounded-sm font-mono tabular-nums placeholder-zinc-400 dark:placeholder-zinc-400 caret-transparent border-0 bg-transparent p-0 text-base/6 sm:text-sm/6 focus:ring-0 focus:ring-offset-0 focus:outline-[revert] focus:outline-offset-[revert]';
+                            $bareInputClasses = 'flex items-center tabular-nums text-base/6 sm:text-sm/6 text-zinc-700 dark:text-zinc-300 bg-white dark:bg-white/10 shadow-xs border border-zinc-200 border-b-zinc-300/80 dark:border-white/10 rounded-lg h-10 px-3';
                             @endphp
                             <?php if ($range): ?>
                                 <div class="sm:px-2 flex items-center gap-4">
                                     <div class="flex items-center gap-2">
-                                        <span class="max-sm:hidden text-sm font-medium text-zinc-800 dark:text-white">{{ __('Start') }}</span>
+                                        <span class="max-sm:hidden text-base/6 sm:text-sm/6 font-medium text-zinc-800 dark:text-white">{{ __('Start') }}</span>
                                         <ui-date-picker-trigger class="{{ $bareInputClasses }}" data-bare>
                                             <div class="flex items-center" data-flux-date-inputs>
                                                 <input type="text" inputmode="numeric" aria-label="{{ __('Day') }}" data-flux-day-input class="{{ $dateInputClasses }} w-[calc(2ch+2px)]" />
@@ -155,7 +155,7 @@ if (isset($dropdown) && $dropdown === false) {
                                         </ui-date-picker-trigger>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="max-sm:hidden text-sm font-medium text-zinc-800 dark:text-white">{{ __('End') }}</span>
+                                        <span class="max-sm:hidden text-base/6 sm:text-sm/6 font-medium text-zinc-800 dark:text-white">{{ __('End') }}</span>
                                         <ui-date-picker-trigger class="{{ $bareInputClasses }}" data-bare>
                                             <div class="flex items-center" data-flux-date-inputs>
                                                 <input type="text" inputmode="numeric" aria-label="{{ __('Day') }}" data-flux-day-input class="{{ $dateInputClasses }} w-[calc(2ch+2px)]" />
@@ -177,8 +177,8 @@ if (isset($dropdown) && $dropdown === false) {
                         <?php else: ?>
                             <?php if ($range): ?>
                                 <div class="sm:px-2 flex items-center gap-4">
-                                    <div class="flex items-center gap-2"><span class="max-sm:hidden text-sm font-medium text-zinc-800 dark:text-white">{{ __('Start') }}</span> <flux:input type="date" class="w-[full] sm:w-[11.25rem]" /></div>
-                                    <div class="flex items-center gap-2"><span class="max-sm:hidden text-sm font-medium text-zinc-800 dark:text-white">{{ __('End') }}</span> <flux:input type="date" class="w-[full] sm:w-[11.25rem]" /></div>
+                                    <div class="flex items-center gap-2"><span class="max-sm:hidden text-base/6 sm:text-sm/6 font-medium text-zinc-800 dark:text-white">{{ __('Start') }}</span> <flux:input type="date" class="w-[full] sm:w-[11.25rem]" /></div>
+                                    <div class="flex items-center gap-2"><span class="max-sm:hidden text-base/6 sm:text-sm/6 font-medium text-zinc-800 dark:text-white">{{ __('End') }}</span> <flux:input type="date" class="w-[full] sm:w-[11.25rem]" /></div>
                                 </div>
                             <?php else: ?>
                                 <flux:input type="date" class="w-full sm:w-[11.25rem]" />
@@ -192,9 +192,9 @@ if (isset($dropdown) && $dropdown === false) {
                         <header class="flex justify-between items-center">
                             <div class="flex items-center gap-2">
                                 <?php if ($selectableHeader): ?>
-                                    <ui-calendar-month display="short" class="font-medium text-sm text-zinc-800 dark:text-white">
+                                    <ui-calendar-month display="short" class="font-medium text-base/6 sm:text-sm/6 text-zinc-800 dark:text-white">
                                         <select
-                                            class="h-10 py-0 border-0 text-sm sm:h-8 appearance-none rounded-lg bg-zinc-100 dark:bg-white/10 dark:[&>option]:bg-zinc-700 dark:[&>option]:text-white px-3 sm:ps-2 bg-position-[right_.25rem_center]! rtl:bg-position-[left_.25rem_center]! pe-[1.35rem] bg-[length:16px_16px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%2300000040%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] hover:bg-[length:16px_16px] hover:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%231f2937%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] dark:bg-[length:16px_16px] dark:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%23ffffff75%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] dark:hover:bg-[length:16px_16px] dark:hover:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%23ffffff%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] bg-no-repeat"
+                                            class="h-10 py-0 border-0 text-base/6 sm:text-sm/6 sm:h-8 appearance-none rounded-lg bg-zinc-100 dark:bg-white/10 dark:[&>option]:bg-zinc-700 dark:[&>option]:text-white px-3 sm:ps-2 bg-position-[right_.25rem_center]! rtl:bg-position-[left_.25rem_center]! pe-[1.35rem] bg-[length:16px_16px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%2300000040%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] hover:bg-[length:16px_16px] hover:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%231f2937%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] dark:bg-[length:16px_16px] dark:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%23ffffff75%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] dark:hover:bg-[length:16px_16px] dark:hover:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%23ffffff%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] bg-no-repeat"
                                         >
                                             <template>
                                                 <option><slot></slot></option>
@@ -202,9 +202,9 @@ if (isset($dropdown) && $dropdown === false) {
                                         </select>
                                     </ui-calendar-month>
 
-                                    <ui-calendar-year class="font-medium text-sm text-zinc-800 dark:text-white">
+                                    <ui-calendar-year class="font-medium text-base/6 sm:text-sm/6 text-zinc-800 dark:text-white">
                                         <select
-                                            class="h-10 py-0 border-0 text-sm sm:h-8 appearance-none rounded-lg bg-zinc-100 dark:bg-white/10 dark:[&>option]:bg-zinc-700 dark:[&>option]:text-white px-3 sm:ps-2 bg-position-[right_.25rem_center]! rtl:bg-position-[left_.25rem_center]! pe-[1.35rem] bg-[length:16px_16px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%2300000040%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] hover:bg-[length:16px_16px] hover:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%231f2937%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] dark:bg-[length:16px_16px] dark:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%23ffffff75%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] dark:hover:bg-[length:16px_16px] dark:hover:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%23ffffff%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] bg-no-repeat"
+                                            class="h-10 py-0 border-0 text-base/6 sm:text-sm/6 sm:h-8 appearance-none rounded-lg bg-zinc-100 dark:bg-white/10 dark:[&>option]:bg-zinc-700 dark:[&>option]:text-white px-3 sm:ps-2 bg-position-[right_.25rem_center]! rtl:bg-position-[left_.25rem_center]! pe-[1.35rem] bg-[length:16px_16px] bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%2300000040%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] hover:bg-[length:16px_16px] hover:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%231f2937%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] dark:bg-[length:16px_16px] dark:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%23ffffff75%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] dark:hover:bg-[length:16px_16px] dark:hover:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%20fill=%22%23ffffff%22%20class=%22size-4%22%3E%3Cpath%20fill-rule=%22evenodd%22%20d=%22M4.22%206.22a.75.75%200%200%201%201.06%200L8%208.94l2.72-2.72a.75.75%200%201%201%201.06%201.06l-3.25%203.25a.75.75%200%200%201-1.06%200L4.22%207.28a.75.75%200%200%201%200-1.06Z%22%20clip-rule=%22evenodd%22/%3E%3C/svg%3E')] bg-no-repeat"
                                         >
                                             <template>
                                                 <option><slot></slot></option>
@@ -248,7 +248,7 @@ if (isset($dropdown) && $dropdown === false) {
                         <div>
                             <template name="heading">
                                 <div class="@if ($selectableHeader) [[data-month]:first-of-type_&]:opacity-0 @endif mb-2 px-2 h-10 sm:h-8 flex items-center">
-                                    <div class="font-medium text-sm text-zinc-800 dark:text-white"><slot></slot></div>
+                                    <div class="font-medium text-base/6 sm:text-sm/6 text-zinc-800 dark:text-white"><slot></slot></div>
                                 </div>
                             </template>
 
@@ -256,11 +256,11 @@ if (isset($dropdown) && $dropdown === false) {
                                 <thead>
                                     <tr class="flex w-full">
                                         <?php if ($weekNumbers): ?>
-                                            <th scope="col" class="{{ $sizeClasses }} text-sm font-medium text-zinc-500 dark:text-zinc-300 flex items-center"><div class="w-full">#</div></th>
+                                            <th scope="col" class="{{ $sizeClasses }} text-base/6 sm:text-sm/6 font-medium text-zinc-500 dark:text-zinc-300 flex items-center"><div class="w-full">#</div></th>
                                         <?php endif; ?>
 
                                         <template name="weekday">
-                                            <th scope="col" class="{{ $sizeClasses }} text-sm font-medium text-zinc-500 dark:text-zinc-300 flex items-center"><div class="w-full"><slot></slot></div></th>
+                                            <th scope="col" class="{{ $sizeClasses }} text-base/6 sm:text-sm/6 font-medium text-zinc-500 dark:text-zinc-300 flex items-center"><div class="w-full"><slot></slot></div></th>
                                         </template>
                                     </tr>
                                 </thead>
@@ -270,7 +270,7 @@ if (isset($dropdown) && $dropdown === false) {
                                         <tr class="flex w-full not-first-of-type:mt-1 [&:first-of-type_td[data-in-range]:not([data-selected]):first-child]:rounded-s-none [&:last-of-type_td[data-in-range]:not([data-selected]):last-child]:rounded-e-none">
                                             <?php if ($weekNumbers): ?>
                                                 <template name="number">
-                                                    <td class="p-0 relative {{ $sizeClasses }} text-xs font-medium text-zinc-400 flex items-center justify-center">
+                                                    <td class="p-0 relative {{ $sizeClasses }} text-sm/5 sm:text-xs/5 font-medium text-zinc-400 flex items-center justify-center">
                                                         <slot></slot>
                                                     </td>
                                                 </template>
@@ -278,7 +278,7 @@ if (isset($dropdown) && $dropdown === false) {
                                             <template name="day">
                                                 <?php if ($attributes->has('static')): ?>
                                                     <td class="p-0 data-unavailable:line-through data-in-range:bg-zinc-100 dark:data-in-range:bg-white/10 data-start:rounded-s-lg data-end:rounded-e-lg data-end-preview:rounded-e-lg first-of-type:rounded-s-lg last-of-type:rounded-e-lg [&[data-selected]+[data-selected]]:rounded-s-none">
-                                                        <div class="relative {{ $sizeClasses }} text-sm font-medium text-zinc-800 dark:text-white flex items-center justify-center rounded-lg [td[data-selected]:has(+td[data-selected])_&]:rounded-e-none [td[data-selected]+td[data-selected]_&]:rounded-s-none [td[data-selected]_&]:bg-[var(--color-accent)] [td[data-selected]_&]:text-[var(--color-accent-foreground)] [td[data-selected]_&[disabled]]:opacity-50 disabled:text-zinc-400 disabled:pointer-events-none disabled:cursor-default">
+                                                        <div class="relative {{ $sizeClasses }} text-base/6 sm:text-sm/6 font-medium text-zinc-800 dark:text-white flex items-center justify-center rounded-lg [td[data-selected]:has(+td[data-selected])_&]:rounded-e-none [td[data-selected]+td[data-selected]_&]:rounded-s-none [td[data-selected]_&]:bg-[var(--color-accent)] [td[data-selected]_&]:text-[var(--color-accent-foreground)] [td[data-selected]_&[disabled]]:opacity-50 disabled:text-zinc-400 disabled:pointer-events-none disabled:cursor-default">
                                                             <div class="absolute inset-0 hidden [td[data-today]_&]:flex justify-center items-end"><div class="mb-1 size-1 rounded-full bg-zinc-800 dark:bg-white [td[data-selected]_&]:bg-white dark:[td[data-selected]_&]:bg-zinc-800"></div></div>
                                                             <slot></slot>
                                                         </div>
@@ -286,14 +286,14 @@ if (isset($dropdown) && $dropdown === false) {
                                                 <?php else: ?>
                                                     <td class="_max-sm:data-outside:opacity-0 p-0 data-unavailable:line-through data-in-range:bg-zinc-100 dark:data-in-range:bg-white/10 data-start:rounded-s-lg data-end:rounded-e-lg data-end-preview:rounded-e-lg first-of-type:rounded-s-lg last-of-type:rounded-e-lg [&[data-selected]+[data-selected]]:rounded-s-none [[data-in-range]:not([data-selected]):not([data-end-preview])+&[data-outside]]:bg-linear-to-r [&[data-outside]:has(+[data-in-range])]:bg-linear-to-l data-outside:opacity-50 from-zinc-100 dark:from-white/10 from-1% [&[data-outside]:has(+[data-in-range][data-selected])]:bg-none!">
                                                         <ui-tooltip position="top">
-                                                            <button type="button" class="{{ $sizeClasses }} text-sm font-medium text-zinc-800 dark:text-white flex flex-col items-center justify-center rounded-lg hover:bg-zinc-800/5 dark:hover:bg-white/5 [td[data-selected]:has(+td[data-selected])_&]:rounded-e-none [td[data-selected]+td[data-selected]_&]:rounded-s-none [td[data-selected]_&]:bg-[var(--color-accent)] [td[data-selected]_&]:text-[var(--color-accent-foreground)] [td[data-selected]_&[disabled]]:opacity-50 disabled:text-zinc-400 disabled:pointer-events-none disabled:cursor-default [[readonly]_&]:pointer-events-none [[readonly]_&]:cursor-default [[readonly]_&]:bg-transparent">
+                                                            <button type="button" class="{{ $sizeClasses }} text-base/6 sm:text-sm/6 font-medium text-zinc-800 dark:text-white flex flex-col items-center justify-center rounded-lg hover:bg-zinc-800/5 dark:hover:bg-white/5 [td[data-selected]:has(+td[data-selected])_&]:rounded-e-none [td[data-selected]+td[data-selected]_&]:rounded-s-none [td[data-selected]_&]:bg-[var(--color-accent)] [td[data-selected]_&]:text-[var(--color-accent-foreground)] [td[data-selected]_&[disabled]]:opacity-50 disabled:text-zinc-400 disabled:pointer-events-none disabled:cursor-default [[readonly]_&]:pointer-events-none [[readonly]_&]:cursor-default [[readonly]_&]:bg-transparent">
                                                                 <div class="relative">
                                                                     <div class="absolute inset-x-0 bottom-[-3px] hidden [td[data-today]_&]:flex justify-center items-end"><div class="size-1 rounded-full bg-zinc-800 dark:bg-white [td[data-selected]_&]:bg-white dark:[td[data-selected]_&]:bg-zinc-800"></div></div>
 
                                                                     <div><slot></slot></div>
 
                                                                     <template name="subtext">
-                                                                        <div class="absolute inset-x-0 bottom-[-1rem] flex justify-center font-medium text-xs text-zinc-400 dark:text-zinc-500 [[data-date-variant='success']_&]:text-lime-600 dark:[[data-date-variant='success']_&]:text-lime-400 [[data-date-variant='warning']_&]:text-yellow-600 dark:[[data-date-variant='warning']_&]:text-yellow-400 [[data-date-variant='danger']_&]:text-rose-500 dark:[[data-date-variant='danger']_&]:text-rose-400">
+                                                                        <div class="absolute inset-x-0 bottom-[-1rem] flex justify-center font-medium text-sm/5 sm:text-xs/5 text-zinc-400 dark:text-zinc-500 [[data-date-variant='success']_&]:text-lime-600 dark:[[data-date-variant='success']_&]:text-lime-400 [[data-date-variant='warning']_&]:text-yellow-600 dark:[[data-date-variant='warning']_&]:text-yellow-400 [[data-date-variant='danger']_&]:text-rose-500 dark:[[data-date-variant='danger']_&]:text-rose-400">
                                                                             <slot></slot>
                                                                         </div>
                                                                     </template>
@@ -301,7 +301,7 @@ if (isset($dropdown) && $dropdown === false) {
                                                             </button>
 
                                                             <template name="details">
-                                                                <div popover="manual" class="relative py-2 px-2.5 rounded-md text-xs text-white font-medium bg-zinc-800 dark:bg-zinc-700 dark:border dark:border-white/10 p-0 overflow-visible">
+                                                                <div popover="manual" class="relative py-2 px-2.5 rounded-md text-sm/5 sm:text-xs/5 text-white font-medium bg-zinc-800 dark:bg-zinc-700 dark:border dark:border-white/10 p-0 overflow-visible">
                                                                     <slot></slot>
                                                                 </div>
                                                             </template>
@@ -319,7 +319,7 @@ if (isset($dropdown) && $dropdown === false) {
 
                 <?php if ($presets): ?>
                     <ui-calendar-presets class="block sm:hidden px-4">
-                        <select class="appearance-none w-full ps-3 pe-10 block h-10 py-2 text-sm rounded-lg shadow-2xs border bg-white dark:bg-white/10 dark:disabled:bg-white/[9%] text-zinc-700 dark:text-zinc-300 has-[option.placeholder:checked]:text-zinc-400 dark:has-[option.placeholder:checked]:text-zinc-400 disabled:shadow-none border border-zinc-200 border-b-zinc-300/80 dark:border-white/10" data-flux-control="" data-flux-select-native="" data-flux-group-target="">
+                        <select class="appearance-none w-full ps-3 pe-10 block h-10 py-2 text-base/6 sm:text-sm/6 rounded-lg shadow-2xs border bg-white dark:bg-white/10 dark:disabled:bg-white/[9%] text-zinc-700 dark:text-zinc-300 has-[option.placeholder:checked]:text-zinc-400 dark:has-[option.placeholder:checked]:text-zinc-400 disabled:shadow-none border border-zinc-200 border-b-zinc-300/80 dark:border-white/10" data-flux-control="" data-flux-select-native="" data-flux-group-target="">
                             <option value="" disabled="" selected="" class="placeholder">{{ __('Choose predefined range...') }}</option>
                             @foreach ($presetArray as $preset)
                                 <option value="{{ $preset->value }}">{{ $preset->label() }}</option>

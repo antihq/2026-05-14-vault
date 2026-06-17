@@ -13,7 +13,7 @@ if ($closable !== null) $clearable = null;
 
 $classes = Flux::classes()
     ->add('h-10 w-full flex items-center px-3 py-2')
-    ->add('font-medium text-base sm:text-sm text-zinc-800 dark:text-white')
+    ->add('font-medium text-base/6 sm:text-sm/6 text-zinc-800 dark:text-white')
     ->add('ps-9') // Make room for magnifying glass icon...
     ->add('pe-9') // Make room for clear/clos button and loading indicator...
     ->add('outline-hidden')
@@ -36,7 +36,7 @@ if ($loading) {
 @endphp
 
 <div class="relative flex grow mx-[-5px] mt-[-5px] mb-[5px]" data-flux-pillbox-search>
-    <div class="absolute top-0 bottom-0 flex items-center justify-center text-xs text-zinc-400 ps-3.5 start-0">
+    <div class="absolute top-0 bottom-0 flex items-center justify-center text-sm/5 sm:text-xs/5 text-zinc-400 ps-3.5 start-0">
         <?php if (is_string($icon)): ?>
             <flux:icon :$icon variant="micro" />
         <?php elseif ($icon): ?>

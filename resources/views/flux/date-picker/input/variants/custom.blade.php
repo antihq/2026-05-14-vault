@@ -20,9 +20,9 @@ $classes = Flux::classes()
     ->add('px-3 flex items-center overflow-hidden')
     ->add('tabular-nums cursor-default')
     ->add(match ($size) {
-        default => 'h-10 text-base sm:text-sm rounded-lg px-3 py-2 leading-[1.375rem]',
-        'sm' => 'h-8 text-sm rounded-md ps-3 pe-2 py-1.5 leading-[1.125rem]',
-        'xs' => 'h-6 text-xs rounded-md ps-3 pe-2 py-1.5 leading-[1.125rem]',
+        default => 'h-10 text-base/6 sm:text-sm/6 rounded-lg px-3 py-2',
+        'sm' => 'h-8 text-base/6 sm:text-sm/6 rounded-md ps-3 pe-2 py-1.5',
+        'xs' => 'h-6 text-sm/5 sm:text-xs/5 rounded-md ps-3 pe-2 py-1.5',
     })
     ->add(match ($variant) {
         'outline' => 'bg-white dark:bg-white/10 dark:disabled:bg-white/[7%]',

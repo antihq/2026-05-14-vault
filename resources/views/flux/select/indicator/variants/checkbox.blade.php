@@ -3,7 +3,7 @@
 @php
 $classes = Flux::classes()
     ->add('shrink-0 size-[1.125rem] rounded-[.3rem] flex justify-center items-center')
-    ->add('text-sm text-zinc-700 dark:text-zinc-800')
+    ->add('text-base/6 sm:text-sm/6 text-zinc-700 dark:text-zinc-800')
     ->add('[ui-option[disabled]_&]:opacity-75 [ui-option[data-selected][disabled]_&]:opacity-50 ')
     ->add('[ui-option[data-selected]_&>svg:first-child]:block')
     ->add([

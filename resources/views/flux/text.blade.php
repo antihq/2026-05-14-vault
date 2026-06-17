@@ -13,8 +13,8 @@ $classes = Flux::classes()
     ->add(match ($size) {
         'xl' => 'text-lg',
         'lg' => 'text-base',
-        default => '[:where(&)]:text-sm',
-        'sm' => 'text-xs',
+        default => '[:where(&)]:text-base/6 sm:[:where(&)]:text-sm/6',
+        'sm' => 'text-sm/5 sm:text-xs/5',
     })
     ->add($color ? match($color) {
         'red' => 'text-red-600 dark:text-red-400',

@@ -17,9 +17,9 @@ $classes = Flux::classes()
     ->add('bg-white dark:bg-white/10 dark:disabled:bg-white/[7%]')
     ->add('disabled:shadow-none')
     ->add(match ($size) {
-        default => 'h-10 text-base sm:text-sm rounded-lg ps-[7px] pe-3 block w-full',
-        'sm' => 'h-8 text-sm rounded-md ps-[5px] pe-2 block w-full',
-        'xs' => 'h-6 text-xs rounded-md ps-[3px] pe-2 block w-full',
+        default => 'h-10 text-base/6 sm:text-sm/6 rounded-lg ps-[7px] pe-3 block w-full',
+        'sm' => 'h-8 text-base/6 sm:text-sm/6 rounded-md ps-[5px] pe-2 block w-full',
+        'xs' => 'h-6 text-sm/5 sm:text-xs/5 rounded-md ps-[3px] pe-2 block w-full',
     })
     ->add($invalid
         ? 'border border-red-500'

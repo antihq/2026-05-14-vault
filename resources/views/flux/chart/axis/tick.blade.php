@@ -14,7 +14,7 @@ $format = is_array($format) ? \Illuminate\Support\Js::encode($format) : $format;
     <template name="tick-label" @if ($format) format="{{ $format }}" @endif>
         <g>
             <text {{ $attributes->merge([
-                'class' => '[:where(&)]:text-xs [:where(&)]:text-zinc-400 [:where(&)]:font-medium [:where(&)]:dark:text-zinc-300',
+                'class' => '[:where(&)]:text-sm/5 sm:[:where(&)]:text-xs/5 [:where(&)]:text-zinc-400 [:where(&)]:font-medium [:where(&)]:dark:text-zinc-300',
                 'text-anchor' => 'middle',
                 'fill' => 'currentColor',
                 'dominant-baseline' => $position === 'top' ? 'text-after-edge' : 'text-before-edge',
@@ -26,7 +26,7 @@ $format = is_array($format) ? \Illuminate\Support\Js::encode($format) : $format;
     <template name="tick-label" @if ($format) format="{{ $format }}" @endif>
         <g>
             <text {{ $attributes->merge([
-                'class' => '[:where(&)]:text-xs [:where(&)]:text-zinc-400 [:where(&)]:dark:text-zinc-300',
+                'class' => '[:where(&)]:text-sm/5 sm:[:where(&)]:text-xs/5 [:where(&)]:text-zinc-400 [:where(&)]:dark:text-zinc-300',
                 'dominant-baseline' => 'central',
                 'fill' => 'currentColor',
                 'text-anchor' => $position === 'right' ? 'start' : 'end',

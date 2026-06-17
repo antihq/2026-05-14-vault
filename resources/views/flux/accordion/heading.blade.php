@@ -10,7 +10,7 @@
 @php
 $classes = Flux::classes()
     ->add('group/accordion-heading flex items-center w-full')
-    ->add('text-start text-sm font-medium')
+    ->add('text-start text-base/6 sm:text-sm/6 font-medium')
     ->add(match ($variant) {
         default => 'justify-between [&>svg]:ms-6',
         'reverse' => 'flex-row-reverse justify-end [&>svg]:me-2',

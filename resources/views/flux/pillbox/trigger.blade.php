@@ -21,8 +21,8 @@ $classes = Flux::classes()
     // Make the placeholder match the text color of standard input placeholders...
     ->add('disabled:shadow-none')
     ->add(match($size) {
-        default => 'min-h-10 text-base sm:text-sm rounded-lg ps-[calc(0.5rem-1px)] pe-3 py-[calc(0.5rem-1px)] block w-full',
-        'sm' => 'min-h-6 text-sm rounded-md ps-[calc(0.25rem)] pe-2 py-[calc(0.25rem)] block w-full',
+        default => 'min-h-10 text-base/6 sm:text-sm/6 rounded-lg ps-[calc(0.5rem-1px)] pe-3 py-[calc(0.5rem-1px)] block w-full',
+        'sm' => 'min-h-6 text-base/6 sm:text-sm/6 rounded-md ps-[calc(0.25rem)] pe-2 py-[calc(0.25rem)] block w-full',
     })
     ->add('border border-zinc-200 border-b-zinc-300/80 dark:border-white/10 data-invalid:border-red-500')
     ->add('in-[data-target]:text-start')

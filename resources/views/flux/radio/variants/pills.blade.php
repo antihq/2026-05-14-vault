@@ -7,7 +7,7 @@
 
 @php
 $classes = Flux::classes()
-    ->add('flex whitespace-nowrap gap-2 items-center py-1 px-2 rounded-full text-sm font-medium leading-4')
+    ->add('flex whitespace-nowrap gap-2 items-center py-1 px-2 rounded-full text-base/6 sm:text-sm/6 font-medium')
     ->add('bg-zinc-800/6 dark:bg-white/10 hover:bg-zinc-800/10 dark:hover:bg-white/15 text-zinc-800 hover:text-zinc-800 dark:text-white/70 dark:hover:text-white')
     ->add(match ($accent) {
         true => 'data-checked:bg-(--color-accent) hover:data-checked:bg-(--color-accent)',

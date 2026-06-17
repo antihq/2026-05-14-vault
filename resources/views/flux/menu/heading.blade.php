@@ -4,7 +4,7 @@
 $classes = Flux::classes([
     'p-2 pb-1 w-full',
     'flex items-center',
-    'text-start text-xs font-medium',
+    'text-start text-sm/5 sm:text-xs/5 font-medium',
     'text-zinc-500 font-medium dark:text-zinc-300',
 ]);
 @endphp

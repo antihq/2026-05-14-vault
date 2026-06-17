@@ -1,5 +1,5 @@
 @blaze(fold: true)
 
-<div {{ $attributes->class('text-sm') }} data-slot="text">
+<div {{ $attributes->class('text-base/6 sm:text-sm/6') }} data-slot="text">
     {{ $slot }}
 </div>

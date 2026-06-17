@@ -12,7 +12,7 @@
 @php
 $classes = Flux::classes()
     ->add('flex items-center')
-    ->add('text-sm font-medium')
+    ->add('text-base/6 sm:text-sm/6 font-medium')
     ->add('group/breadcrumb')
     ;
 

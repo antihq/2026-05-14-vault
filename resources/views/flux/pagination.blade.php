@@ -71,7 +71,7 @@ $scrollIntoViewJsSnippet = ($scrollTo !== null && $scrollTo !== false)
 @else
     <div {{ $attributes->class('@container pt-3 border-t border-zinc-100 dark:border-zinc-700 flex justify-between items-center gap-3') }} data-flux-pagination>
         @if ($paginator->total() > 0)
-            <div class="text-zinc-500 dark:text-zinc-400 text-xs font-medium whitespace-nowrap">
+            <div class="text-zinc-500 dark:text-zinc-400 text-sm/5 sm:text-xs/5 font-medium whitespace-nowrap">
                 {!! __('Showing') !!} {{ $paginator->firstItem() }} {!! __('to') !!} {{ $paginator->lastItem() }} {!! __('of') !!} {{ $paginator->total() }} {!! __('results') !!}
             </div>
         @else
@@ -125,7 +125,7 @@ $scrollIntoViewJsSnippet = ($scrollTo !== null && $scrollTo !== false)
                     @if (is_string($element))
                         <div
                             aria-disabled="true"
-                            class="cursor-default flex justify-center items-center text-xs size-6 rounded-[6px] font-medium dark:text-zinc-400 text-zinc-400"
+                            class="cursor-default flex justify-center items-center text-sm/5 sm:text-xs/5 size-6 rounded-[6px] font-medium dark:text-zinc-400 text-zinc-400"
                         >{{ $element }}</div>
                     @endif
 
@@ -136,7 +136,7 @@ $scrollIntoViewJsSnippet = ($scrollTo !== null && $scrollTo !== false)
                                 <div
                                     wire:key="paginator-{{ $paginator->getPageName() }}-page{{ $page }}"
                                     aria-current="page"
-                                    class="cursor-default flex justify-center items-center text-xs h-6 px-2 rounded-[6px] font-medium dark:text-white text-zinc-800"
+                                    class="cursor-default flex justify-center items-center text-sm/5 sm:text-xs/5 h-6 px-2 rounded-[6px] font-medium dark:text-white text-zinc-800"
                                 >{{ $page }}</div>
                             @else
                                 <button
@@ -144,7 +144,7 @@ $scrollIntoViewJsSnippet = ($scrollTo !== null && $scrollTo !== false)
                                     wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')"
                                     x-on:click="{{ $scrollIntoViewJsSnippet }}"
                                     type="button"
-                                    class="text-xs h-6 px-2 rounded-[6px] text-zinc-400 font-medium dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/20 hover:text-zinc-800 dark:hover:text-white"
+                                    class="text-sm/5 sm:text-xs/5 h-6 px-2 rounded-[6px] text-zinc-400 font-medium dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/20 hover:text-zinc-800 dark:hover:text-white"
                                 >{{ $page }}</button>
                             @endif
                         @endforeach

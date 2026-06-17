@@ -5,7 +5,7 @@
 
 @php
 $classes = Flux::classes()
-    ->add('rounded-full font-semibold text-sm')
+    ->add('rounded-full font-semibold text-base/6 sm:text-sm/6')
     ->add('grid place-items-center *:col-start-1 *:row-start-1')
     ;
 
@@ -50,7 +50,7 @@ if ($variant !== 'bare') {
 @endphp
 
 <div {{ $attributes->class($classes) }} data-flux-timeline-indicator>
-    <div data-flux-timeline-baseline class="opacity-0 [:where(&)]:text-sm" aria-hidden="true">&ZeroWidthSpace;</div>
+    <div data-flux-timeline-baseline class="opacity-0 [:where(&)]:text-base/6 sm:[:where(&)]:text-sm/6" aria-hidden="true">&ZeroWidthSpace;</div>
 
     <div>
         {{ $slot }}

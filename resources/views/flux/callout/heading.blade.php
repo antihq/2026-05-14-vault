@@ -9,7 +9,7 @@
 
 @php
     $classes = Flux::classes()
-        ->add('flex items-center gap-2 text-sm font-medium')
+        ->add('flex items-center gap-2 text-base/6 sm:text-sm/6 font-medium')
         ;
 
     $iconClasses = Flux::classes()

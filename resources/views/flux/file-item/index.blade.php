@@ -20,7 +20,7 @@ $classes = Flux::classes()
     ->add('bg-white dark:bg-white/10 dark:disabled:bg-white/[7%]')
     // Make the placeholder match the text color of standard input placeholders...
     ->add('disabled:shadow-none')
-    ->add('min-h-10 text-base sm:text-sm rounded-lg block w-full')
+    ->add('min-h-10 text-base/6 sm:text-sm/6 rounded-lg block w-full')
     ->add($invalid
         ? 'border border-red-500'
         : 'border border-zinc-200 border-b-zinc-300/80 dark:border-white/10'
@@ -68,11 +68,11 @@ $iconVariant = $text ? 'solid' : 'micro';
 
     <div class="flex-1 overflow-hidden py-[calc(0.75rem-3px)] me-3 flex flex-col justify-center gap-1" data-slot="content">
         <?php if ($heading): ?>
-            <div class="text-sm font-medium text-zinc-500 dark:text-white/80 whitespace-nowrap overflow-hidden text-ellipsis">{{ $heading }}</div>
+            <div class="text-base/6 sm:text-sm/6 font-medium text-zinc-500 dark:text-white/80 whitespace-nowrap overflow-hidden text-ellipsis">{{ $heading }}</div>
         <?php endif; ?>
 
         <?php if ($text): ?>
-            <div class="text-xs text-zinc-500">{{ $text }}</div>
+            <div class="text-sm/5 sm:text-xs/5 text-zinc-500">{{ $text }}</div>
         <?php endif; ?>
     </div>
 

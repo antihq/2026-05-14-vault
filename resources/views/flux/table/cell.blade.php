@@ -8,7 +8,7 @@
 
 @php
 $classes = Flux::classes()
-    ->add('py-3 px-3 first:ps-0 last:pe-0 text-sm')
+    ->add('py-3 px-3 first:ps-0 last:pe-0 text-base/6 sm:text-sm/6')
     ->add(match($align) {
         'center' => 'text-center',
         'end' => 'text-end',

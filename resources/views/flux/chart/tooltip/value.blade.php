@@ -12,7 +12,7 @@
 $format = is_array($format) ? \Illuminate\Support\Js::encode($format) : $format;
 @endphp
 
-<div {{ $attributes->class(['flex items-center gap-2 p-2 text-xs [:where(&)]:text-zinc-500 dark:[:where(&)]:text-zinc-300']) }}>
+<div {{ $attributes->class(['flex items-center gap-2 p-2 text-sm/5 sm:text-xs/5 [:where(&)]:text-zinc-500 dark:[:where(&)]:text-zinc-300']) }}>
     {{ $slot }}
 
     @if (is_string($label) && $label !== '')

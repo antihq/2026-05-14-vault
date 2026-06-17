@@ -53,13 +53,13 @@ $loadingClasses = Flux::classes()
 
     <div class="flex flex-col {{ $inline ? 'gap-1' : 'items-center gap-2' }}">
         <?php if ($heading) : ?>
-            <div class="text-sm font-medium text-zinc-800 dark:text-white cursor-default [[disabled]_&]:opacity-75">
+            <div class="text-base/6 sm:text-sm/6 font-medium text-zinc-800 dark:text-white cursor-default [[disabled]_&]:opacity-75">
                 {{ $heading }}
             </div>
         <?php endif; ?>
 
         <?php if ($text) : ?>
-            <div class="relative text-zinc-500 dark:text-white/60 cursor-default {{ $inline ? 'text-xs' : 'text-sm' }}">
+            <div class="relative text-zinc-500 dark:text-white/60 cursor-default {{ $inline ? 'text-sm/5 sm:text-xs/5' : 'text-base/6 sm:text-sm/6' }}">
                 @if ($withProgress)
                     <div class="not-in-data-loading:opacity-0 absolute inset-x-0 top-0 flex gap-3 items-center">
                         <div class="flex-1 h-1 rounded-full bg-zinc-200 dark:bg-white/10">

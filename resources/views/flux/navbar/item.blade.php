@@ -68,7 +68,7 @@ $classes = Flux::classes()
     <?php endif; ?>
 
     <?php if ($slot->isNotEmpty()): ?>
-        <div class="{{ $icon ? 'ms-3' : '' }} flex-1 text-sm font-medium leading-none whitespace-nowrap [[data-nav-footer]_&]:hidden [[data-nav-sidebar]_[data-nav-footer]_&]:block" data-content>{{ $slot }}</div>
+        <div class="{{ $icon ? 'ms-3' : '' }} flex-1 text-base/6 sm:text-sm/6 font-medium whitespace-nowrap [[data-nav-footer]_&]:hidden [[data-nav-sidebar]_[data-nav-footer]_&]:block" data-content>{{ $slot }}</div>
     <?php endif; ?>
 
     <?php if (is_string($iconTrailing) && $iconTrailing !== ''): ?>

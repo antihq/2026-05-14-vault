@@ -31,7 +31,7 @@ $trailingIconClasses = Flux::classes()
 $classes = Flux::classes()
     ->add('flex items-center px-2 py-1.5 w-full focus:outline-hidden')
     ->add('rounded-md')
-    ->add('text-start text-sm font-medium')
+    ->add('text-start text-base/6 sm:text-sm/6 font-medium')
     ->add('[&[disabled]]:opacity-50')
     ->add(match ($variant) {
         'danger' => [
@@ -46,7 +46,7 @@ $classes = Flux::classes()
     ;
 
 $suffixClasses = Flux::classes()
-    ->add('ms-auto text-xs text-zinc-400')
+    ->add('ms-auto text-sm/5 sm:text-xs/5 text-zinc-400')
     ;
 @endphp
 

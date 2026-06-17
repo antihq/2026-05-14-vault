@@ -19,9 +19,9 @@ $classes = Flux::classes()
     ->add('flex items-center overflow-hidden')
     ->add('cursor-text [ui-color-picker[disabled]_&]:cursor-default')
     ->add(match ($size) {
-        default => 'h-10 text-base sm:text-sm rounded-lg ps-[7px] py-2 leading-[1.375rem]' . ($hasTrailingIcons ? ' pe-[3px]' : ' pe-3'),
-        'sm' => 'h-8 text-sm rounded-lg ps-[5px] py-1.5 leading-[1.125rem]' . ($hasTrailingIcons ? ' pe-[3px]' : ' pe-2'),
-        'xs' => 'h-6 text-xs rounded-md ps-[3px] py-1.5 leading-[1.125rem]' . ($hasTrailingIcons ? ' pe-[0px]' : ' pe-1.5'),
+        default => 'h-10 text-base/6 sm:text-sm/6 rounded-lg ps-[7px] py-2' . ($hasTrailingIcons ? ' pe-[3px]' : ' pe-3'),
+        'sm' => 'h-8 text-base/6 sm:text-sm/6 rounded-lg ps-[5px] py-1.5' . ($hasTrailingIcons ? ' pe-[3px]' : ' pe-2'),
+        'xs' => 'h-6 text-sm/5 sm:text-xs/5 rounded-md ps-[3px] py-1.5' . ($hasTrailingIcons ? ' pe-[0px]' : ' pe-1.5'),
     })
     // Focus: show outline on the container when the inner input has focus-visible
     ->add('has-focus-visible:outline-2 has-focus-visible:outline-offset-[-1px] has-focus-visible:outline-[-webkit-focus-ring-color]')

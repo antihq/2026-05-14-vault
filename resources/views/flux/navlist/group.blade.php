@@ -14,7 +14,7 @@
                 <flux:icon.chevron-right class="size-3! block group-data-open/disclosure-button:hidden rtl:rotate-180" />
             </div>
 
-            <span class="text-sm font-medium leading-none">{{ $heading }}</span>
+            <span class="text-base/6 sm:text-sm/6 font-medium">{{ $heading }}</span>
         </button>
 
         <div class="relative hidden data-open:block space-y-[2px] ps-7" @if ($expanded === true) data-open @endif>
@@ -26,7 +26,7 @@
 <?php elseif ($heading): ?>
     <div {{ $attributes->class('block space-y-[2px]') }}>
         <div class="px-3 py-2">
-            <div class="text-sm text-zinc-400 font-medium leading-none">{{ $heading }}</div>
+            <div class="text-base/6 sm:text-sm/6 text-zinc-400 font-medium">{{ $heading }}</div>
         </div>
 
         <div>

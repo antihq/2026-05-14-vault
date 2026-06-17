@@ -24,7 +24,7 @@
                     <?php endif; ?>
                 </div>
 
-                <span class="flex-1 text-left rtl:text-right text-sm font-medium leading-none">{{ $heading }}</span>
+                <span class="flex-1 text-left rtl:text-right text-base/6 sm:text-sm/6 font-medium">{{ $heading }}</span>
 
                 <div class="ps-3 pe-2.5">
                     <flux:icon.chevron-down class="size-3! hidden group-data-open/disclosure-button:block" />
@@ -53,7 +53,7 @@
                     </div>
                 <?php endif; ?>
 
-                <span class="hidden in-data-flux-menu:block flex-1 text-start text-sm font-medium leading-none text-zinc-800 dark:text-white">{{ $heading }}</span>
+                <span class="hidden in-data-flux-menu:block flex-1 text-start text-base/6 sm:text-sm/6 font-medium text-zinc-800 dark:text-white">{{ $heading }}</span>
 
                 <div class="hidden in-data-flux-menu:block">
                     <flux:icon.chevron-right :variant="$iconVariant" class="ms-auto size-4 text-zinc-400 [[data-flux-sidebar-group-dropdown]>button:hover_&]:text-current rtl:hidden" />
@@ -75,7 +75,7 @@
                     <flux:icon.chevron-right class="size-3! block group-data-open/disclosure-button:hidden rtl:rotate-180" />
                 </div>
 
-                <span class="text-sm font-medium leading-none">{{ $heading }}</span>
+                <span class="text-base/6 sm:text-sm/6 font-medium">{{ $heading }}</span>
             </button>
 
             <div class="relative hidden data-open:block ps-7" @if ($expanded === true) data-open @endif>
@@ -91,7 +91,7 @@
 <?php elseif ($heading): ?>
     <div {{ $attributes->class('flex flex-col in-data-flux-sidebar-collapsed-desktop:hidden') }} data-flux-sidebar-group>
         <div class="px-3 py-2">
-            <div class="text-sm text-zinc-400 font-medium leading-none">{{ $heading }}</div>
+            <div class="text-base/6 sm:text-sm/6 text-zinc-400 font-medium">{{ $heading }}</div>
         </div>
 
         <div class="flex flex-col">
