@@ -4,7 +4,7 @@
     {{ $attributes->except('class') }}
     @class([
         $attributes->get('class'),
-        'grid grid-cols-1 text-sm sm:grid-cols-[min(50%,--spacing(64))_auto]',
+        'grid grid-cols-1 text-base/6 sm:text-sm/6 sm:grid-cols-[min(50%,--spacing(64))_auto]',
     ])
 >
     {{ $slot }}
