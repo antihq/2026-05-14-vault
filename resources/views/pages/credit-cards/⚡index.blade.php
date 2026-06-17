@@ -75,7 +75,7 @@ new #[Title('Credit Cards')] class extends Component
                                 {{ $creditCard->name }}
                             </a>
                         </p>
-                        <flux:text class="flex truncate">
+                        <flux:text class="flex truncate mt-1">
                             {{ $creditCard->masked_number }}
                         </flux:text>
                     </div>

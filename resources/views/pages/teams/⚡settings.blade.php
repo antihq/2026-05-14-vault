@@ -144,13 +144,13 @@ new class extends Component
     }
 }; ?>
 
-<section class="w-full max-w-xl space-y-6">
+<section class="w-full max-w-xl space-y-12">
 
     <div>
         <flux:heading level="2">Team details</flux:heading>
 
-        <form wire:submit="updateTeamName" class="mt-3">
-            <flux:card class="px-4 pt-3 pb-4.5">
+        <form wire:submit="updateTeamName" class="mt-2">
+            <flux:card class="px-4 py-5">
                 <flux:field>
                     <flux:label>Owner</flux:label>
                     <flux:input :value="$this->ownerName" type="text" required variant="filled" readonly />
@@ -177,7 +177,7 @@ new class extends Component
             <span class="text-zinc-500 dark:text-zinc-400 text-sm/5 sm:text-xs/5">{{ $this->members->count() }}</span>
         </div>
 
-        <flux:card class="mt-3 p-0!">
+        <flux:card class="mt-2 p-0!">
             <ul role="list" class="divide-y divide-zinc-100 dark:divide-zinc-700">
                 @foreach ($this->members as $member)
                     <li class="px-4 py-3" data-test="member-row">
@@ -224,7 +224,7 @@ new class extends Component
     <div>
         <flux:heading level="2">Invite member</flux:heading>
 
-        <form wire:submit="createInvitation" class="mt-3">
+        <form wire:submit="createInvitation" class="mt-2">
             <flux:card class="p-4">
                 <flux:fieldset :disabled="!$this->permissions->canCreateInvitation">
                     <flux:field>
@@ -260,7 +260,7 @@ new class extends Component
             </div>
 
             @if (filled($this->invitations))
-                <flux:card class="mt-3 p-0!">
+                <flux:card class="mt-2 p-0!">
                     <ul role="list" class="divide-y divide-zinc-100 dark:divide-zinc-700">
                         @foreach ($this->invitations as $invitation)
                             <li class="px-4 py-3" data-test="invitation-row">
@@ -287,8 +287,8 @@ new class extends Component
     <div>
         <flux:heading level="2">Delete team</flux:heading>
 
-        <form wire:submit="deleteTeam" class="mt-3">
-            <flux:card class="p-4 pt-3 pb-4.5">
+        <form wire:submit="deleteTeam" class="mt-2">
+            <flux:card class="p-4 py-5 pb-4.5">
                 <flux:fieldset :disabled="! $this->permissions->canDeleteTeam || $team->is_personal">
                     <flux:field>
                         <flux:label>Type "<span class="normal-case">{{ $team->name }}</span>" to confirm</flux:label>

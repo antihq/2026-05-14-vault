@@ -67,7 +67,7 @@ new #[Title('New Password')] class extends Component
 
 <section class="w-full max-w-xl">
     <form wire:submit="createPassword">
-        <flux:card class="px-4 pt-3 pb-4.5">
+        <flux:card class="px-4 py-5">
             <flux:field>
                 <flux:label>Name</flux:label>
                 <flux:input wire:model="name" type="text" required autofocus />

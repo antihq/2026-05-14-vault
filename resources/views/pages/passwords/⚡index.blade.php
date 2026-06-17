@@ -75,7 +75,7 @@ new #[Title('Passwords')] class extends Component
                                 {{ $password->name }}
                             </a>
                         </p>
-                        <flux:text class="flex truncate">
+                        <flux:text class="flex truncate mt-1">
                             {{ $password->username }}
                         </flux:text>
                     </div>
