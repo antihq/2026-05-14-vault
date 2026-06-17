@@ -55,11 +55,10 @@ new #[Title('Passwords')] class extends Component
         </flux:button>
     </div>
 
-    <div class="mt-6.5">
-        <flux:input wire:model.live="search" placeholder="Search..." clearable />
-    </div>
-
-    <flux:card class="mt-4 p-0!">
+    <flux:card class="mt-4 p-0">
+        <div class="p-2">
+            <flux:input wire:model.live="search" placeholder="Search..." clearable />
+        </div>
         <ul role="list" class="divide-y divide-zinc-100 dark:divide-zinc-700">
             @foreach ($this->passwords as $password)
                 <li wire:key="{{ $password->id }}" class="relative flex justify-between gap-x-6 px-4 py-3"
