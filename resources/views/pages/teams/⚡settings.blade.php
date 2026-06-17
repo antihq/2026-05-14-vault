@@ -150,7 +150,7 @@ new class extends Component
         <flux:heading level="2">Team details</flux:heading>
 
         <form wire:submit="updateTeamName" class="mt-3">
-            <flux:card class="p-6 pt-5 max-sm:p-4 max-sm:pt-3">
+            <flux:card class="px-4 pt-3 pb-4.5">
                 <flux:field>
                     <flux:label>Owner</flux:label>
                     <flux:input :value="$this->ownerName" type="text" required variant="filled" readonly />
@@ -180,7 +180,7 @@ new class extends Component
         <flux:card class="mt-3 p-0!">
             <ul role="list" class="divide-y divide-zinc-100 dark:divide-zinc-700">
                 @foreach ($this->members as $member)
-                    <li class="px-5 py-4" data-test="member-row">
+                    <li class="px-4 py-3" data-test="member-row">
                         <div class="flex items-center gap-2">
                             <p class="font-medium">{{ $member->name }}</p>
                             <flux:badge color="fuchsia">{{ $member->pivot->role->value }}</flux:badge>
@@ -225,7 +225,7 @@ new class extends Component
         <flux:heading level="2">Invite member</flux:heading>
 
         <form wire:submit="createInvitation" class="mt-3">
-            <flux:card class="p-6 pt-5 max-sm:p-4 max-sm:pt-3">
+            <flux:card class="p-4">
                 <flux:fieldset :disabled="!$this->permissions->canCreateInvitation">
                     <flux:field>
                         <flux:label>Email address</flux:label>
@@ -263,7 +263,7 @@ new class extends Component
                 <flux:card class="mt-3 p-0!">
                     <ul role="list" class="divide-y divide-zinc-100 dark:divide-zinc-700">
                         @foreach ($this->invitations as $invitation)
-                            <li class="px-5 py-4" data-test="invitation-row">
+                            <li class="px-4 py-3" data-test="invitation-row">
                                 <p class="font-medium">{{ $invitation->email }}</p>
                                 <div class="flex flex-wrap items-center gap-x-3 justify-between mt-1">
                                     <div>
@@ -288,7 +288,7 @@ new class extends Component
         <flux:heading level="2">Delete team</flux:heading>
 
         <form wire:submit="deleteTeam" class="mt-3">
-            <flux:card class="p-6 pt-5 max-sm:p-4 max-sm:pt-3">
+            <flux:card class="p-4 pt-3 pb-4.5">
                 <flux:fieldset :disabled="! $this->permissions->canDeleteTeam || $team->is_personal">
                     <flux:field>
                         <flux:label>Type "<span class="normal-case">{{ $team->name }}</span>" to confirm</flux:label>

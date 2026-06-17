@@ -62,7 +62,7 @@ new #[Title('Credit Cards')] class extends Component
     <flux:card class="mt-4 p-0!">
         <ul role="list" class="divide-y divide-zinc-100 dark:divide-zinc-700">
             @foreach ($this->creditCards as $creditCard)
-                <li wire:key="{{ $creditCard->id }}" class="relative flex justify-between gap-x-6 px-5 py-4"
+                <li wire:key="{{ $creditCard->id }}" class="relative flex justify-between gap-x-6 px-4 py-3"
                     x-data="{
                         cardNumber: {{ \Illuminate\Support\Js::encode($creditCard->card_number) }},
                         cvv: {{ \Illuminate\Support\Js::encode($creditCard->cvv) }}
@@ -81,7 +81,7 @@ new #[Title('Credit Cards')] class extends Component
                     </div>
                     <div class="flex shrink-0 items-center gap-x-4">
                         <div class="hidden sm:flex sm:flex-col sm:items-end relative z-10">
-                            <flux:text :color="$creditCard->is_expired ? 'red' : null">{{ $creditCard->expiry_date }}</flux:text>
+                            <flux:text :color="$creditCard->is_expired ? 'red' : null" class="font-medium" variant="strong">{{ $creditCard->expiry_date }}</flux:text>
                         </div>
                         <flux:dropdown align="end" class="relative z-10">
                             <flux:button icon="ellipsis-horizontal" variant="ghost" inset="right" />

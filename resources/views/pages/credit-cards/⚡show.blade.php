@@ -77,11 +77,11 @@ new class extends Component
 
     <flux:card class="mt-6.5 p-0">
         <x-description.list>
-            <x-description.term class="pl-5 max-sm:px-5">Name on card</x-description.term>
-            <x-description.details class="break-all pr-5 max-sm:px-5">{{ $creditCardModel->name_on_card }}</x-description.details>
+            <x-description.term class="pl-4 max-sm:px-4">Name on card</x-description.term>
+            <x-description.details class="break-all pr-4 max-sm:px-4 font-medium">{{ $creditCardModel->name_on_card }}</x-description.details>
 
-            <x-description.term class="pl-5 max-sm:px-5">Card number</x-description.term>
-            <x-description.details class="flex gap-x-4 items-center pr-5 max-sm:px-5">
+            <x-description.term class="pl-4 max-sm:px-4">Card number</x-description.term>
+            <x-description.details class="flex gap-x-4 items-center pr-4 max-sm:px-4 font-medium">
                 <span x-show="!showNumber">{{ $creditCardModel->masked_number }}</span>
                 <span x-show="showNumber" x-cloak x-text="cardNumber" class="font-mono break-all"></span>
                 <flux:button
@@ -93,13 +93,13 @@ new class extends Component
                 </flux:button>
             </x-description.details>
 
-            <x-description.term class="pl-5 max-sm:px-5">Expiry date</x-description.term>
-            <x-description.details class="pr-5 max-sm:px-5">
+            <x-description.term class="pl-4 max-sm:px-4">Expiry date</x-description.term>
+            <x-description.details class="pr-4 max-sm:px-4 font-medium">
                 <flux:text :color="$creditCardModel->is_expired ? 'red' : null">{{ $creditCardModel->expiry_date }}</flux:text>
             </x-description.details>
 
-            <x-description.term class="pl-5 max-sm:px-5">CVV</x-description.term>
-            <x-description.details class="flex gap-x-4 items-center pr-5 max-sm:px-5">
+            <x-description.term class="pl-4 max-sm:px-4">CVV</x-description.term>
+            <x-description.details class="flex gap-x-4 items-center pr-4 max-sm:px-4 font-medium">
                 <span x-show="!showCvv">•••</span>
                 <span x-show="showCvv" x-cloak x-text="cvv" class="font-mono"></span>
                 <flux:button
@@ -112,8 +112,8 @@ new class extends Component
             </x-description.details>
 
             @if ($creditCardModel->notes)
-                <x-description.term class="pl-5 max-sm:px-5">Notes</x-description.term>
-                <x-description.details class="pr-5 max-sm:px-5">
+                <x-description.term class="pl-4 max-sm:px-4">Notes</x-description.term>
+                <x-description.details class="pr-4 max-sm:px-4">
                     {!! Illuminate\Support\Str::markdown($creditCardModel->notes) !!}
                 </x-description.details>
             @endif

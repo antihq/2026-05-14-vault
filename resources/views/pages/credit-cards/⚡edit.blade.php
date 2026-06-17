@@ -89,7 +89,7 @@ new class extends Component
     </flux:breadcrumbs>
 
     <form wire:submit="updateCreditCard" class="mt-4">
-        <flux:card class="px-6 py-5 max-sm:px-4 max-sm:py-3">
+        <flux:card class="px-4 pt-3 pb-4.5">
             <flux:field>
                 <flux:label>Name</flux:label>
                 <flux:input wire:model="name" type="text" required />

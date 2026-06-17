@@ -14,7 +14,7 @@
 
                 <div class="w-full flex-1 flex-wrap flex px-1.5">
                     <flux:navbar class="pb-3">
-                        <flux:navbar.item :href="route('home')" :accent="true" class="lg:hidden" wire:navigate>{{ config('app.name') }}</flux:navbar.item>
+                        <flux:navbar.item :href="route('home')" :accent="true" class="lg:hidden text-zinc-800" wire:navigate>{{ config('app.name') }}</flux:navbar.item>
                         <flux:navbar.item :href="route('dashboard')" :accent="true" class="text-zinc-800" wire:navigate>Dashboard</flux:navbar.item>
                     </flux:navbar>
 

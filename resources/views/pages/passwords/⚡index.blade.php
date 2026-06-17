@@ -62,7 +62,7 @@ new #[Title('Passwords')] class extends Component
     <flux:card class="mt-4 p-0!">
         <ul role="list" class="divide-y divide-zinc-100 dark:divide-zinc-700">
             @foreach ($this->passwords as $password)
-                <li wire:key="{{ $password->id }}" class="relative flex justify-between gap-x-6 px-5 py-4"
+                <li wire:key="{{ $password->id }}" class="relative flex justify-between gap-x-6 px-4 py-3"
                     x-data="{
                         username: {{ \Illuminate\Support\Js::encode($password->username) }},
                         password: {{ \Illuminate\Support\Js::encode($password->password) }}

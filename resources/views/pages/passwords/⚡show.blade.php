@@ -75,19 +75,19 @@ new class extends Component
     <flux:card class="mt-6.5 p-0">
         <x-description.list>
             @if ($passwordModel->website)
-                <x-description.term class="pl-5 max-sm:px-5">Website</x-description.term>
-                <x-description.details class="pr-5 max-sm:px-5">
+                <x-description.term class="pl-4 max-sm:px-4">Website</x-description.term>
+                <x-description.details class="pr-4 max-sm:px-4 font-medium">
                     <flux:link :href="$passwordModel->website" target="_blank" variant="ghost" class="truncate lowercase">
                         {{ parse_url($passwordModel->website, PHP_URL_HOST) ?: $passwordModel->website }}
                     </flux:link>
                 </x-description.details>
             @endif
 
-            <x-description.term class="pl-5 max-sm:px-5">Username</x-description.term>
-            <x-description.details class="break-all pr-5 max-sm:px-5">{{ $passwordModel->username }}</x-description.details>
+            <x-description.term class="pl-4 max-sm:px-4">Username</x-description.term>
+            <x-description.details class="break-all pr-4 max-sm:px-4 font-medium">{{ $passwordModel->username }}</x-description.details>
 
-            <x-description.term class="pl-5 max-sm:px-5">Password</x-description.term>
-            <x-description.details class="flex gap-x-4 items-center pr-5 max-sm:px-5">
+            <x-description.term class="pl-4 max-sm:px-4">Password</x-description.term>
+            <x-description.details class="flex gap-x-4 items-center pr-4 max-sm:px-4 font-medium">
                 <span x-show="!showPass" x-text="'•'.repeat(password.length)" class="font-mono"></span>
                 <span x-show="showPass" x-cloak x-text="password" class="font-mono break-all"></span>
                 <flux:button
@@ -100,8 +100,8 @@ new class extends Component
             </x-description.details>
 
             @if ($passwordModel->notes)
-                <x-description.term class="pl-5 max-sm:px-5">Notes</x-description.term>
-                <x-description.details class="pr-5 max-sm:px-5">
+                <x-description.term class="pl-4 max-sm:px-4">Notes</x-description.term>
+                <x-description.details class="pr-4 max-sm:px-4">
                     {!! Illuminate\Support\Str::markdown($passwordModel->notes) !!}
                 </x-description.details>
             @endif

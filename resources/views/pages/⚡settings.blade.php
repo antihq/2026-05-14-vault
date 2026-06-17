@@ -277,7 +277,7 @@ new #[Layout('layouts.account'), Title('Settings')] class extends Component
         <flux:heading level="2">Profile</flux:heading>
 
         <form wire:submit="updateProfile" class="mt-3">
-            <flux:card class="p-6 pt-5 max-sm:p-4 max-sm:pt-3">
+            <flux:card class="px-4 pt-3 pb-4.5">
                 <flux:field>
                     <flux:label>Name</flux:label>
                     <flux:input wire:model="profileForm.name" type="text" required autofocus autocomplete="name" />
@@ -317,7 +317,7 @@ new #[Layout('layouts.account'), Title('Settings')] class extends Component
         <flux:heading level="2">Password</flux:heading>
 
         <form wire:submit="updatePassword" class="mt-3">
-            <flux:card class="p-6 pt-5 max-sm:p-4 max-sm:pt-3">
+            <flux:card class="px-4 pt-3 pb-4.5">
                 <flux:field>
                     <flux:label>Current password</flux:label>
                     <flux:input wire:model="passwordForm.current_password" type="password" required autocomplete="current-password" viewable />
@@ -353,7 +353,7 @@ new #[Layout('layouts.account'), Title('Settings')] class extends Component
     <div>
         <flux:heading level="2">Two-factor authentication</flux:heading>
 
-        <flux:card class="p-6 pt-5 max-sm:p-4 max-sm:pt-3 mt-3">
+        <flux:card class="p-4 mt-3">
             <flux:fieldset :disabled="!$canManageTwoFactor">
                 @if ($twoFactorEnabled && ! $showQrCode)
                     <x-description.list>
@@ -468,7 +468,7 @@ new #[Layout('layouts.account'), Title('Settings')] class extends Component
     <div x-data>
         <flux:heading level="2">Appearance</flux:heading>
 
-        <flux:card class="p-6 pt-5 max-sm:p-4 max-sm:pt-3 mt-3">
+        <flux:card class="px-4 py-3 mt-3">
             <flux:radio.group x-model="$flux.appearance">
                 <flux:radio value="light" label="Light" />
                 <flux:radio value="dark" label="Dark" />
@@ -483,7 +483,7 @@ new #[Layout('layouts.account'), Title('Settings')] class extends Component
         <flux:heading level="2">Delete account</flux:heading>
 
         <form wire:submit="deleteAccount" class="mt-3">
-            <flux:card class="p-6 pt-5 max-sm:p-4 max-sm:pt-3">
+            <flux:card class="px-4 pt-3 pb-4.5">
                 <flux:fieldset :disabled="!$this->showDeleteUser">
                     @if (! $this->showDeleteUser)
                         <p class="text-amber-600 dark:text-amber-400 mb-6">
