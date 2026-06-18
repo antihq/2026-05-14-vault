@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TeamPermission;
 use App\Enums\TeamRole;
 use App\Models\Password;
 use App\Models\Team;
@@ -858,4 +859,387 @@ test('passwords index shows domain instead of full URL', function () {
 
     $response->assertSee('www.github.com');
     $response->assertSee('href="https://www.github.com/settings"', false);
+});
+
+test('team owner can move a password to another team they belong to', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $destination = Team::factory()->create();
+    $source->members()->attach($user, ['role' => TeamRole::Owner->value]);
+    $destination->members()->attach($user, ['role' => TeamRole::Member->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $destination->id)
+        ->call('movePassword')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('passwords.show', ['current_team' => $destination, 'password' => $password]));
+
+    expect($password->fresh()->team_id)->toBe($destination->id);
+});
+
+test('team admin can move a password to another team', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $destination = $user->personalTeam();
+    $source->members()->attach($user, ['role' => TeamRole::Admin->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $destination->id)
+        ->call('movePassword')
+        ->assertHasNoErrors();
+
+    expect($password->fresh()->team_id)->toBe($destination->id);
+});
+
+test('regular member cannot move a password out of the team', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $destination = $user->personalTeam();
+    $source->members()->attach($user, ['role' => TeamRole::Member->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $destination->id)
+        ->call('movePassword')
+        ->assertForbidden();
+
+    expect($password->fresh()->team_id)->toBe($source->id);
+});
+
+test('non team member cannot move a password', function () {
+    $owner = User::factory()->create();
+    $nonMember = User::factory()->create();
+    $source = Team::factory()->create();
+    $source->members()->attach($owner, ['role' => TeamRole::Owner->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($nonMember);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $nonMember->personalTeam()->id)
+        ->call('movePassword')
+        ->assertForbidden();
+
+    expect($password->fresh()->team_id)->toBe($source->id);
+});
+
+test('password cannot be moved to a team the user does not belong to', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $otherTeam = Team::factory()->create();
+    $source->members()->attach($user, ['role' => TeamRole::Owner->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $otherTeam->id)
+        ->call('movePassword')
+        ->assertHasErrors(['moveToTeamId']);
+
+    expect($password->fresh()->team_id)->toBe($source->id);
+});
+
+test('password cannot be moved to the same team it already belongs to', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $source->members()->attach($user, ['role' => TeamRole::Owner->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $source->id)
+        ->call('movePassword')
+        ->assertHasErrors(['moveToTeamId']);
+});
+
+test('moving a password does not re encrypt the value and it stays decryptable', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $destination = $user->personalTeam();
+    $source->members()->attach($user, ['role' => TeamRole::Owner->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+        'notes' => 'sensitive notes',
+    ]);
+
+    $originalEncryptedPassword = DB::table('passwords')->where('id', $password->id)->value('encrypted_password');
+    $originalEncryptedNotes = DB::table('passwords')->where('id', $password->id)->value('encrypted_notes');
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $destination->id)
+        ->call('movePassword')
+        ->assertHasNoErrors();
+
+    $raw = DB::table('passwords')->where('id', $password->id)->first();
+
+    expect($raw->encrypted_password)->toBe($originalEncryptedPassword);
+    expect($raw->encrypted_notes)->toBe($originalEncryptedNotes);
+
+    $fresh = $password->fresh();
+    expect($fresh->password)->toBe('secret123');
+    expect($fresh->notes)->toBe('sensitive notes');
+});
+
+test('password can be moved into the personal team', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $personal = $user->personalTeam();
+    $source->members()->attach($user, ['role' => TeamRole::Owner->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $personal->id)
+        ->call('movePassword')
+        ->assertHasNoErrors();
+
+    expect($password->fresh()->team_id)->toBe($personal->id);
+});
+
+test('password can be moved out of the personal team', function () {
+    $user = User::factory()->create();
+    $personal = $user->personalTeam();
+    $destination = Team::factory()->create();
+    $destination->members()->attach($user, ['role' => TeamRole::Member->value]);
+
+    $password = $personal->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $personal, 'password' => $password])
+        ->set('moveToTeamId', $destination->id)
+        ->call('movePassword')
+        ->assertHasNoErrors();
+
+    expect($password->fresh()->team_id)->toBe($destination->id);
+});
+
+test('edit page shows move section for team admins with another team', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $source->members()->attach($user, ['role' => TeamRole::Admin->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.edit', ['current_team' => $source, 'password' => $password]));
+
+    $response->assertOk();
+    $response->assertSee('Move to team');
+    $response->assertSee($user->personalTeam()->name);
+});
+
+test('edit page hides move section for regular members', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $source->members()->attach($user, ['role' => TeamRole::Member->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.edit', ['current_team' => $source, 'password' => $password]));
+
+    $response->assertOk();
+    $response->assertDontSee('Move to team');
+});
+
+test('edit page hides move section when user has no other team to move to', function () {
+    $user = User::factory()->create();
+    $personal = $user->personalTeam();
+
+    $password = $personal->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('passwords.edit', ['current_team' => $personal, 'password' => $password]));
+
+    $response->assertOk();
+    $response->assertDontSee('Move to team');
+});
+
+test('move permission is granted to admin role', function () {
+    expect(TeamRole::Admin->hasPermission(TeamPermission::MovePassword))->toBeTrue();
+});
+
+test('move permission is granted to owner role', function () {
+    expect(TeamRole::Owner->hasPermission(TeamPermission::MovePassword))->toBeTrue();
+});
+
+test('move permission is not granted to member role', function () {
+    expect(TeamRole::Member->hasPermission(TeamPermission::MovePassword))->toBeFalse();
+});
+
+test('moved password becomes inaccessible to source team members and accessible to destination team members', function () {
+    $mover = User::factory()->create();
+    $sourceMember = User::factory()->create();
+    $destinationMember = User::factory()->create();
+
+    $source = Team::factory()->create();
+    $destination = Team::factory()->create();
+
+    $source->members()->attach($mover, ['role' => TeamRole::Owner->value]);
+    $source->members()->attach($sourceMember, ['role' => TeamRole::Member->value]);
+    $destination->members()->attach($mover, ['role' => TeamRole::Owner->value]);
+    $destination->members()->attach($destinationMember, ['role' => TeamRole::Member->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($sourceMember)
+        ->get(route('passwords.show', ['current_team' => $source, 'password' => $password]))
+        ->assertOk();
+
+    $this->actingAs($mover);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->set('moveToTeamId', $destination->id)
+        ->call('movePassword')
+        ->assertHasNoErrors();
+
+    $this->actingAs($sourceMember)
+        ->get(route('passwords.show', ['current_team' => $source, 'password' => $password]))
+        ->assertForbidden();
+
+    $this->actingAs($destinationMember)
+        ->get(route('passwords.show', ['current_team' => $destination, 'password' => $password]))
+        ->assertOk()
+        ->assertSee('GitHub');
+});
+
+test('movePassword requires a destination team to be selected', function () {
+    $user = User::factory()->create();
+    $source = $user->personalTeam();
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->call('movePassword')
+        ->assertHasErrors(['moveToTeamId']);
+
+    expect($password->fresh()->team_id)->toBe($source->id);
+});
+
+test('movePassword auto-selects the only available destination team', function () {
+    $user = User::factory()->create();
+    $source = Team::factory()->create();
+    $destination = $user->personalTeam();
+    $source->members()->attach($user, ['role' => TeamRole::Owner->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->call('movePassword')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('passwords.show', ['current_team' => $destination, 'password' => $password]));
+
+    expect($password->fresh()->team_id)->toBe($destination->id);
+});
+
+test('movableTeams excludes the current team and includes all other teams the user belongs to', function () {
+    $user = User::factory()->create();
+    $personal = $user->personalTeam();
+    $source = Team::factory()->create();
+    $other = Team::factory()->create();
+
+    $source->members()->attach($user, ['role' => TeamRole::Admin->value]);
+    $other->members()->attach($user, ['role' => TeamRole::Member->value]);
+
+    $password = $source->passwords()->create([
+        'name' => 'GitHub',
+        'username' => 'johndoe',
+        'password' => 'secret123',
+    ]);
+
+    $this->actingAs($user);
+
+    $movable = Livewire::test('pages::passwords.edit', ['current_team' => $source, 'password' => $password])
+        ->get('movableTeams');
+
+    expect($movable->pluck('id')->sort()->values()->all())
+        ->toBe(collect([$personal->id, $other->id])->sort()->values()->all())
+        ->and($movable->pluck('id'))->not->toContain($source->id);
 });

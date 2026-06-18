@@ -20,7 +20,7 @@ enum TeamRole: string
     {
         return match ($this) {
             self::Owner => 'Full control over the team, including billing and ownership transfer.',
-            self::Admin => 'Can update team settings and manage invitations.',
+            self::Admin => 'Can update team settings, manage invitations, and move passwords between teams.',
             self::Member => 'No management permissions.',
         };
     }
@@ -38,6 +38,7 @@ enum TeamRole: string
                 TeamPermission::UpdateTeam,
                 TeamPermission::CreateInvitation,
                 TeamPermission::CancelInvitation,
+                TeamPermission::MovePassword,
             ],
             self::Member => [],
         };
