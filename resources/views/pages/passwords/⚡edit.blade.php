@@ -130,105 +130,95 @@ new class extends Component
     }
 }; ?>
 
-<section class="w-full max-w-xl space-y-12">
-    <div>
-        <flux:breadcrumbs>
-            <flux:breadcrumbs.item :href="route('passwords.show', ['current_team' => $teamModel, 'password' => $passwordModel])">{{ $passwordModel->name }}</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item>Edit</flux:breadcrumbs.item>
-        </flux:breadcrumbs>
+<section class="w-full max-w-xl">
+    <flux:breadcrumbs>
+        <flux:breadcrumbs.item :href="route('passwords.show', ['current_team' => $teamModel, 'password' => $passwordModel])">{{ $passwordModel->name }}</flux:breadcrumbs.item>
+        <flux:breadcrumbs.item>Edit</flux:breadcrumbs.item>
+    </flux:breadcrumbs>
 
-        <form wire:submit="updatePassword" class="mt-4">
-            <flux:card class="px-4 py-5">
-                <flux:field>
-                    <flux:label>Name</flux:label>
-                    <flux:input wire:model="name" type="text" required />
-                    <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
-                    <flux:error name="name" />
-                </flux:field>
-                <flux:field class="mt-6">
-                    <flux:label>Username</flux:label>
-                    <flux:autocomplete wire:model="username" required>
-                        @foreach($this->usernameSuggestions as $suggestion)
-                            <flux:autocomplete.item>{{ $suggestion }}</flux:autocomplete.item>
-                        @endforeach
-                    </flux:autocomplete>
-                    <flux:description>The email or username used to sign in</flux:description>
-                    <flux:error name="username" />
-                </flux:field>
-                <flux:field class="mt-6">
-                    <flux:label>Password</flux:label>
-                    <flux:input wire:model="password" type="password" required viewable clearable />
-                    <flux:button wire:click.prevent="generatePassword" size="sm" type="button" class="mt-2">Regenerate</flux:button>
-                    <flux:description>The sign-in password — auto-generated, overwrite or use Regenerate</flux:description>
-                    <flux:error name="password" />
-                </flux:field>
-                <flux:field class="mt-6">
-                    <flux:label>Website</flux:label>
-                    <flux:input wire:model="website" type="url" placeholder="https://example.com" />
-                    <flux:description>The login page URL for this service</flux:description>
-                    <flux:error name="website" />
-                </flux:field>
-                <flux:field class="mt-6">
-                    <flux:label>Notes</flux:label>
-                    <flux:textarea wire:model="notes" />
-                    <flux:error name="notes" />
-                    <flux:description>Security questions, recovery codes, or other details</flux:description>
-                </flux:field>
-            </flux:card>
-            <div class="mt-4 flex">
-                <flux:spacer />
-                <flux:button variant="primary" type="submit">
-                    Update password
-                </flux:button>
-            </div>
-        </form>
-    </div>
+    <form wire:submit="updatePassword" class="mt-4">
+        <flux:field>
+            <flux:label>Name</flux:label>
+            <flux:input wire:model="name" type="text" required />
+            <flux:description>A label for this entry, e.g. "Work email" or "Netflix"</flux:description>
+            <flux:error name="name" />
+        </flux:field>
+        <flux:field class="mt-6">
+            <flux:label>Username</flux:label>
+            <flux:autocomplete wire:model="username" required>
+                @foreach($this->usernameSuggestions as $suggestion)
+                    <flux:autocomplete.item>{{ $suggestion }}</flux:autocomplete.item>
+                @endforeach
+            </flux:autocomplete>
+            <flux:description>The email or username used to sign in</flux:description>
+            <flux:error name="username" />
+        </flux:field>
+        <flux:field class="mt-6">
+            <flux:label>Password</flux:label>
+            <flux:input wire:model="password" type="password" required viewable clearable />
+            <flux:button wire:click.prevent="generatePassword" size="sm" type="button" class="mt-2">Regenerate</flux:button>
+            <flux:description>The sign-in password — auto-generated, overwrite or use Regenerate</flux:description>
+            <flux:error name="password" />
+        </flux:field>
+        <flux:field class="mt-6">
+            <flux:label>Website</flux:label>
+            <flux:input wire:model="website" type="url" placeholder="https://example.com" />
+            <flux:description>The login page URL for this service</flux:description>
+            <flux:error name="website" />
+        </flux:field>
+        <flux:field class="mt-6">
+            <flux:label>Notes</flux:label>
+            <flux:textarea wire:model="notes" />
+            <flux:error name="notes" />
+            <flux:description>Security questions, recovery codes, or other details</flux:description>
+        </flux:field>
+
+        <flux:spacer class="mt-6" />
+
+        <flux:button variant="primary" type="submit">
+            Update password
+        </flux:button>
+    </form>
 
     @can('move', $passwordModel)
         @if ($this->movableTeams->isNotEmpty())
-            <flux:separator variant="subtle" />
+            <flux:separator class="my-12" />
 
-            <div>
-                <flux:heading level="2">Move to team</flux:heading>
-                <flux:description class="mt-1">
-                    Transfer this password to another team you belong to. Members of the current team will lose access.
-                </flux:description>
+            <flux:heading level="2">Move to team</flux:heading>
+            <flux:description class="mt-1">
+                Transfer this password to another team you belong to. Members of the current team will lose access.
+            </flux:description>
 
-                <form wire:submit="movePassword" class="mt-2">
-                    <flux:card class="px-4 py-5">
-                        <flux:field>
-                            <flux:label>Destination team</flux:label>
-                            <flux:select wire:model="moveToTeamId" placeholder="Choose a team...">
-                                @foreach ($this->movableTeams as $team)
-                                    <flux:select.option :value="$team->id">{{ $team->name }}{{ $team->is_personal ? ' (personal)' : '' }}</flux:select.option>
-                                @endforeach
-                            </flux:select>
-                            <flux:error name="moveToTeamId" />
-                        </flux:field>
-                    </flux:card>
-                    <div class="mt-4 flex">
-                        <flux:spacer />
-                        <flux:button type="submit" variant="primary" wire:confirm="Move this password to the selected team? Members of the current team will lose access.">
-                            Move password
-                        </flux:button>
-                    </div>
-                </form>
-            </div>
+            <form wire:submit="movePassword" class="mt-4">
+                <flux:field>
+                    <flux:label>Destination team</flux:label>
+                    <flux:select wire:model="moveToTeamId" placeholder="Choose a team...">
+                        @foreach ($this->movableTeams as $team)
+                            <flux:select.option :value="$team->id">{{ $team->name }}{{ $team->is_personal ? ' (personal)' : '' }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                    <flux:error name="moveToTeamId" />
+                </flux:field>
+
+                <flux:spacer class="mt-6" />
+
+                <flux:button type="submit" variant="primary" wire:confirm="Move this password to the selected team? Members of the current team will lose access.">
+                    Move password
+                </flux:button>
+            </form>
         @endif
     @endcan
 
-    <flux:separator variant="subtle" />
+    <flux:separator class="my-12" />
 
-    <div>
-        <flux:heading level="2">Delete password</flux:heading>
-        <flux:description class="mt-1">
-            Permanently remove this password from the team. This cannot be undone.
-        </flux:description>
+    <flux:heading level="2">Delete password</flux:heading>
+    <flux:description class="mt-1">
+        Permanently remove this password from the team. This cannot be undone.
+    </flux:description>
 
-        <form wire:submit="deletePassword" wire:confirm="Delete this password? This cannot be undone." class="mt-2">
-            <flux:button type="submit" variant="danger">
-                Delete password
-            </flux:button>
-        </form>
-    </div>
+    <form wire:submit="deletePassword" wire:confirm="Delete this password? This cannot be undone." class="mt-4">
+        <flux:button type="submit" variant="danger">
+            Delete password
+        </flux:button>
+    </form>
 </section>

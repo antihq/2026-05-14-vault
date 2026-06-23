@@ -271,239 +271,219 @@ new #[Layout('layouts.account'), Title('Settings')] class extends Component
     }
 }; ?>
 
-<section class="w-full max-w-xl space-y-12">
-    <div>
-        <flux:heading level="2">Profile</flux:heading>
+<section class="w-full max-w-xl">
+    <flux:heading level="2">Profile</flux:heading>
 
-        <form wire:submit="updateProfile" class="mt-2">
-            <flux:card class="px-4 py-5">
-                <flux:field>
-                    <flux:label>Name</flux:label>
-                    <flux:input wire:model="profileForm.name" type="text" required autofocus autocomplete="name" />
-                    <flux:error name="profileForm.name" />
-                </flux:field>
+    <form wire:submit="updateProfile" class="mt-4">
+        <flux:field>
+            <flux:label>Name</flux:label>
+            <flux:input wire:model="profileForm.name" type="text" required autofocus autocomplete="name" />
+            <flux:error name="profileForm.name" />
+        </flux:field>
 
-                <flux:field class="mt-6">
-                    <flux:label>Email</flux:label>
-                    <flux:input wire:model="profileForm.email" type="email" required autocomplete="email" />
-                    <flux:error name="profileForm.email" />
+        <flux:field class="mt-6">
+            <flux:label>Email</flux:label>
+            <flux:input wire:model="profileForm.email" type="email" required autocomplete="email" />
+            <flux:error name="profileForm.email" />
 
-                    @if ($this->hasUnverifiedEmail)
-                        <flux:button wire:click="resendVerificationNotification" variant="subtle" class="mt-2">
-                            Resend verification email
-                        </flux:button>
-                    @endif
-
-                    @if ($this->emailVerificationEnabled && Auth::user()->hasVerifiedEmail() && $profileForm->email !== $profileForm->originalEmail)
-                        <p class="text-amber-600 dark:text-amber-400 mt-2">
-                            Your email will be marked as unverified.
-                        </p>
-                    @endif
-                </flux:field>
-            </flux:card>
-            <div class="mt-4 flex">
-                <flux:spacer />
-                <flux:button type="submit" variant="primary" data-test="update-profile-button">
-                    Update profile
+            @if ($this->hasUnverifiedEmail)
+                <flux:button wire:click="resendVerificationNotification" variant="subtle" class="mt-2">
+                    Resend verification email
                 </flux:button>
-            </div>
-        </form>
-    </div>
+            @endif
 
-    <flux:separator variant="subtle" />
+            @if ($this->emailVerificationEnabled && Auth::user()->hasVerifiedEmail() && $profileForm->email !== $profileForm->originalEmail)
+                <p class="text-amber-600 dark:text-amber-400 mt-2">
+                    Your email will be marked as unverified.
+                </p>
+            @endif
+        </flux:field>
 
-    <div>
-        <flux:heading level="2">Password</flux:heading>
+        <flux:spacer class="mt-6" />
 
-        <form wire:submit="updatePassword" class="mt-2">
-            <flux:card class="px-4 py-5">
-                <flux:field>
-                    <flux:label>Current password</flux:label>
-                    <flux:input wire:model="passwordForm.current_password" type="password" required autocomplete="current-password" viewable />
-                    <flux:error name="passwordForm.current_password" />
-                </flux:field>
+        <flux:button type="submit" variant="primary" data-test="update-profile-button">
+            Update profile
+        </flux:button>
+    </form>
 
-                <flux:field class="mt-6">
-                    <flux:label>New password</flux:label>
-                    <flux:input wire:model="passwordForm.password" type="password" required autocomplete="new-password" viewable />
-                    <flux:description>
-                        {{ implode(', ', $this->passwordRulesDescription) . '.' }}
-                    </flux:description>
-                    <flux:error name="passwordForm.password" />
-                </flux:field>
+    <flux:separator class="my-12" />
 
-                <flux:field class="mt-6">
-                    <flux:label>Confirm password</flux:label>
-                    <flux:input wire:model="passwordForm.password_confirmation" type="password" required autocomplete="new-password" viewable />
-                    <flux:error name="passwordForm.password_confirmation" />
-                </flux:field>
-            </flux:card>
-            <div class="mt-4 flex">
-                <flux:spacer />
-                <flux:button type="submit" variant="primary" data-test="update-password-button">
-                    Update password
-                </flux:button>
-            </div>
-        </form>
-    </div>
+    <flux:heading level="2">Password</flux:heading>
 
-    <flux:separator variant="subtle" />
+    <form wire:submit="updatePassword" class="mt-4">
+        <flux:field>
+            <flux:label>Current password</flux:label>
+            <flux:input wire:model="passwordForm.current_password" type="password" required autocomplete="current-password" viewable />
+            <flux:error name="passwordForm.current_password" />
+        </flux:field>
 
-    <div>
-        <flux:heading level="2">Two-factor authentication</flux:heading>
+        <flux:field class="mt-6">
+            <flux:label>New password</flux:label>
+            <flux:input wire:model="passwordForm.password" type="password" required autocomplete="new-password" viewable />
+            <flux:description>
+                {{ implode(', ', $this->passwordRulesDescription) . '.' }}
+            </flux:description>
+            <flux:error name="passwordForm.password" />
+        </flux:field>
 
-        <flux:card class="px-4 py-5 mt-2">
-            <flux:fieldset :disabled="!$canManageTwoFactor">
-                @if ($twoFactorEnabled && ! $showQrCode)
-                    <x-description.list>
-                        <x-description.term>Status</x-description.term>
-                        <x-description.details>{{ $this->twoFactorStatus }}</x-description.details>
+        <flux:field class="mt-6">
+            <flux:label>Confirm password</flux:label>
+            <flux:input wire:model="passwordForm.password_confirmation" type="password" required autocomplete="new-password" viewable />
+            <flux:error name="passwordForm.password_confirmation" />
+        </flux:field>
 
-                        <x-description.term>Recovery codes remaining</x-description.term>
-                        <x-description.details>
-                            <span class="{{ $this->recoveryCodesRemaining <= 2 ? 'text-amber-600' : '' }}">
-                                {{ $this->recoveryCodesRemaining . ' of 8 codes' }}
-                            </span>
-                        </x-description.details>
-                    </x-description.list>
+        <flux:spacer class="mt-6" />
 
-                    <div class="mt-6 space-y-4">
-                        @error('recoveryCodes')
-                            <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
-                        @enderror
+        <flux:button type="submit" variant="primary" data-test="update-password-button">
+            Update password
+        </flux:button>
+    </form>
 
-                        @if (filled($recoveryCodes))
-                            <div class="grid grid-cols-2 gap-x-8 gap-y-1 font-mono text-sm" role="list" aria-label="Recovery codes">
-                                @foreach($recoveryCodes as $recoveryCode)
-                                    <div role="listitem" class="select-text" wire:loading.class="opacity-50 animate-pulse">
-                                        {{ $recoveryCode }}
-                                    </div>
-                                @endforeach
+    <flux:separator class="my-12" />
+
+    <flux:heading level="2">Two-factor authentication</flux:heading>
+
+    <flux:fieldset :disabled="!$canManageTwoFactor" class="mt-4">
+        @if ($twoFactorEnabled && ! $showQrCode)
+            <x-description.list>
+                <x-description.term>Status</x-description.term>
+                <x-description.details>{{ $this->twoFactorStatus }}</x-description.details>
+
+                <x-description.term>Recovery codes remaining</x-description.term>
+                <x-description.details>
+                    <span class="{{ $this->recoveryCodesRemaining <= 2 ? 'text-amber-600' : '' }}">
+                        {{ $this->recoveryCodesRemaining . ' of 8 codes' }}
+                    </span>
+                </x-description.details>
+            </x-description.list>
+
+            <div class="mt-6 space-y-4">
+                @error('recoveryCodes')
+                    <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
+                @enderror
+
+                @if (filled($recoveryCodes))
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-1 font-mono text-sm" role="list" aria-label="Recovery codes">
+                        @foreach($recoveryCodes as $recoveryCode)
+                            <div role="listitem" class="select-text" wire:loading.class="opacity-50 animate-pulse">
+                                {{ $recoveryCode }}
                             </div>
-
-                            <flux:button variant="danger" wire:click="regenerateRecoveryCodes">
-                                Regenerate codes
-                            </flux:button>
-                        @else
-                            <flux:callout variant="warning" icon="exclamation-triangle" heading="No recovery codes found" />
-                        @endif
+                        @endforeach
                     </div>
 
-                    <form wire:submit="disableTwoFactor" class="mt-6">
-                        <flux:fieldset>
-                            <flux:legend level="3">Disable two-factor authentication</flux:legend>
+                    <flux:button variant="danger" wire:click="regenerateRecoveryCodes">
+                        Regenerate codes
+                    </flux:button>
+                @else
+                    <flux:callout variant="warning" icon="exclamation-triangle" heading="No recovery codes found" />
+                @endif
+            </div>
 
-                            <flux:field class="mt-6">
-                                <flux:label>Current password</flux:label>
-                                <flux:input wire:model="disablePassword" type="password" required viewable />
-                                <flux:error name="disablePassword" />
-                            </flux:field>
-                        </flux:fieldset>
+            <form wire:submit="disableTwoFactor" class="mt-6">
+                <flux:fieldset>
+                    <flux:legend level="3">Disable two-factor authentication</flux:legend>
 
-                        <div class="mt-4 flex">
-                            <flux:spacer />
-                            <flux:button variant="danger" type="submit" data-test="disable-two-factor-button">
-                                Disable
-                            </flux:button>
-                        </div>
-                    </form>
-                @elseif ($showQrCode)
-                    <div>
-                        @error('setupData')
-                            <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
-                        @enderror
+                    <flux:field class="mt-6">
+                        <flux:label>Current password</flux:label>
+                        <flux:input wire:model="disablePassword" type="password" required viewable />
+                        <flux:error name="disablePassword" />
+                    </flux:field>
+                </flux:fieldset>
 
-                        <div>
-                            {!! $qrCodeSvg !!}
-                        </div>
+                <flux:spacer class="mt-6" />
 
-                        <flux:field class="mt-6">
-                            <flux:label>Setup key</flux:label>
-                            <flux:input
-                                :value="$manualSetupKey"
-                                readonly
-                                variant="filled"
-                                copyable
-                                input:class="font-mono"
-                            />
-                        </flux:field>
+                <flux:button variant="danger" type="submit" data-test="disable-two-factor-button">
+                    Disable
+                </flux:button>
+            </form>
+        @elseif ($showQrCode)
+            <div>
+                @error('setupData')
+                    <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
+                @enderror
 
-                        @if ($this->requiresTwoFactorConfirmation)
-                            <flux:field class="mt-6">
-                                <flux:label>Code</flux:label>
-                                <flux:otp name="code" wire:model="code" length="6" />
-                                <flux:error name="code" />
-                            </flux:field>
+                <div>
+                    {!! $qrCodeSvg !!}
+                </div>
 
-                            <div class="mt-4 flex gap-1">
-                                <flux:button wire:click="confirmTwoFactor" variant="primary">
-                                    Confirm
-                                </flux:button>
-                                <flux:button variant="subtle" wire:click="cancelTwoFactorSetup" type="button">
-                                    Cancel
-                                </flux:button>
-                            </div>
-                        @else
-                            <div class="mt-6 flex gap-3">
-                                <flux:button wire:click="confirmTwoFactor" variant="primary" :disabled="$errors->has('setupData')">
-                                    Enable
-                                </flux:button>
-                            </div>
-                        @endif
+                <flux:field class="mt-6">
+                    <flux:label>Setup key</flux:label>
+                    <flux:input
+                        :value="$manualSetupKey"
+                        readonly
+                        variant="filled"
+                        copyable
+                        input:class="font-mono"
+                    />
+                </flux:field>
+
+                @if ($this->requiresTwoFactorConfirmation)
+                    <flux:field class="mt-6">
+                        <flux:label>Code</flux:label>
+                        <flux:otp name="code" wire:model="code" length="6" />
+                        <flux:error name="code" />
+                    </flux:field>
+
+                    <div class="mt-4 flex gap-1">
+                        <flux:button wire:click="confirmTwoFactor" variant="primary">
+                            Confirm
+                        </flux:button>
+                        <flux:button variant="subtle" wire:click="cancelTwoFactorSetup" type="button">
+                            Cancel
+                        </flux:button>
                     </div>
                 @else
-                    <div>
-                        <flux:button wire:click="enableTwoFactor" variant="primary">
-                            Enable two-factor
+                    <div class="mt-6 flex gap-3">
+                        <flux:button wire:click="confirmTwoFactor" variant="primary" :disabled="$errors->has('setupData')">
+                            Enable
                         </flux:button>
                     </div>
                 @endif
-            </flux:fieldset>
-        </flux:card>
-    </div>
+            </div>
+        @else
+            <div>
+                <flux:button wire:click="enableTwoFactor" variant="primary">
+                    Enable two-factor
+                </flux:button>
+            </div>
+        @endif
+    </flux:fieldset>
 
-    <flux:separator variant="subtle" />
+    <flux:separator class="my-12" />
 
     <div x-data>
         <flux:heading level="2">Appearance</flux:heading>
 
-        <flux:card class="px-4 py-5 mt-2">
-            <flux:radio.group x-model="$flux.appearance">
-                <flux:radio value="light" label="Light" />
-                <flux:radio value="dark" label="Dark" />
-                <flux:radio value="system" label="System" description="Follows your operating system preference" />
-            </flux:radio.group>
-        </flux:card>
+        <flux:radio.group x-model="$flux.appearance" class="mt-4">
+            <flux:radio value="light" label="Light" />
+            <flux:radio value="dark" label="Dark" />
+            <flux:radio value="system" label="System" description="Follows your operating system preference" />
+        </flux:radio.group>
     </div>
 
-    <flux:separator variant="subtle" />
+    <flux:separator class="my-12" />
 
-    <div>
-        <flux:heading level="2">Delete account</flux:heading>
+    <flux:heading level="2">Delete account</flux:heading>
 
-        <form wire:submit="deleteAccount" class="mt-2">
-            <flux:card class="px-4 py-5 pb-4.5">
-                <flux:fieldset :disabled="!$this->showDeleteUser">
-                    @if (! $this->showDeleteUser)
-                        <p class="text-amber-600 dark:text-amber-400 mb-6">
-                            Email verification required to delete your account.
-                        </p>
-                    @endif
+    <form wire:submit="deleteAccount" class="mt-4">
+        <flux:fieldset :disabled="!$this->showDeleteUser">
+            @if (! $this->showDeleteUser)
+                <p class="text-amber-600 dark:text-amber-400 mb-6">
+                    Email verification required to delete your account.
+                </p>
+            @endif
 
-                    <flux:field>
-                        <flux:label>Current password</flux:label>
-                        <flux:input wire:model="deleteForm.password" type="password" required viewable />
-                        <flux:error name="deleteForm.password" />
-                    </flux:field>
-                </flux:fieldset>
-            </flux:card>
-            <div class="mt-4 flex">
-                <flux:spacer />
-                <flux:button type="submit" variant="danger" data-test="delete-user-button" :disabled="!$this->showDeleteUser">
-                    Delete account
-                </flux:button>
-            </div>
-        </form>
-    </div>
+            <flux:field>
+                <flux:label>Current password</flux:label>
+                <flux:input wire:model="deleteForm.password" type="password" required viewable />
+                <flux:error name="deleteForm.password" />
+            </flux:field>
+        </flux:fieldset>
 
+        <flux:spacer class="mt-6" />
+
+        <flux:button type="submit" variant="danger" data-test="delete-user-button" :disabled="!$this->showDeleteUser">
+            Delete account
+        </flux:button>
+    </form>
 </section>

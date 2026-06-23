@@ -28,7 +28,7 @@
 
 @theme {
     --color-accent: var(--color-lime-300);
-    --color-accent-content: var(--color-purple-600);
+    --color-accent-content: var(--color-blue-600);
     --color-accent-foreground: var(--color-lime-950);
 }
 @layer theme {

@@ -89,49 +89,46 @@ new class extends Component
     </flux:breadcrumbs>
 
     <form wire:submit="updateCreditCard" class="mt-4">
-        <flux:card class="px-4 py-5">
+        <flux:field>
+            <flux:label>Name</flux:label>
+            <flux:input wire:model="name" type="text" required />
+            <flux:description>A label for this card, e.g. "Personal Visa"</flux:description>
+            <flux:error name="name" />
+        </flux:field>
+        <flux:field class="mt-6">
+            <flux:label>Name on card</flux:label>
+            <flux:input wire:model="nameOnCard" type="text" required />
+            <flux:description>The cardholder name exactly as printed on the card</flux:description>
+            <flux:error name="nameOnCard" />
+        </flux:field>
+        <flux:field class="mt-6">
+            <flux:label>Card number</flux:label>
+            <flux:input wire:model="cardNumber" type="text" required mask="9999 9999 9999 9999" icon:trailing="credit-card" />
+            <flux:description>The 13–19 digit number on the front or back of the card</flux:description>
+            <flux:error name="cardNumber" />
+        </flux:field>
+        <div class="grid grid-cols-2 gap-4 mt-6">
             <flux:field>
-                <flux:label>Name</flux:label>
-                <flux:input wire:model="name" type="text" required />
-                <flux:description>A label for this card, e.g. "Personal Visa"</flux:description>
-                <flux:error name="name" />
+                <flux:label>Expiry date</flux:label>
+                <flux:input wire:model="expiryDate" type="text" required mask="99/99" placeholder="MM/YY" />
+                <flux:description>Month and year printed on the card</flux:description>
+                <flux:error name="expiryDate" />
             </flux:field>
-            <flux:field class="mt-6">
-                <flux:label>Name on card</flux:label>
-                <flux:input wire:model="nameOnCard" type="text" required />
-                <flux:description>The cardholder name exactly as printed on the card</flux:description>
-                <flux:error name="nameOnCard" />
-            </flux:field>
-            <flux:field class="mt-6">
-                <flux:label>Card number</flux:label>
-                <flux:input wire:model="cardNumber" type="text" required mask="9999 9999 9999 9999" icon:trailing="credit-card" />
-                <flux:description>The 13–19 digit number on the front or back of the card</flux:description>
-                <flux:error name="cardNumber" />
-            </flux:field>
-            <div class="grid grid-cols-2 gap-4 mt-6">
-                <flux:field>
-                    <flux:label>Expiry date</flux:label>
-                    <flux:input wire:model="expiryDate" type="text" required mask="99/99" placeholder="MM/YY" />
-                    <flux:description>Month and year printed on the card</flux:description>
-                    <flux:error name="expiryDate" />
-                </flux:field>
 
-                <flux:field>
-                    <flux:label>CVV</flux:label>
-                    <flux:input wire:model="cvv" type="password" required viewable mask="9999" />
-                    <flux:description>3-digit code on the back (4 digits on the front for Amex)</flux:description>
-                    <flux:error name="cvv" />
-                </flux:field>
-            </div>
-            <flux:field class="mt-6">
-                <flux:label>Notes</flux:label>
-                <flux:textarea wire:model="notes" />
-                <flux:error name="notes" />
-                <flux:description>Billing address, PIN, or other details</flux:description>
+            <flux:field>
+                <flux:label>CVV</flux:label>
+                <flux:input wire:model="cvv" type="password" required viewable mask="9999" />
+                <flux:description>3-digit code on the back (4 digits on the front for Amex)</flux:description>
+                <flux:error name="cvv" />
             </flux:field>
-        </flux:card>
-        <div class="mt-4 flex">
-            <flux:spacer />
+        </div>
+        <flux:field class="mt-6">
+            <flux:label>Notes</flux:label>
+            <flux:textarea wire:model="notes" />
+            <flux:error name="notes" />
+            <flux:description>Billing address, PIN, or other details</flux:description>
+        </flux:field>
+        <div class="mt-6">
             <flux:button variant="primary" type="submit">
                 Update credit card
             </flux:button>
