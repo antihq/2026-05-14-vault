@@ -16,14 +16,15 @@ USER www-data
 # ---- Composer dependencies (prod only) ----
 # Must come before "assets" because the assets build copies vendor/ from here
 # (app.css imports Flux CSS and @source-scans vendor stub paths).
-# COMPOSER_AUTH comes from the VPS environment (/etc/environment) as a build
-# secret — it authenticates livewire/flux-pro against composer.fluxui.dev and
-# is never baked into the image. Locally: COMPOSER_AUTH="$(cat ~/.composer/auth.json)" docker build .
+# Auth for livewire/flux-pro: auth.json lives ONLY on the VPS (baked into the
+# local composer-auth:local image, built from /root/composer-auth). It is
+# copied in here, used by composer, and deleted in the same layer — it never
+# reaches the final image and is never committed to git.
 FROM base AS dependencies
 WORKDIR /var/www/html
 COPY composer.json composer.lock ./
-RUN --mount=type=secret,env=COMPOSER_AUTH \
-    composer install --no-interaction --prefer-dist --no-scripts --no-dev --optimize-autoloader
+COPY --from=composer-auth:local /auth.json ./auth.json
+RUN composer install --no-interaction --prefer-dist --no-scripts --no-dev --optimize-autoloader && rm -f auth.json
 
 # ---- JS assets (Vite 8 needs a recent Node) ----
 FROM node:22-alpine AS assets
