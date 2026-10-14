@@ -10,6 +10,7 @@ servers:
       - 127.0.0.1
     options:
       stop-timeout: 30
+      memory: 1g
       # NOTE: no `init: true` here — serversideup images use s6-overlay,
       # which must run as PID 1. Docker's --init (tini) breaks it (exit 100).
 ssh:
@@ -80,6 +81,9 @@ env:
     - AWS_DEFAULT_REGION
     - AWS_USE_PATH_STYLE_ENDPOINT
     - VITE_APP_NAME
+    - PHP_FPM_PM_MAX_CHILDREN
+    - PHP_FPM_PM_MAX_REQUESTS
+    - PHP_MEMORY_LIMIT
 volumes:
   - /srv/storage/2026-05-14-vault:/storage
 deploy_timeout: 120
