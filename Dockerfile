@@ -1,4 +1,4 @@
-FROM serversideup/php:8.4-fpm-nginx-alpine AS base
+FROM serversideup/php:8.3-fpm-nginx-alpine AS base
 
 ENV AUTORUN_ENABLED=1 \
     PHP_OPCACHE_ENABLE=1 \
@@ -16,10 +16,14 @@ USER www-data
 # ---- Composer dependencies (prod only) ----
 # Must come before "assets" because the assets build copies vendor/ from here
 # (app.css imports Flux CSS and @source-scans vendor stub paths).
+# COMPOSER_AUTH comes from the VPS environment (/etc/environment) as a build
+# secret — it authenticates livewire/flux-pro against composer.fluxui.dev and
+# is never baked into the image. Locally: COMPOSER_AUTH="$(cat ~/.composer/auth.json)" docker build .
 FROM base AS dependencies
 WORKDIR /var/www/html
 COPY composer.json composer.lock ./
-RUN composer install --no-interaction --prefer-dist --no-scripts --no-dev --optimize-autoloader
+RUN --mount=type=secret,env=COMPOSER_AUTH \
+    composer install --no-interaction --prefer-dist --no-scripts --no-dev --optimize-autoloader
 
 # ---- JS assets (Vite 8 needs a recent Node) ----
 FROM node:22-alpine AS assets
