@@ -31,8 +31,8 @@ proxy:
   ssl: false
   forward_headers: true
   healthcheck:
-    path: /up
-    interval: 15
+    path: /healthz.txt
+    interval: 5
     timeout: 1
   run:
     bind_ips:
