@@ -46,5 +46,7 @@ COPY --chown=www-data:www-data . /var/www/html
 COPY --from=dependencies --chown=www-data:www-data /var/www/html/vendor /var/www/html/vendor
 COPY --from=assets --chown=www-data:www-data /app/public/build /var/www/html/public/build
 
+USER root
 RUN rm -rf /usr/bin/composer && \
     mkdir -p /storage && chown www-data:www-data /storage
+USER www-data
