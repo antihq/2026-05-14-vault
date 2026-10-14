@@ -1,4 +1,4 @@
-FROM serversideup/php:8.3-fpm-nginx-alpine AS base
+FROM serversideup/php:8.4-fpm-nginx-alpine AS base
 
 ENV AUTORUN_ENABLED=1 \
     PHP_OPCACHE_ENABLE=1 \
