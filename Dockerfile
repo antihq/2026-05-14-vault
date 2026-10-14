@@ -24,6 +24,9 @@ FROM base AS dependencies
 WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 COPY --from=composer-auth:local /auth.json ./auth.json
+USER root
+RUN chown www-data:www-data auth.json && chmod 600 auth.json
+USER www-data
 RUN composer install --no-interaction --prefer-dist --no-scripts --no-dev --optimize-autoloader && rm -f auth.json
 
 # ---- JS assets (Vite 8 needs a recent Node) ----
