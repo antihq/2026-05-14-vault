@@ -14,11 +14,14 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 USER www-data
 
 # ---- JS assets (Vite 8 needs a recent Node) ----
+# vendor/ is copied in because app.css imports Flux CSS and @source-scans
+# vendor stub paths — Tailwind/Vite need composer deps present to build.
 FROM node:22-alpine AS assets
 WORKDIR /app
 COPY package.json package-lock.json vite.config.js ./
 COPY resources ./resources
 COPY public ./public
+COPY --from=dependencies /var/www/html/vendor ./vendor
 RUN npm ci && npm run build
 
 # ---- Composer dependencies (prod only) ----
