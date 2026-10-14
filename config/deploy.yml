@@ -44,5 +44,5 @@ env:
     - LOG_CHANNEL
 volumes:
   - /srv/storage/2026-05-14-vault:/storage
-deploy_timeout: 60
+deploy_timeout: 120
 drain_timeout: 5
