@@ -9,8 +9,9 @@ servers:
     hosts:
       - 127.0.0.1
     options:
-      init: true
-      stop-timeout: 1
+      stop-timeout: 30
+      # NOTE: no `init: true` here — serversideup images use s6-overlay,
+      # which must run as PID 1. Docker's --init (tini) breaks it (exit 100).
 ssh:
   user: deploy
   keys:
