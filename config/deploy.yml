@@ -32,7 +32,7 @@ proxy:
   forward_headers: true
   healthcheck:
     path: /up
-    interval: 1
+    interval: 15
     timeout: 1
   run:
     bind_ips:
