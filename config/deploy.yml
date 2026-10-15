@@ -27,6 +27,7 @@ builder:
   driver: docker
   context: .
 proxy:
+  host: vault.antihq.com
   app_port: 8080
   ssl: false
   forward_headers: true
